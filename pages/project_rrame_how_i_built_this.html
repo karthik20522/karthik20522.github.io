@@ -1,0 +1,222 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ramblings of Karthik</title>
+
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div style="width:100%; text-align: center;">
+                <img src="https://media.licdn.com/dms/image/C4E03AQFz7hl4dZryuw/profile-displayphoto-shrink_200_200/0?e=1564012800&v=beta&t=QLw4PP3jadNeL8A_T7nCgGOvPE3-RQKkO8qPjoI4pz4" style="border-radius: 50%;" />
+            </div>
+            <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
+            <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
+            <p class="view" style="margin:0;"><a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a></p>
+            <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
+        </header>
+        <section>
+            <h1>Project Frame - How I Built This</h1>
+
+            The whole idea behind Project Frame was to provide the user the ability to download a part of the video, basically a online video clipper. <br><i>Note: I built this just for fun and its just a proof of concept.</i><br>
+            <br>
+            Tools used:<br>
+            - FFMPEG - <a href="http://www.ffmpeg.org/">http://www.ffmpeg.org</a><br>
+            - ASP.NET 4.0<br>
+            - GettyImages Connect API<br>
+            - JQuery videoBG<br>
+            - jQuery Wookmark plugin <br>
+            - jQuery imagesLoaded plugin <br>
+            - simplePagination.js<br>
+            - Chardinjs<br>
+            - jQuery pageSlide <br>
+            - soundmanager 2 <br>
+            - SLY <a href="https://github.com/Darsain/sly">https://github.com/Darsain/sly</a>
+            <br><br>
+            <b>Homepage:</b><br><br>
+            <a href="http://1.bp.blogspot.com/-5SZBoT4v7GI/UazmbfZbDfI/AAAAAAAAD0g/_JYLuoYOXo0/s1600/out_gif_kufli.gif" imageanchor="1"><img border="0" src="http://1.bp.blogspot.com/-5SZBoT4v7GI/UazmbfZbDfI/AAAAAAAAD0g/_JYLuoYOXo0/s640/out_gif_kufli.gif" /></a><br><br>
+            The page is pretty simple page except for the background video. I used videoBG plugin to play video. So how did i build the video? FFMpeg has a way to superimpose multiple video in a grid layout. An example for generating grid layout can be found at <a href="https://ffmpeg.org/trac/ffmpeg/wiki/FilteringGuide#multipleinputoverlayin4x4grid">https://ffmpeg.org/trac/ffmpeg/wiki/FilteringGuide#multipleinputoverlayin4x4grid</a>. Using this as my starting point, I downloaded 16 videos from GettyImages.com and generated four 4x4 videos and took the final 4 videos and superimposed on top of each other to generate 1 large video with 16videos embedded within in. But off course the final video was gigantic, so I resized the final video to web size. <br><br>
+            <i>FFMpeg script code to generate the superimposed video:</i>
+            <code style="font-size:12px;">
+                <pre>
+ffmpeg -i 1.mov -i 2.mov -i 3.mov -i 4.mov -filter_complex "[0:0]pad=iw*2:ih*2[a],[a][1:0]overlay=w[b],[b][2:0]overlay=0:h[c],[c][3:0]overlay=w:h" -shortest output.mp4
+</pre>
+            </code>
+            <i>FFMpeg script code to resize the video:</i>
+            <code style="font-size:12px;">
+                <pre>
+ffmpeg -i output.mp4 -s 720x480 -acodec copy output.mp4[webm]
+</pre>
+            </code>
+
+
+            <br>
+            <b>Search Result Page:</b>
+            <br>
+            <table>
+                <tr>
+                    <td>
+                        <a href="http://3.bp.blogspot.com/-IyHxv6NF_Fc/Uaz2JROy-3I/AAAAAAAAD0s/G7URYXYOHEA/s1600/hack-1.jpg" imageanchor="1"><img border="0" src="http://3.bp.blogspot.com/-IyHxv6NF_Fc/Uaz2JROy-3I/AAAAAAAAD0s/G7URYXYOHEA/s320/hack-1.jpg" /></a><br>
+                    </td>
+                    <td>
+                        Move along nothing fancy here. Connect API was used to search videos and jQuery Wookmark in combination with ImageLoader was used to display the result in pinterest style fashion.
+                    </td>
+                <tr>
+            </table>
+            <br><br>
+            <b>Video Edit Page:</b>
+            <br><br>
+            <a href="http://3.bp.blogspot.com/-hZ0wgael5tc/UbTSiEfJkrI/AAAAAAAAD10/g3xEPmChru4/s1600/cuttingboard2.jpg" imageanchor="1"><img border="0" src="http://3.bp.blogspot.com/-hZ0wgael5tc/UbTSiEfJkrI/AAAAAAAAD10/g3xEPmChru4/s640/cuttingboard2.jpg" /></a>
+            <br><br>
+            Few things happen here when the page is loaded:
+            <br>1) Download the video file to a temp. directory
+            <code style="font-size:12px;">
+                <pre>
+ var webClient = new WebClient();
+ if (!string.IsNullOrEmpty(videoUrl))
+  await webClient.DownloadFileTaskAsync(videoUrl, fileName);
+ else
+  throw new Exception("No video file found to download");
+</pre>
+            </code>
+            <br>2) Generate thumbnails using ffmpeg
+            <code style="font-size:12px;">
+                <pre>
+ private Task<bool> GenerateThumbnails(string id, string videoFileLocation)
+ {
+  var tcs = new TaskCompletionSource<bool>();
+  var ffmpegFile = ConfigurationManager.AppSettings["ffmpeg"];
+  var thumbLocation = System.Web.HttpContext.Current.Server.MapPath("~/public/thumbs");
+  var folderName = string.Format("{0}\\{1}", thumbLocation, id);
+
+  if (!Directory.Exists(folderName))
+   Directory.CreateDirectory(folderName);
+
+  var arguments = string.Format("-i {0} -f image2 -vf fps=fps=1 -s 96x72 {1}\\out%d.jpg", videoFileLocation, folderName);
+
+  var process = new Process
+  {
+   StartInfo = { FileName = ffmpegFile, Arguments = arguments },
+   EnableRaisingEvents = true
+  };
+  process.Exited += (sender, args) => tcs.SetResult(true);
+  process.Start();
+
+  return tcs.Task;
+ } 
+</pre>
+            </code>
+
+            <table>
+                <tr>
+                    <td>
+                        <a href="http://3.bp.blogspot.com/-Qq03bv0ZW90/Ua0HcGa1-OI/AAAAAAAAD1M/i7TBjF-9FbI/s1600/6-3-2013+5-14-43+PM.jpg" imageanchor="1"><img border="0" src="http://3.bp.blogspot.com/-Qq03bv0ZW90/Ua0HcGa1-OI/AAAAAAAAD1M/i7TBjF-9FbI/s320/6-3-2013+5-14-43+PM.jpg" /></a>
+                    </td>
+
+                    <td>
+                        This generates thumbnails of 96x72 dimensions and with files as out{number}.jpg. Folder structure something like the following:
+                    </td>
+                <tr>
+            </table>
+
+            <br>
+            3) There is Video metadata information view for which I used jQuery Imageslide.
+            <br><br>
+            <a href="http://1.bp.blogspot.com/-GDF_id_PYxI/Ua0IQrvrlUI/AAAAAAAAD1U/iZaNTYxVBcQ/s1600/6-3-2013+5-18-12+PM.jpg" imageanchor="1"><img border="0" src="http://1.bp.blogspot.com/-GDF_id_PYxI/Ua0IQrvrlUI/AAAAAAAAD1U/iZaNTYxVBcQ/s480/6-3-2013+5-18-12+PM.jpg" /></a>
+
+            <br><br>
+            Following server side code snippet for generating the image information table which jquery pageslider uses for rendering.
+            <br><br>
+            <code style="font-size:12px;">
+                <pre>
+[HttpGet]
+public HttpResponseMessage GetImageDetail(string id)
+{
+ _sb.AppendFormat(imageInfo.Urls.Thumb, imageInfo.Caption);
+ _sb.AppendFormat(_pivotFormat, "Caption", imageInfo.Caption ?? string.Empty);
+ _sb.AppendFormat(_pivotFormat, "Date Created", imageInfo.DateCreated.ToString("F"));
+ _sb.AppendFormat(_pivotFormat, "Artist", imageInfo.FilmMaker ?? string.Empty);
+ _sb.AppendFormat(_pivotFormat, "Asset Family", imageInfo.AssetFamily ?? string.Empty);
+ _sb.AppendFormat(_pivotFormat, "Era", imageInfo.Era ?? string.Empty);
+ _sb.AppendFormat(_pivotFormat, "Keywords", string.Join(", ", imageInfo.Keywords.Select(s => s.Text).ToList()));
+ _sb.AppendFormat(_pivotFormat, "Clip Length", imageInfo.ClipLength ?? string.Empty);
+ _sb.AppendFormat(_pivotFormat, "Copyright", imageInfo.Copyright ?? string.Empty);
+ _sb.AppendFormat(_pivotFormat, "Collection Name", imageInfo.CollectionName ?? string.Empty);
+ _sb.AppendFormat(_pivotFormat, "Color Type", imageInfo.Color ?? string.Empty);
+ _sb.AppendFormat(_pivotFormat, "Mastered To", imageInfo.MasteredTo ?? string.Empty);
+ _sb.AppendFormat(_pivotFormat, "Camera Type", imageInfo.OriginallyShotOn ?? string.Empty);
+</pre>
+            </code>
+
+            <br>
+            4) Once the user selects the preferred video range, following code is executed on the server side to clip the video using ffmpeg.<br>
+            <br><a href="http://4.bp.blogspot.com/-EzydTbeX6oY/Ua0JjfvH6HI/AAAAAAAAD1k/bP2m-9vSano/s1600/6-3-2013+5-23-44+PM.jpg" imageanchor="1"><img border="0" src="http://4.bp.blogspot.com/-EzydTbeX6oY/Ua0JjfvH6HI/AAAAAAAAD1k/bP2m-9vSano/s640/6-3-2013+5-23-44+PM.jpg" /></a>
+            <br>
+            <code style="font-size:12px;">
+                <pre>
+ private Task<bool> ClipVideo(string fileName, string outputName, int startSecond, int duration)
+ {
+  var tcs = new TaskCompletionSource<bool>();
+  var ffmpegFile = ConfigurationManager.AppSettings["ffmpeg"];
+  var clipLocation = System.Web.HttpContext.Current.Server.MapPath("~/public/clip");
+  var videoLocation = System.Web.HttpContext.Current.Server.MapPath("~/public/downloads");
+
+  var arguments = string.Format("-sameq -ss {0} -t {1} -i {2} {3}", startSecond, duration, string.Format("{0}\\{1}", videoLocation, fileName), 
+   string.Format("{0}\\{1}", clipLocation, outputName));
+
+  var process = new Process
+  {
+   StartInfo = { FileName = ffmpegFile, Arguments = arguments },
+   EnableRaisingEvents = true
+  };
+  process.Exited += (sender, args) => tcs.SetResult(true);
+  process.Start();
+
+  return tcs.Task;
+ }
+</pre>
+            </code>
+            <br>
+
+            Off-course this solution of downloading the video file and generating the thumbnail is not a viable solution for a real world scenario. But we could always pre-process the thumbnails and
+            store the thumbnails are an image sprite (saving as an image sprite would save number of files the OS would have to handle; off-course this sprite technique was ment for real world scenario).
+            Since the entire code based (server side) is all async/TPL based, multiple users using the tool works quite well. But there is always an alternate solution for video processing like Animoto or
+            Amazon Transcoding service.
+
+            <!--*********************FOOTER'ISH************************-->
+            <div id="graphcomment"></div>
+            <script type="text/javascript">
+                window.gc_params = {
+                    graphcomment_id: 'Karthik-Github',
+                    fixed_header_height: 0,
+                };
+                (function () {
+                    var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+                    gc.src = 'https://graphcomment.com/js/integration.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
+                })();
+            </script>
+
+        </section>
+        <footer></footer>
+    </div>
+    <script src="/javascripts/scale.fix.js"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-140795658-1');
+    </script>
+</body>
+</html>

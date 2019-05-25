@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ramblings of Karthik</title>
+
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div style="width:100%; text-align: center;">
+                <img src="https://media.licdn.com/dms/image/C4E03AQFz7hl4dZryuw/profile-displayphoto-shrink_200_200/0?e=1564012800&v=beta&t=QLw4PP3jadNeL8A_T7nCgGOvPE3-RQKkO8qPjoI4pz4" style="border-radius: 50%;" />
+            </div>
+            <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
+            <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
+            <p class="view" style="margin:0;"><a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a></p>
+            <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
+        </header>
+        <section>
+            <h1>JMeter - Posting JSON</h1>
+
+            <!-- WRITE UR BLOG HERE-->
+            Apache JMeter is probably one of the most comprehensive Load/Stress testing tool out in the market that is free! One of the tasks that I recently was to load test a WebApi service with production data to simulate real world data. Unfortunately there were not many articles that discussed about a simple way of using jMeter to post data. Following is a step by step procedure to post JSON to a URI:
+
+            <br><br>
+
+            <b>Step 1</b>: Assuming you already have your root setup (thread group)<br> <br>
+            <a href="http://1.bp.blogspot.com/-gbHTlUJlEh0/USPYyS6E0MI/AAAAAAAADIg/G1xPAtNXchg/s1600/jmeter_thread_group.png" imageanchor="1"><img border="0" src="http://1.bp.blogspot.com/-gbHTlUJlEh0/USPYyS6E0MI/AAAAAAAADIg/G1xPAtNXchg/s320/jmeter_thread_group.png" /></a>
+            <br><br>
+
+            <b>Step 2</b>: Add a HTTP Request "Config Element" and fill up the "Server Name or IP" with your server address and port number i.e. if you have one and change the Http Request Protocol to http and Method to POST. Update the Http Request Path with the URI. In the Http Request Parameters, add a new row with the Value as "${<i>somename</i>}"
+            <br><br>
+            <a href="http://2.bp.blogspot.com/-MnmBE5GGJYg/USPaN8J_jqI/AAAAAAAADIs/iHFZvdTA4oE/s1600/jmeter_http_request.png" imageanchor="1"><img border="0" src="http://2.bp.blogspot.com/-MnmBE5GGJYg/USPaN8J_jqI/AAAAAAAADIs/iHFZvdTA4oE/s320/jmeter_http_request.png" /></a>
+            <br><br>
+
+            <b>Step 3</b>: Add "CSV Data Set Config" [Config Element] and add your Filename with the relative path and provide the same variable name "<i>somename</i>" as mentioned above. If you are not using a comma as the delimiter then add the delimiter. The options, "Recycle at EOF" when set to True would start back from the beginning of the file if the test reached the end of file.<br><br>
+
+            <a href="http://3.bp.blogspot.com/-uH4aibSLpog/USPbSJC3_9I/AAAAAAAADI8/f8v9WzQYtAc/s1600/jmeter_CSV_data_set_config.png" imageanchor="1"><img border="0" src="http://3.bp.blogspot.com/-uH4aibSLpog/USPbSJC3_9I/AAAAAAAADI8/f8v9WzQYtAc/s320/jmeter_CSV_data_set_config.png" /></a>
+
+            <br><br>
+            Step 4: Add a Http Header Manager and set the content-type to application/json
+            <br><br>
+            <a href="http://1.bp.blogspot.com/-5Y4uTXS5S0U/USPbq5W1CZI/AAAAAAAADJE/g7JU1snM89g/s1600/jmeter_header_manager.png" imageanchor="1"><img border="0" src="http://1.bp.blogspot.com/-5Y4uTXS5S0U/USPbq5W1CZI/AAAAAAAADJE/g7JU1snM89g/s320/jmeter_header_manager.png" /></a>
+
+            <br><br>
+
+            Done.. Hit Start (ctl + R) and it should start posting JSON to your service.
+
+            <!--*********************FOOTER'ISH************************-->
+            <div id="graphcomment"></div>
+            <script type="text/javascript">
+                window.gc_params = {
+                    graphcomment_id: 'Karthik-Github',
+                    fixed_header_height: 0,
+                };
+                (function () {
+                    var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+                    gc.src = 'https://graphcomment.com/js/integration.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
+                })();
+            </script>
+
+        </section>
+        <footer></footer>
+    </div>
+    <script src="/javascripts/scale.fix.js"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-140795658-1');
+    </script>
+</body>
+</html>

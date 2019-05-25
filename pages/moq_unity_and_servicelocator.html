@@ -26,18 +26,76 @@
             <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
         </header>
         <section>
-            <h1>Service Oriented Architecture - What, Why, How, When?</h1>
-            <p>
-                <em>June 3rd, 2018</em>
-            </p>
+            <h1>Moq, Unity and Servicelocator</h1>
 
-            An introduction to SOA and its principles <br /><br />
+            Unit testing code that utilizes Unity, ServiceLocator with Moq framework is a thing of a beauty. Well,not really but a pain if it's your first time. Why? Because if you are a heavy google first, code second type of a developer then googling for Moq + ServiceLocator implementation would only give you Moq + Unity but no ServiceLocator implementation or examples. So, after spending nearly an hr, decided to share or at least remind myself how to for the next time:
 
-            <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vRmmC1xA2smxayH3CwTzZVQWpNxY1yY3J6D7rvZkiAOtlm5lL1LqJnammQjasLgbIiXAOeA-XLrDi9w/embed?start=false&loop=false&delayms=3000"
-                    frameborder="0" width="600" height="370" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+            <br><br>
+            <b>Bootstrapping your ServiceLocator: </b><br>
+            <i>Note: This is the initialization of Unity in your code</i>
 
-            <br /><br />
+            <code style="font-size:12px;">
+                <pre>
+    public static class Bootstrapper
+    {
+        public static void Initialise()
+        {
+            var container = BuildUnityContainer();
 
+            var provider = new UnityServiceLocator(container);
+            ServiceLocator.SetLocatorProvider(() => provider);
+
+            GlobalConfiguration.Configuration.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);
+        }
+
+        private static IUnityContainer BuildUnityContainer()
+        {
+            var container = new UnityContainer();
+
+            container.RegisterType<IAssetManager, AssetManager>();
+
+            return container;
+        }
+    }
+</pre>
+            </code>
+            <br><br>
+            <b>Then in your calling method you would do something like this:</b>
+
+            <code style="font-size:12px;">
+                <pre>
+     IAssetManager _assetManager = ServiceLocator.Current.GetInstance<IAssetManager>();
+</pre>
+            </code>
+
+            <br><br>
+            <b>Following is how to moq the above Unity and ServiceLocator instance in Unit test cases:</b>
+
+
+            <code style="font-size:12px;">
+                <pre>
+
+using Moq;
+using Microsoft.Practices.ServiceLocation;
+
+var mockManager = new Mock<IAssetManager>();
+var mockServiceLocator = new Mock<IServiceLocator>();            
+
+mockManager.Setup(assetManager => assetManager.AddToQueue(It.IsAny<string>())).Returns(
+ new Models.ResponseMessage()
+ {
+  Status = "Success"
+ });
+
+mockServiceLocator.Setup(x => x.GetInstance<IAssetManager>()).Returns(mockManager.Object);
+ServiceLocator.SetLocatorProvider(new ServiceLocatorProvider(() => mockServiceLocator.Object));
+
+// do your tests..
+
+</pre>
+            </code>
+
+            <!--*********************FOOTER'ISH************************-->
             <div id="graphcomment"></div>
             <script type="text/javascript">
                 window.gc_params = {
@@ -55,8 +113,6 @@
         <footer></footer>
     </div>
     <script src="/javascripts/scale.fix.js"></script>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-140795658-1"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
@@ -64,6 +120,5 @@
 
         gtag('config', 'UA-140795658-1');
     </script>
-
 </body>
 </html>

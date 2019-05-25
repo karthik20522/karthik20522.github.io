@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ramblings of Karthik</title>
+
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div style="width:100%; text-align: center;">
+                <img src="https://media.licdn.com/dms/image/C4E03AQFz7hl4dZryuw/profile-displayphoto-shrink_200_200/0?e=1564012800&v=beta&t=QLw4PP3jadNeL8A_T7nCgGOvPE3-RQKkO8qPjoI4pz4" style="border-radius: 50%;" />
+            </div>
+            <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
+            <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
+            <p class="view" style="margin:0;"><a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a></p>
+            <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
+        </header>
+        <section>
+            <h1>Generate Certificate using Open SSL</h1>
+
+            Though creating HTTPS Certificate using IIS 7 is very simple but I needed more control over the information about the certificate. OpenSSL was the answere. OpenSSL documentation on my first read was a little complicated or a little too much information on how to create a certificate. So for all the people out there trying to create SSL certificate using OpenSSL hear is how it's done:<br /><br />1) First we need to create a "key" file which holds the password phrase. The Command to generate a key file is as follows:<br />c:\>openssl genrsa -des3 -out kufli.key 2048<br />Basically the above command would create a RSA encrypted key file. The above command would require you to type in the pass-phrase.<br /><a href="http://2.bp.blogspot.com/_x9-hQNFipOw/SjB0ORX2crI/AAAAAAAAA6M/ywKNqpKjkKU/s1600-h/1_OpenSSL_RSA_Key_Generation.png"><img style="WIDTH: 381px; HEIGHT: 400px; CURSOR: hand" id="BLOGGER_PHOTO_ID_5345900546219209394" border="0" alt="" src="http://2.bp.blogspot.com/_x9-hQNFipOw/SjB0ORX2crI/AAAAAAAAA6M/ywKNqpKjkKU/s400/1_OpenSSL_RSA_Key_Generation.png" /></a><br /><br />2)Once the Key file is generated, we can go ahead and create the Certificate file. Following command is used for creating a certificate file:<br />c:\>openssl req -new -key kufli.key -x509 -out kufli.crt -config openssl.CNF<br />The above command would prompt you to fill-in Country Name, State or Province Code, Locality Name, Organization Name, Organizational Unit Name, Command Name and Email Address.<br /><a href="http://4.bp.blogspot.com/_x9-hQNFipOw/SjB1Xe6Y0wI/AAAAAAAAA6U/vDBVWyMxnG0/s1600-h/2_OpenSSL_Certificate_Key_Config.png"><img style="WIDTH: 323px; HEIGHT: 400px; CURSOR: hand" id="BLOGGER_PHOTO_ID_5345901803984179970" border="0" alt="" src="http://4.bp.blogspot.com/_x9-hQNFipOw/SjB1Xe6Y0wI/AAAAAAAAA6U/vDBVWyMxnG0/s400/2_OpenSSL_Certificate_Key_Config.png" /></a><br /><br />That;s it. The above command creates the Certificate file needed for Https protocol. Bellow screenshots displays the certificate information:<br /><a href="http://1.bp.blogspot.com/_x9-hQNFipOw/SjB1_6FfBYI/AAAAAAAAA6c/uF-U-n1Ha9Q/s1600-h/3_OpenSSL_Certificate_CRT.png"><img style="cursor:pointer; cursor:hand;width: 338px; height: 400px;" src="http://1.bp.blogspot.com/_x9-hQNFipOw/SjB1_6FfBYI/AAAAAAAAA6c/uF-U-n1Ha9Q/s400/3_OpenSSL_Certificate_CRT.png" border="0" alt="" id="BLOGGER_PHOTO_ID_5345902498473248130" /></a><br /><a href="http://2.bp.blogspot.com/_x9-hQNFipOw/SjB2J4uAopI/AAAAAAAAA6k/oZGutrrktdM/s1600-h/4_OpenSSL_Certificate_Information.png"><img style="cursor:pointer; cursor:hand;width: 320px; height: 400px;" src="http://2.bp.blogspot.com/_x9-hQNFipOw/SjB2J4uAopI/AAAAAAAAA6k/oZGutrrktdM/s400/4_OpenSSL_Certificate_Information.png" border="0" alt="" id="BLOGGER_PHOTO_ID_5345902669905044114" /></a>
+
+            <!--*********************FOOTER'ISH************************-->
+            <div id="graphcomment"></div>
+            <script type="text/javascript">
+                window.gc_params = {
+                    graphcomment_id: 'Karthik-Github',
+                    fixed_header_height: 0,
+                };
+                (function () {
+                    var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+                    gc.src = 'https://graphcomment.com/js/integration.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
+                })();
+            </script>
+
+        </section>
+        <footer></footer>
+    </div>
+    <script src="/javascripts/scale.fix.js"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-140795658-1');
+    </script>
+</body>
+</html>

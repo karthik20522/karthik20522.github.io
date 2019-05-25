@@ -26,18 +26,48 @@
             <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
         </header>
         <section>
-            <h1>Service Oriented Architecture - What, Why, How, When?</h1>
-            <p>
-                <em>June 3rd, 2018</em>
-            </p>
+            <h1>jQTagCloud - Simple Tag Cloud in jQuery</h1>
 
-            An introduction to SOA and its principles <br /><br />
+            A simple tag cloud plugin that I built in JQuery (1.5kb in size uncompressed). <a href="https://github.com/karthik20522/jqTagCloud">https://github.com/karthik20522/jqTagCloud</a>
 
-            <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vRmmC1xA2smxayH3CwTzZVQWpNxY1yY3J6D7rvZkiAOtlm5lL1LqJnammQjasLgbIiXAOeA-XLrDi9w/embed?start=false&loop=false&delayms=3000"
-                    frameborder="0" width="600" height="370" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+            <br>
+            <br>
+            An example usage: <br>
 
-            <br /><br />
+            <code style="font-size:12px;">
+                <pre>
+ &lt;div id="panel"&gt;                
+	&lt;a count="38" href="#"&gt;Horizontal&lt;/a&gt;
+	&lt;a count="76" href="#"&gt;FullLength&lt;/a&gt;
+	&lt;a count="14" href="#"&gt;Japan&lt;/a&gt;
+	&lt;a count="38" href="#"&gt;Toyota Stadium&lt;/a&gt;
+	&lt;a count="59" href="#"&gt;Toyota&lt;/a&gt;
+&lt;/div&gt;
 
+&lt;script&gt;
+	$("#panel").jqTagCloud({ maxSize: 30, minSize: 12 });
+ &lt;/script&gt;
+</pre>
+            </code>
+
+            <b>maxSize</b>: Maximum font size to use < br >
+            <b>minSize</b>: Minimum font size to use < br >
+            <br>
+            Multiple tag clouds can be used on same page. Checkout the example file for demo:
+            <code style="font-size:12px;">
+                <pre>
+$("#panel").jqTagCloud({maxSize: 30, minSize:12 });
+$("#panel2").jqTagCloud({maxSize: 35, minSize:10 });
+</pre>
+            </code>
+            <br><br>
+            <a href="http://4.bp.blogspot.com/-iDQsg8maT-0/UMfomRXN6wI/AAAAAAAADBw/IJ2kcDsNBJs/s1600/jqTagCloud-example.png" imageanchor="1" style=""><img border="0" height="201" width="400" src="http://4.bp.blogspot.com/-iDQsg8maT-0/UMfomRXN6wI/AAAAAAAADBw/IJ2kcDsNBJs/s400/jqTagCloud-example.png" /></a>
+            <br><br>
+            <br>
+            Screenshot usage of this plugin:<br><br>
+            <a href="http://4.bp.blogspot.com/-jsC8vDzqQDY/UMfndaV5N7I/AAAAAAAADBk/Tsqy4tTXi8c/s1600/jqTagCloud.png" imageanchor="1" style=""><img border="0" height="278" width="400" src="http://4.bp.blogspot.com/-jsC8vDzqQDY/UMfndaV5N7I/AAAAAAAADBk/Tsqy4tTXi8c/s400/jqTagCloud.png" /></a>
+
+            <!--*********************FOOTER'ISH************************-->
             <div id="graphcomment"></div>
             <script type="text/javascript">
                 window.gc_params = {
@@ -55,8 +85,6 @@
         <footer></footer>
     </div>
     <script src="/javascripts/scale.fix.js"></script>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-140795658-1"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
@@ -64,6 +92,5 @@
 
         gtag('config', 'UA-140795658-1');
     </script>
-
 </body>
 </html>

@@ -1,0 +1,181 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ramblings of Karthik</title>
+
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div style="width:100%; text-align: center;">
+                <img src="https://media.licdn.com/dms/image/C4E03AQFz7hl4dZryuw/profile-displayphoto-shrink_200_200/0?e=1564012800&v=beta&t=QLw4PP3jadNeL8A_T7nCgGOvPE3-RQKkO8qPjoI4pz4" style="border-radius: 50%;" />
+            </div>
+            <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
+            <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
+            <p class="view" style="margin:0;"><a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a></p>
+            <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
+        </header>
+        <section>
+            <h1>Log analysis using Logstash, ElasticSearch and Kibana</h1>
+            <b style='font-size:20px !important;'>Introduction</b>:
+            <table>
+                <tr>
+                    <td>
+                        <img border="0" style='height:100px;' src="https://semicomplete.com/presentations/logstash-scale11x/images/logstash.png" />
+                    </td>
+                    <td>
+                        <b><i>Logstash</i></b> is a free tool for managing events and logs. It has three primary components, an Input module for collecting logs from various sources [<a href="http://logstash.net/docs/1.1.13/">http://logstash.net/docs/1.1.13/</a>], a parsing module for tweaking and parsing data and finally a storage/output module to save or pass along the parsed data to other systems [<a href="http://logstash.net/docs/1.1.13/">http://logstash.net/docs/1.1.13/</a>].
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <img style='height:100px;' border="0" src="https://ahmetdal.org/wp-content/uploads/2012/05/elasticsearch.png" />
+                    </td>
+                    <td>
+                        <b><i>ElasticSearch</i></b> is this awesome distributable, RESTful, free Lucene powered search engine/server. Unlike SOLR, ES is very simple to use and maintain and similar to SOLR, indexing is near realtime.
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>
+                        <img border="0" src="https://2.bp.blogspot.com/-6ZmXeNF2ptU/UdSRe_2EupI/AAAAAAAAD5k/vt7bYIQD3_w/s140/kibana-1-dashboard.png" />
+                    </td>
+
+                    <td>
+                        <b><i>Kibana</i></b> is a presentation layer that sits on top of Elasticsearch to analyze and make sense of logs that logstash throws into Elastic search; Kibana is a highly scalable interface for Logstash and ElasticSearch that allows you to efficiently search, graph, analyze and otherwise make sense of a mountain of logs.
+                    </td>
+
+                </tr>
+            </table>
+            Logstash + ElasticSearch + Kibana combination can be compared to open sourced Splunk but on a smaller scale.
+            <br> <br>
+
+            <b style='font-size:20px !important;'>Setup</b>:<br>
+            <b><i>Logstash</i></b>, is as easy as downloading [<a href="http://logstash.net/">http://logstash.net/</a>] the JAR file and setting up the input and ouput sources and running the java command. In this example, I will be monitoring a log file and writing it into Elasticsearch server for users to analyse the data using Kibana.
+            <br><br>
+            <code style="font-size:12px;">
+                <pre>
+//logstash-simple.conf
+input {
+ file {
+  path => "c:\Temp\logs\dataLog.log"
+  format => "json"
+  type => "string"               
+ }
+}
+output {  
+ stdout { }
+ elasticsearch { embedded => true }
+}
+
+//on command line
+$ java -jar logstash-1.1.13-flatjar.jar agent -f logstash-simple.conf
+</pre>
+            </code>
+
+            <br>
+            <b><i>Elasticsearch</i></b>: download the zip package from the site [<a href="http://www.elasticsearch.org/download/">http://www.elasticsearch.org/download/</a>] and run the elasticsearch.bat file.
+            <br>
+            <i>Note: make sure the JAVA_HOME is setup up right for the logstash and elasticsearch to work.</i>
+            <br><br>
+            <a href="http://2.bp.blogspot.com/-UFcuotkPTwg/UdysJINaPNI/AAAAAAAAD6U/ioxopWh6JF4/s1600/7-9-2013+4-20-35+PM.png" imageanchor="1"><img border="0" src="http://2.bp.blogspot.com/-UFcuotkPTwg/UdysJINaPNI/AAAAAAAAD6U/ioxopWh6JF4/s320/7-9-2013+4-20-35+PM.png" /></a>
+            <br><br>
+            <b><i>Kibana</i></b>: download the kibana files from Github [<a href="https://github.com/elasticsearch/kibana">https://github.com/elasticsearch/kibana</a>] and either run it as a standalone app or make it part of ElasticSearch plugins. You can do this by copying the kibana files to the ElasticSearch plugins / sites directory.
+
+            <br><br>
+            <a href="http://1.bp.blogspot.com/-um7SZKt5VNU/UdSRexJXiXI/AAAAAAAAD5Y/UWylVND5Qc0/s919/kibana-0-installation.png" imageanchor="1"><img border="0" src="http://1.bp.blogspot.com/-um7SZKt5VNU/UdSRexJXiXI/AAAAAAAAD5Y/UWylVND5Qc0/s480/kibana-0-installation.png" /></a>
+            <br><br>
+            *Open config.js in your favorite editor<br>
+            *Set elasticsearch: 'http://localhost:9200', to your ElasticSearch server
+            <br><br>
+            <b style='font-size:20px !important;'>Use case:</b><br>
+            In general most of these log analyzer always talk about analyzing website traffic etc similar to the videos that Kibana has on their website. [<a href="http://kibana.org/about.html">http://kibana.org/about.html</a>]. This is great but in real world logs and events are more than just website traffic such as information flow checkpoints, performance data etc.
+            <br>
+            In our case, lets assume we have some data that is being passed from one system to another and we are logging to a file. A simple representation of this information flow is as follows:
+            <br><br>
+            <a href="http://3.bp.blogspot.com/-5xbgV1LaegY/UdysJXgsxJI/AAAAAAAAD6Y/Bi0S1f0H7X4/s1600/7-9-2013+3-59-29+PM.png" imageanchor="1"><img border="0" src="http://3.bp.blogspot.com/-5xbgV1LaegY/UdysJXgsxJI/AAAAAAAAD6Y/Bi0S1f0H7X4/s320/7-9-2013+3-59-29+PM.png" /></a>
+
+            <br><br>
+            So basically there are 4 systems or states that the data is passed thru, Ingest, Digest, Process and Exit. At each of these systems, an event is logged to track the data flow or basically checkpoints. These events are logged in dataLog.log file as mentioned in the above logstash configuration file.
+            <br><br>
+
+
+            Once the logstash is up and running, logstash basically tails the files and copies the logged events to elastic search as JSON objects. Elasticsearch index;s all the fields and kibana is now ready to access the data.  Following are <u>some</u> of the cases that can be analyzed using Kibana:
+
+            <br><br>
+
+            <table>
+                <tr>
+                    <td>
+                        <b>Show all data flowing thru the system</b><br><br>
+                        <a href="http://2.bp.blogspot.com/-6ZmXeNF2ptU/UdSRe_2EupI/AAAAAAAAD5k/vt7bYIQD3_w/s1354/kibana-1-dashboard.png" imageanchor="1"><img border="0" src="http://2.bp.blogspot.com/-6ZmXeNF2ptU/UdSRe_2EupI/AAAAAAAAD5k/vt7bYIQD3_w/s360/kibana-1-dashboard.png" /></a>
+                    </td>
+                    <td style='padding-left:10px;'>
+
+                        <b>Filter by Id</b><br><br>
+                        <a href="http://2.bp.blogspot.com/-YgUmgMkgtvE/UdSReyFXAsI/AAAAAAAAD5c/MgxuZiS5u0g/s1012/kibana-3-Search-filter.png" imageanchor="1"><img border="0" src="http://2.bp.blogspot.com/-YgUmgMkgtvE/UdSReyFXAsI/AAAAAAAAD5c/MgxuZiS5u0g/s330/kibana-3-Search-filter.png" /></a>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>
+                        <br>
+
+                        <b>Get All Error'd</b><br><br>
+                        <a href="http://2.bp.blogspot.com/-b72_Tdl6M6M/UdSRfU6p5tI/AAAAAAAAD5o/a3KCSN0_P_8/s1012/kibana-4-Search-custom.png" imageanchor="1"><img border="0" src="http://2.bp.blogspot.com/-b72_Tdl6M6M/UdSRfU6p5tI/AAAAAAAAD5o/a3KCSN0_P_8/s340/kibana-4-Search-custom.png" /></a>
+                    </td>
+
+
+                    <td style='padding-left:10px;'>
+                        <br>
+                        <b>Advanced Filter using Lucene Syntax</b><br><br>
+                        <a href="http://2.bp.blogspot.com/-geRJRY-Jgdw/UdSRfZCpsKI/AAAAAAAAD5s/L3KpYEnZs9g/s1012/kibana-5-custom-search.png" imageanchor="1"><img border="0" src="http://2.bp.blogspot.com/-geRJRY-Jgdw/UdSRfZCpsKI/AAAAAAAAD5s/L3KpYEnZs9g/s340/kibana-5-custom-search.png" /></a>
+                    </td>
+                </tr>
+            </table>
+            <br><br>
+
+            The above reporting/analysis are just a few examples that can be achieved using Kibana + Elasticsearch. With Kibana you can design your own custom dashboards with configurable panels that can be grouped by role. Charts and panels are fully interactive with features like drill down, range selection and customization. With using Elasticsearch, rapid data growth is as easy as adding more ES servers (in cluster).
+
+
+
+
+            <!--*********************FOOTER'ISH************************-->
+            <div id="graphcomment"></div>
+            <script type="text/javascript">
+                window.gc_params = {
+                    graphcomment_id: 'Karthik-Github',
+                    fixed_header_height: 0,
+                };
+                (function () {
+                    var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+                    gc.src = 'https://graphcomment.com/js/integration.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
+                })();
+            </script>
+
+        </section>
+        <footer></footer>
+    </div>
+    <script src="/javascripts/scale.fix.js"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-140795658-1');
+    </script>
+</body>
+</html>

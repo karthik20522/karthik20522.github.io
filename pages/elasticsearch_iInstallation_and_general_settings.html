@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ramblings of Karthik</title>
+
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div style="width:100%; text-align: center;">
+                <img src="https://media.licdn.com/dms/image/C4E03AQFz7hl4dZryuw/profile-displayphoto-shrink_200_200/0?e=1564012800&v=beta&t=QLw4PP3jadNeL8A_T7nCgGOvPE3-RQKkO8qPjoI4pz4" style="border-radius: 50%;" />
+            </div>
+            <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
+            <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
+            <p class="view" style="margin:0;"><a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a></p>
+            <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
+        </header>
+        <section>
+            <h1>Elasticsearch - Installation and general settings</h1>
+
+            Installation of Elasticsearch is a breeze by which I mean it's as simple as downloading the zip/tar file and unzipping it.
+
+            <code style="font-size:12px;">
+                <pre>
+$ wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.3.2.zip
+$ unzip elasticsearch-1.3.2.zip -d /usr/share/elasticsearch
+$ /usr/share/elasticsearch/bin/plugin -install mobz/elasticsearch-head
+$ /usr/share/elasticsearch/bin/plugin -install elasticsearch/elasticsearch-cloud-aws/2.3.0
+            </pre>
+            </code>
+            In the above bash script, we are essentially downloading the file, unzipping and installing couple of plugins for administration and cloud discovery. Now that we have Elasticsearch unzipped, we can optionally provide location to it's data, log and configuration folder. There are two ways to provide Elastisearch this configuration. First way is to provide the paths in the yml configuration file elasticsearch.yml. For example
+            <code style="font-size:12px;">
+                <pre>
+#elasticsearch.yml
+path.data: /var/elasticsearch/data
+path.logs: /var/elasticsearch/logs
+path.work: /tmp/elasticsearch
+            </pre>
+            </code>
+
+            Second way is running Elasticsearch in daemon mode, you can setup the paths in the sysconfig file generally located at /etc/sysconfig/elasticsearch. The configuration in this file is passed onto ES as command line settings when elasticsearch is started.
+
+            <code style="font-size:12px;">
+                <pre>
+#vi /etc/sysconfig/elasticsearch
+LOG_DIR=/var/log/elasticsearch
+DATA_DIR=/var/lib/elasticsearch
+WORK_DIR=/tmp/elasticsearch
+CONF_DIR=/etc/elasticsearch
+CONF_FILE=/etc/elasticsearch/elasticsearch.yml
+            </pre>
+            </code>
+            <i>Note that the configuration in the elasticsearch.yml file overrides the sysconfig file</i>
+            <br>
+            But lets say that we using a package manager or puppet scripts to install elasticsearch and now we have no idea where the config files and data directories located. One easy way to get these information is to curl the elasticsearch node endpoint which returns back all the information regarding each node with all path and configuration information
+            <code style="font-size:12px;">
+                <pre>
+$ curl http://localhost:9200/_nodes?pretty
+
+"path" : {
+    "conf" : "/etc/elasticsearch",
+    "data" : "/var/elasticsearch/data",
+    "logs" : "/var/elasticsearch/logs",
+    "work" : "/tmp/elasticsearch",
+    "home" : "/usr/share/elasticsearch"
+},
+"node" : {
+    "data" : "true",
+    "master" : "true"
+}
+            </pre>
+            </code>
+            <i>More information on the directory structure can be found at <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/setup-dir-layout.html">Elasticsearch Directory layout</a></i>
+            <br>
+            OK, now that we have elasticsearch unzipped and the data directory setup, lets update some minimal but essential Elasticsearch configuration:
+            <code style="font-size:12px;">
+                <pre>
+#elasticsearch.yml
+cluster.name: es-test-cluster
+node.name: es-node-1
+node.master: true
+node.data: true
+            </pre>
+            </code>
+
+            <i>List of all configuration can be found at: <a href="https://github.com/elasticsearch/elasticsearch/blob/master/config/elasticsearch.yml">Elasticsearch configuration file</a></i>
+            <br>
+            Note that if the node.name is not provided, Elasticsearch automatically assigns a node name based on Marvel comic characters. This is fine as long as Elasticsearch process does not restart as it will assign a new name again which could be trouble if you are monitoring the ES process by node names.
+            <br>Now that we have the basic elasticsearch settings updated/added, we can start elasticsearch by running:
+            <code style="font-size:12px;">
+                <pre>
+$ /usr/share/elasticsearch/bin/elasticsearch
+#(or) in daemon mode
+$ /usr/share/elasticsearch/bin/elasticsearch -d
+#(or) using init.d script if one installed by the package manager
+$ /etc/init.d/elasticsearch start
+            </pre>
+            </code>
+
+            <!--*********************FOOTER'ISH************************-->
+            <div id="graphcomment"></div>
+            <script type="text/javascript">
+                window.gc_params = {
+                    graphcomment_id: 'Karthik-Github',
+                    fixed_header_height: 0,
+                };
+                (function () {
+                    var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+                    gc.src = 'https://graphcomment.com/js/integration.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
+                })();
+            </script>
+
+        </section>
+        <footer></footer>
+    </div>
+    <script src="/javascripts/scale.fix.js"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-140795658-1');
+    </script>
+</body>
+</html>

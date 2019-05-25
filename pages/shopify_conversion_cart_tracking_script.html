@@ -26,17 +26,37 @@
             <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
         </header>
         <section>
-            <h1>Service Oriented Architecture - What, Why, How, When?</h1>
-            <p>
-                <em>June 3rd, 2018</em>
-            </p>
+            <h1>Shopify Conversion/Shopping Cart pixel tracking custom script</h1>
 
-            An introduction to SOA and its principles <br /><br />
+            Script example on how to track the conversion data.
+            <h4>Intended object:</h4>
+            <code style="font-size:12px;">
+<pre>
+{
+      "transaction": "2646894",
+      "amount": "699",
+      "currency": "USD",
+      "products": [
+        {
+          "sku": "BR0349P2434C",
+          "price": "399",
+          "size": "34C"
+        },
+        {
+          "sku": "BR0349P0434C",
+          "price": "399",
+          "size": "34C"
+        }
+      ]
+}
+</pre>
+            </code>
 
-            <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vRmmC1xA2smxayH3CwTzZVQWpNxY1yY3J6D7rvZkiAOtlm5lL1LqJnammQjasLgbIiXAOeA-XLrDi9w/embed?start=false&loop=false&delayms=3000"
-                    frameborder="0" width="600" height="370" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+            <h4>In shopify liquid template page for conversion:</h4>
+            <script src="https://gist.github.com/karthik20522/aed18b2f90feea4c36f4b878ad49d355.js"></script>
 
-            <br /><br />
+            <h4>For cart page tracking:</h4>
+            <script src="https://gist.github.com/karthik20522/a19b3954c6874c73c66d99677d8dd7ca.js"></script>
 
             <div id="graphcomment"></div>
             <script type="text/javascript">
@@ -55,8 +75,6 @@
         <footer></footer>
     </div>
     <script src="/javascripts/scale.fix.js"></script>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-140795658-1"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
@@ -64,6 +82,5 @@
 
         gtag('config', 'UA-140795658-1');
     </script>
-
 </body>
 </html>

@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ramblings of Karthik</title>
+
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div style="width:100%; text-align: center;">
+                <img src="https://media.licdn.com/dms/image/C4E03AQFz7hl4dZryuw/profile-displayphoto-shrink_200_200/0?e=1564012800&v=beta&t=QLw4PP3jadNeL8A_T7nCgGOvPE3-RQKkO8qPjoI4pz4" style="border-radius: 50%;" />
+            </div>
+            <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
+            <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
+            <p class="view" style="margin:0;"><a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a></p>
+            <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
+        </header>
+        <section>
+            <h1>IIS 7.0 SSL using Self-Signed Certificates</h1>
+
+            While developing a website for a friend of mine he recommended me to use SSL since he was expecting sensitive information being POST. So we were brainstorming various options like buying an authenticate SSL (Verisign) or using OpenSSL to generate a personal SSL, but we ended upon using IIS 7 feature of Self-Signed Certificate. I have got to admit the fact that IIS 7 feature list is definite a giant-leap for quick web development and deployment! Anyways, following are some simple steps to create SSL using IIS 7:<br /><br />1) Certificates are managed in IIS 7 by clicking the root machine node, and then selecting the "Server Certificates" icon in the feature pane.<br /><a href="http://3.bp.blogspot.com/_x9-hQNFipOw/SjBtVHGcI9I/AAAAAAAAA5U/aBgSpCAKi-4/s1600-h/1_Server_Certificates_IIS.png"><img style="WIDTH: 400px; HEIGHT: 205px; CURSOR: hand" id="BLOGGER_PHOTO_ID_5345892967139517394" border="0" alt="" src="http://3.bp.blogspot.com/_x9-hQNFipOw/SjBtVHGcI9I/AAAAAAAAA5U/aBgSpCAKi-4/s400/1_Server_Certificates_IIS.png" /></a><br />2) Double click the "Server Certificate" or click "Open Feature" and click the "Create Self-Signed Certificate" link on the right-hand side of the admin tool and in the new Certificate interface type in a name of your new SSL certificate.<br /><a href="http://2.bp.blogspot.com/_x9-hQNFipOw/SjBt-m9xXHI/AAAAAAAAA5c/ViTt78q6G6s/s1600-h/2_Self_signed_Certificate_New.png"><img style="WIDTH: 400px; HEIGHT: 205px; CURSOR: hand" id="BLOGGER_PHOTO_ID_5345893680067730546" border="0" alt="" src="http://2.bp.blogspot.com/_x9-hQNFipOw/SjBt-m9xXHI/AAAAAAAAA5c/ViTt78q6G6s/s400/2_Self_signed_Certificate_New.png" /></a><a href="http://1.bp.blogspot.com/_x9-hQNFipOw/SjBue1JH6II/AAAAAAAAA5k/8Fkz4xagNSI/s1600-h/3_Self_Signed_Certificate_Complete.png"><img style="WIDTH: 400px; HEIGHT: 180px; CURSOR: hand" id="BLOGGER_PHOTO_ID_5345894233629255810" border="0" alt="" src="http://1.bp.blogspot.com/_x9-hQNFipOw/SjBue1JH6II/AAAAAAAAA5k/8Fkz4xagNSI/s400/3_Self_Signed_Certificate_Complete.png" /></a><br />3)To enable SSL on your web-site, select the website node and click the "Bindings" link in the "actions" pane on the right-hand side of the screen and click the "Add" button. In the "add binding" dialog we add the HTTPS protocol support. We can select the self-signed certificate we created earlier from the SSL certificate dropdownlist.<br /><a href="http://3.bp.blogspot.com/_x9-hQNFipOw/SjBvJZLzN9I/AAAAAAAAA5s/qoS1eASuPHw/s1600-h/4_SSL_Add_Binding_IIS.png"><img style="WIDTH: 400px; HEIGHT: 248px; CURSOR: hand" id="BLOGGER_PHOTO_ID_5345894964858664914" border="0" alt="" src="http://3.bp.blogspot.com/_x9-hQNFipOw/SjBvJZLzN9I/AAAAAAAAA5s/qoS1eASuPHw/s400/4_SSL_Add_Binding_IIS.png" /></a><br />4)To test if the SSL is working, open your website (IE/firefox) and you should be prompted with "Security Certificate" warning message. I guess this is some sort of Anti-phishing check. Remember to use "https" and not "http"<br />On Internet Explorer:<br /><a href="http://2.bp.blogspot.com/_x9-hQNFipOw/SjBwGTsudWI/AAAAAAAAA50/oN6oGBexEbI/s1600-h/5_HTTPS_Certificate_error.png"><img style="WIDTH: 400px; HEIGHT: 220px; CURSOR: hand" id="BLOGGER_PHOTO_ID_5345896011358172514" border="0" alt="" src="http://2.bp.blogspot.com/_x9-hQNFipOw/SjBwGTsudWI/AAAAAAAAA50/oN6oGBexEbI/s400/5_HTTPS_Certificate_error.png" /></a><br />On Firefox:<br /><a href="http://2.bp.blogspot.com/_x9-hQNFipOw/SjBwmdL6PSI/AAAAAAAAA58/OMppuJ0SC14/s1600-h/6_Certificate_error_mesage.png"><img style="WIDTH: 400px; HEIGHT: 351px; CURSOR: hand" id="BLOGGER_PHOTO_ID_5345896563660700962" border="0" alt="" src="http://2.bp.blogspot.com/_x9-hQNFipOw/SjBwmdL6PSI/AAAAAAAAA58/OMppuJ0SC14/s400/6_Certificate_error_mesage.png" /></a><br />5) You can view your SSL certificate on lower right corner of you browser.<br /><a href="http://1.bp.blogspot.com/_x9-hQNFipOw/SjBwwgxcNHI/AAAAAAAAA6E/L-Cd7_zAtpM/s1600-h/7_IIS_SSL_Certificate_https.png"><img style="WIDTH: 400px; HEIGHT: 240px; CURSOR: hand" id="BLOGGER_PHOTO_ID_5345896736422114418" border="0" alt="" src="http://1.bp.blogspot.com/_x9-hQNFipOw/SjBwwgxcNHI/AAAAAAAAA6E/L-Cd7_zAtpM/s400/7_IIS_SSL_Certificate_https.png" /></a><br /><br />SSL on IIS 7 is as simple as above. GO MICROSOFT!!
+
+            <!--*********************FOOTER'ISH************************-->
+            <div id="graphcomment"></div>
+            <script type="text/javascript">
+                window.gc_params = {
+                    graphcomment_id: 'Karthik-Github',
+                    fixed_header_height: 0,
+                };
+                (function () {
+                    var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+                    gc.src = 'https://graphcomment.com/js/integration.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
+                })();
+            </script>
+
+        </section>
+        <footer></footer>
+    </div>
+    <script src="/javascripts/scale.fix.js"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-140795658-1');
+    </script>
+</body>
+</html>
