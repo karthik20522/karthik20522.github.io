@@ -1,5 +1,6 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
@@ -12,6 +13,7 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 </head>
+
 <body>
     <div class="wrapper">
         <header>
@@ -20,15 +22,51 @@
             </div>
             <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
             <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
-            <p class="view" style="margin:0;"><a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a></p>
-            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a></p>
-            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a></p>
-            <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
+            <p class="view" style="margin:0;">
+                <a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a>
+            </p>
+            <p class="view" style="margin:0;">
+                <a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a>
+            </p>
+            <p class="view" style="margin:0;">
+                <a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a>
+            </p>
+            <p class="view">
+                <a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a>
+            </p>
         </header>
         <section>
-            <h1>To work smart or work hard</h1>
-
-            Someone once told me I work too hard. But do I really work hard? There is a lot of difference between being physically present at work for 8hrs and actually working for 8hrs! My work usually consists of 1hr lunch + 2 hrs on reddit and maybe 4 hrs of work related work like talking, emailing & finally programming. Am I a hard working employee?? I hope I am not!<br /><br />During my relatively small 6yrs of work experience, I have come across 3 types of employees:<br /><br />1. Someone who works for the sake of working.<br />2. Some who works for love of money.<br />3. someone who is passionate and work more than what is asked for.<br /><br />Type 2 and type 3 employees are equally motivated for different reasons but would be an asset to the team & the company as they have some form of motivation. But type 1 is a liability to the company. Type 1 employee is a type according to me is someone who writes code without fundamental knowledge of the problem that is being solved and potentially an unsatisfactory code. This is the type that adds bugs to the system.<br /><br />Now let's take a smart employee, a smart employee understands the business and writes code to not only solve the current problem efficiently but also  designs, builds and structures code in the most elegant and flexible way for future changes to the system. To justify a smart user let's take the following coding practices:<br /><br />- A good programmer will always write test cases and follow TDD pattern to avoid functional bugs. Having test cases ensures the functionality of the code remains intact when a change is made. Test tools like NUnit (code level testing), Watin for UI testing and Jasmine for JavaScript testing are useful.<br /><br />- A good programmer tends to usually refractor code. Off course a good programmer is confident of his/her changes by ensuring the test cases are passing.<br /><br />- A smart programmer is aware of the fact that a system over time degrades in performance. An architecture designed for scalability is a smart thinking. Not many programmers think in multi tier architecture. Building a system where the website is a consumer of a data service (web service) is architecturally good decision as scaling is as simple as adding more web services box's (not entirely true but there is some truth in it). Basic idea is to keep UI & business & data isolated from each other. Vertical and horizontal scaling are now a reachable goal. From a code perspective, async/event driven programming would increase through put of the system & having a business layer as a web service would provide the basis of scaling if data fetching or complex business logic takes too long. On a data layer, having master-slave configuration can decrease load on db by having master for write operation and slave for read operations. For non critical information like logging, doesn't require to be written in real time, a message queue is an ideal solution (MSMQ, Rabbit MQ)<br /><br />Now a smart programmer understands the above issues and design in a certain way to avoid long term issues. There is nothing wrong in working hard short term but working hard weeks/months together is a sign of a fundamental problem that one should access. Like:<br /><br />-Is there too many bugs that you dealing with, well, then I guess it's time to write test cases.<br /><br />-Is there performance issue, well maybe it's time to re-evaluate the system design.<br /><br />-Not sure of your programming skills, indulge in pair programming, code reviews.<br /><br />-Spending too much time writing code, well it's time to expand your skills; research on blogs, get to know the latest and greatest technology, maybe someone somewhere have solved the problem in a very efficient way than your struggle.<br /><br />The moral of my story is that over time the amount of effort put in should decrease. A smart programmer would learn to avoid both short term (bugs) and long term mistakes (architecture) compared to a duck tape programmer who lives for short term gains and long term pains. Take the extra effort to be the smart ass at the beginning and become the bad ass in the end.<br /><br />Work smart my friends not work hard.
+            <h1>To work smart or work hard</h1> Someone once told me I work too hard. But do I really work hard? There is a lot of difference between being physically present at work for 8hrs and actually working for 8hrs! My work usually consists of 1hr lunch + 2 hrs on reddit and maybe 4 hrs of work related work like talking, emailing & finally programming. Am I a hard working employee?? I hope I am not!
+            <br />
+            <br />During my relatively small 6yrs of work experience, I have come across 3 types of employees:
+            <br />
+            <br />1. Someone who works for the sake of working.
+            <br />2. Some who works for love of money.
+            <br />3. someone who is passionate and work more than what is asked for.
+            <br />
+            <br />Type 2 and type 3 employees are equally motivated for different reasons but would be an asset to the team & the company as they have some form of motivation. But type 1 is a liability to the company. Type 1 employee is a type according to me is someone who writes code without fundamental knowledge of the problem that is being solved and potentially an unsatisfactory code. This is the type that adds bugs to the system.
+            <br />
+            <br />Now let's take a smart employee, a smart employee understands the business and writes code to not only solve the current problem efficiently but also designs, builds and structures code in the most elegant and flexible way for future changes to the system. To justify a smart user let's take the following coding practices:
+            <br />
+            <br />- A good programmer will always write test cases and follow TDD pattern to avoid functional bugs. Having test cases ensures the functionality of the code remains intact when a change is made. Test tools like NUnit (code level testing), Watin for UI testing and Jasmine for JavaScript testing are useful.
+            <br />
+            <br />- A good programmer tends to usually refractor code. Off course a good programmer is confident of his/her changes by ensuring the test cases are passing.
+            <br />
+            <br />- A smart programmer is aware of the fact that a system over time degrades in performance. An architecture designed for scalability is a smart thinking. Not many programmers think in multi tier architecture. Building a system where the website is a consumer of a data service (web service) is architecturally good decision as scaling is as simple as adding more web services box's (not entirely true but there is some truth in it). Basic idea is to keep UI & business & data isolated from each other. Vertical and horizontal scaling are now a reachable goal. From a code perspective, async/event driven programming would increase through put of the system & having a business layer as a web service would provide the basis of scaling if data fetching or complex business logic takes too long. On a data layer, having master-slave configuration can decrease load on db by having master for write operation and slave for read operations. For non critical information like logging, doesn't require to be written in real time, a message queue is an ideal solution (MSMQ, Rabbit MQ)
+            <br />
+            <br />Now a smart programmer understands the above issues and design in a certain way to avoid long term issues. There is nothing wrong in working hard short term but working hard weeks/months together is a sign of a fundamental problem that one should access. Like:
+            <br />
+            <br />-Is there too many bugs that you dealing with, well, then I guess it's time to write test cases.
+            <br />
+            <br />-Is there performance issue, well maybe it's time to re-evaluate the system design.
+            <br />
+            <br />-Not sure of your programming skills, indulge in pair programming, code reviews.
+            <br />
+            <br />-Spending too much time writing code, well it's time to expand your skills; research on blogs, get to know the latest and greatest technology, maybe someone somewhere have solved the problem in a very efficient way than your struggle.
+            <br />
+            <br />The moral of my story is that over time the amount of effort put in should decrease. A smart programmer would learn to avoid both short term (bugs) and long term mistakes (architecture) compared to a duck tape programmer who lives for short term gains and long term pains. Take the extra effort to be the smart ass at the beginning and become the bad ass in the end.
+            <br />
+            <br />Work smart my friends not work hard.
 
             <!--*********************FOOTER'ISH************************-->
             <div id="graphcomment"></div>
@@ -38,7 +76,9 @@
                     fixed_header_height: 0,
                 };
                 (function () {
-                    var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+                    var gc = document.createElement('script');
+                    gc.type = 'text/javascript';
+                    gc.async = true;
                     gc.src = 'https://graphcomment.com/js/integration.js';
                     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
                 })();
@@ -50,10 +90,14 @@
     <script src="/javascripts/scale.fix.js"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
         gtag('js', new Date());
 
         gtag('config', 'UA-140795658-1');
     </script>
 </body>
+
 </html>

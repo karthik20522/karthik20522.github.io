@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\pages"
   ],
-  "SelectedNode": "\\index.html",
+  "SelectedNode": "\\pages\\trivial_bash_script_to_restart_services_in_aws.html",
   "PreviewInSolutionExplorer": false
 }

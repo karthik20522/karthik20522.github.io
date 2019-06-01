@@ -1,5 +1,6 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
@@ -12,6 +13,7 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 </head>
+
 <body>
     <div class="wrapper">
         <header>
@@ -20,15 +22,26 @@
             </div>
             <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
             <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
-            <p class="view" style="margin:0;"><a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a></p>
-            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a></p>
-            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a></p>
-            <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
+            <p class="view" style="margin:0;">
+                <a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a>
+            </p>
+            <p class="view" style="margin:0;">
+                <a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a>
+            </p>
+            <p class="view" style="margin:0;">
+                <a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a>
+            </p>
+            <p class="view">
+                <a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a>
+            </p>
         </header>
         <section>
-            <h1>ASP.NET IP Address behind Proxy</h1>
-
-            While working on a Project where we needed to submit a monthly report to our clients which included the number of Clicks and number of Unique users, we always ended up having about 10-20% discrepancies when it was compared with the clients internal reports.  Most of our clients were using Atlas tracking (Microsoft's product) which made us rethink the blame game. So one of our clients was kind enough to send us their internal report and we realized that they had more unique IP users (like 20% more users IP) logged than we did. So while brainstorming our code we found that we missed to code the obvious scenario when the User's are behind a proxy server like computers within a office n/w share the same IP.<br />Using Request.ServerVariables["REMOTE_ADDR"] was only logging the Proxy address and not the actual clients IP. So we had to modify our code to the following:<br /><br /><code style="font-size:12px;"><pre><br />String userIP = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];<br />// If there is no proxy, get the standard remote address<br />if (userIP == null || userIP == "" || userIP.ToLower() == "unknown") {<br />   userIP  = Request.ServerVariables["REMOTE_ADDR"];<br />}<br /></pre></code><br /><br />"HTTP_X_FORWARDED_FOR" request variable for the most part has the actual clients address but we need to make sure the variable is not null or empty. Thus the conditional check.
+            <h1>ASP.NET IP Address behind Proxy</h1> While working on a Project where we needed to submit a monthly report to our clients which included the number of Clicks and number of Unique users, we always ended up having about 10-20% discrepancies when it was compared with the clients internal reports. Most of our clients were using Atlas tracking (Microsoft's product) which made us rethink the blame game. So one of our clients was kind enough to send us their internal report and we realized that they had more unique IP users (like 20% more users IP) logged than we did. So while brainstorming our code we found that we missed to code the obvious scenario when the User's are behind a proxy server like computers within a office n/w share the same IP.
+            <br />Using Request.ServerVariables["REMOTE_ADDR"] was only logging the Proxy address and not the actual clients IP. So we had to modify our code to the following:
+            <br />
+            <br /><code style="font-size:12px;"><pre><br />String userIP = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];<br />// If there is no proxy, get the standard remote address<br />if (userIP == null || userIP == "" || userIP.ToLower() == "unknown") {<br />   userIP  = Request.ServerVariables["REMOTE_ADDR"];<br />}<br /></pre></code>
+            <br />
+            <br />"HTTP_X_FORWARDED_FOR" request variable for the most part has the actual clients address but we need to make sure the variable is not null or empty. Thus the conditional check.
 
             <!--*********************FOOTER'ISH************************-->
             <div id="graphcomment"></div>
@@ -38,7 +51,9 @@
                     fixed_header_height: 0,
                 };
                 (function () {
-                    var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+                    var gc = document.createElement('script');
+                    gc.type = 'text/javascript';
+                    gc.async = true;
                     gc.src = 'https://graphcomment.com/js/integration.js';
                     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
                 })();
@@ -50,10 +65,14 @@
     <script src="/javascripts/scale.fix.js"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
         gtag('js', new Date());
 
         gtag('config', 'UA-140795658-1');
     </script>
 </body>
+
 </html>

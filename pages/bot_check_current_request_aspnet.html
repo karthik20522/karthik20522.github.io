@@ -1,5 +1,6 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
@@ -12,6 +13,7 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 </head>
+
 <body>
     <div class="wrapper">
         <header>
@@ -20,15 +22,26 @@
             </div>
             <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
             <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
-            <p class="view" style="margin:0;"><a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a></p>
-            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a></p>
-            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a></p>
-            <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
+            <p class="view" style="margin:0;">
+                <a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a>
+            </p>
+            <p class="view" style="margin:0;">
+                <a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a>
+            </p>
+            <p class="view" style="margin:0;">
+                <a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a>
+            </p>
+            <p class="view">
+                <a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a>
+            </p>
         </header>
         <section>
-            <h1>Bot/Crawler/Spider Check Current.Request ASP.NET</h1>
-
-            While implementing a Caching Solution (LRU caching) for a project that I was working on, I realized that search engine crawlers were flooding the IIS cache which led to "out of memory exception". So for this I had to make sure that if the current request was from a Crawler then do not add to the Cache. So following is a simple implementation of WebCrawler check in C#<br /><br /><code style="font-size:12px;"><pre><br />public static bool IsCrawler(HttpRequest request)<br />  {<br />      if (request != null)<br />      {<br />          bool isCrawler = request.Browser.Crawler;<br />          if (!isCrawler)<br />          {<br />              // put any additional known crawlers in the Regex below<br />              Regex regEx = new Regex("Twiceler|twiceler|BaiDuSpider|baduspider|Slurp|slurp|<br />ask|Ask|Teoma|teoma|Yahoo|yahoo");<br />              isCrawler = regEx.Match(request.UserAgent).Success;<br />          }<br />          return isCrawler;<br />      }<br />      return true;<br />  }<br /></pre></code><br /><br />USAGE:<br /><code style="font-size:12px;"><pre><br />if(IsCrawler(HttpContext.Current.Request))<br />{<br /> response.write("You are a bot. Piss off!!");<br />}<br />else { ... }<br /></pre></code>
+            <h1>Bot/Crawler/Spider Check Current.Request ASP.NET</h1> While implementing a Caching Solution (LRU caching) for a project that I was working on, I realized that search engine crawlers were flooding the IIS cache which led to "out of memory exception". So for this I had to make sure that if the current request was from a Crawler then do not add to the Cache. So following is a simple implementation of WebCrawler check in C#
+            <br />
+            <br /><code style="font-size:12px;"><pre><br />public static bool IsCrawler(HttpRequest request)<br />  {<br />      if (request != null)<br />      {<br />          bool isCrawler = request.Browser.Crawler;<br />          if (!isCrawler)<br />          {<br />              // put any additional known crawlers in the Regex below<br />              Regex regEx = new Regex("Twiceler|twiceler|BaiDuSpider|baduspider|Slurp|slurp|<br />ask|Ask|Teoma|teoma|Yahoo|yahoo");<br />              isCrawler = regEx.Match(request.UserAgent).Success;<br />          }<br />          return isCrawler;<br />      }<br />      return true;<br />  }<br /></pre></code>
+            <br />
+            <br />USAGE:
+            <br /><code style="font-size:12px;"><pre><br />if(IsCrawler(HttpContext.Current.Request))<br />{<br /> response.write("You are a bot. Piss off!!");<br />}<br />else { ... }<br /></pre></code>
 
             <!--*********************FOOTER'ISH************************-->
             <div id="graphcomment"></div>
@@ -38,7 +51,9 @@
                     fixed_header_height: 0,
                 };
                 (function () {
-                    var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+                    var gc = document.createElement('script');
+                    gc.type = 'text/javascript';
+                    gc.async = true;
                     gc.src = 'https://graphcomment.com/js/integration.js';
                     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
                 })();
@@ -50,10 +65,14 @@
     <script src="/javascripts/scale.fix.js"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
         gtag('js', new Date());
 
         gtag('config', 'UA-140795658-1');
     </script>
 </body>
+
 </html>

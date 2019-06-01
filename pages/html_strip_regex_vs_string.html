@@ -1,5 +1,6 @@
-<!doctype html>
+ï»¿<!doctype html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
@@ -12,6 +13,7 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 </head>
+
 <body>
     <div class="wrapper">
         <header>
@@ -20,15 +22,35 @@
             </div>
             <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
             <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
-            <p class="view" style="margin:0;"><a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a></p>
-            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a></p>
-            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a></p>
-            <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
+            <p class="view" style="margin:0;">
+                <a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a>
+            </p>
+            <p class="view" style="margin:0;">
+                <a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a>
+            </p>
+            <p class="view" style="margin:0;">
+                <a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a>
+            </p>
+            <p class="view">
+                <a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a>
+            </p>
         </header>
         <section>
-            <h1>HTML Strip [ RegEx vs String ]</h1>
-
-            Since I work on a extremely user driven content web site, I have to make sure that there is no user inputted HTML on the page that break the CSS or the layout of the page. So we had to build a HTML Stripping functionality to strip out the HTML on the fly. We had initially used the obvious RegEx technique to strip out the HTML. But as the traffic increased the page performance/page load time started increasing. So we decided to enable trace on the page to determine the most expensive operation. So while re factoring the code we realized that the HTML stripping functionality was adding on the page load time.<br /><br />So while digging around the internet to find a optimized stripping code, I came across two site. 1) DotNet Pearls [http://dotnetperls.com/remove-html-tags] and 2) StackOverflow [http://stackoverflow.com/questions/473087/string-benchmarks-in-c-refactoring-for-speed-maintainability].<br /><br />Both these sites spoke about string operations vs RegEx and I decided to implement the technique mentioned on their site and following is the result from Page.Trace<br /><br /><a onblur="try {parent.deselectBloggerImageGracefully();} catch(e) {}" href="http://2.bp.blogspot.com/_x9-hQNFipOw/SjU99a-948I/AAAAAAAAA9A/w24WKCtOp1Y/s1600-h/ASP_NET_REGEX_HTML_STRIP.jpg"><img style="cursor: pointer; width: 400px; height: 315px;" src="http://2.bp.blogspot.com/_x9-hQNFipOw/SjU99a-948I/AAAAAAAAA9A/w24WKCtOp1Y/s400/ASP_NET_REGEX_HTML_STRIP.jpg" alt="" id="BLOGGER_PHOTO_ID_5347248257997071298" border="0" /></a><br /><br /><br />As you can see from above data that there is a huge speed difference (thou it’s in milliseconds factor!!) but still much faster and there are fewer objects (string) used which is good for memory usage.<br /><br />Though the original string index code worked wonders, but since we are optimizing code for performance (speed and memory usage) we can re-factor the code to use stringbuilder (better memory management).<br /><br /><code style="font-size:12px;"><pre><br />private static string StripHTML(string pSource)<br />{<br /> char[] ca = pSource.ToCharArray();<br /> StringBuilder sb = new StringBuilder((pSource.Length * 5 / 4));<br /> bool inside = false;<br />            <br /> for (int i = 0; i <= ca.Length - 1; i++)         <br /> {             <br />  char oTempChar = ca[i];<br />  if (oTempChar == '<'){ inside = true; continue; }<br />  if (oTempChar == '>'){ inside = false; continue; }<br />  if (!inside) { sb.Append(oTempChar); }<br /> }<br /><br /> return sb.ToString();<br />}<br /></pre></code>
+            <h1>HTML Strip [ RegEx vs String ]</h1> Since I work on a extremely user driven content web site, I have to make sure that there is no user inputted HTML on the page that break the CSS or the layout of the page. So we had to build a HTML Stripping functionality to strip out the HTML on the fly. We had initially used the obvious RegEx technique to strip out the HTML. But as the traffic increased the page performance/page load time started increasing. So we decided to enable trace on the page to determine the most expensive operation. So while re factoring the code we realized that the HTML stripping functionality was adding on the page load time.
+            <br />
+            <br />So while digging around the internet to find a optimized stripping code, I came across two site. 1) DotNet Pearls [http://dotnetperls.com/remove-html-tags] and 2) StackOverflow [http://stackoverflow.com/questions/473087/string-benchmarks-in-c-refactoring-for-speed-maintainability].
+            <br />
+            <br />Both these sites spoke about string operations vs RegEx and I decided to implement the technique mentioned on their site and following is the result from Page.Trace
+            <br />
+            <br />
+            <a onblur="try {parent.deselectBloggerImageGracefully();} catch(e) {}" href="http://2.bp.blogspot.com/_x9-hQNFipOw/SjU99a-948I/AAAAAAAAA9A/w24WKCtOp1Y/s1600-h/ASP_NET_REGEX_HTML_STRIP.jpg"><img style="cursor: pointer; width: 400px; height: 315px;" src="http://2.bp.blogspot.com/_x9-hQNFipOw/SjU99a-948I/AAAAAAAAA9A/w24WKCtOp1Y/s400/ASP_NET_REGEX_HTML_STRIP.jpg" alt="" id="BLOGGER_PHOTO_ID_5347248257997071298" border="0" /></a>
+            <br />
+            <br />
+            <br />As you can see from above data that there is a huge speed difference (thou itï¿½s in milliseconds factor!!) but still much faster and there are fewer objects (string) used which is good for memory usage.
+            <br />
+            <br />Though the original string index code worked wonders, but since we are optimizing code for performance (speed and memory usage) we can re-factor the code to use stringbuilder (better memory management).
+            <br />
+            <br /><code style="font-size:12px;"><pre><br />private static string StripHTML(string pSource)<br />{<br /> char[] ca = pSource.ToCharArray();<br /> StringBuilder sb = new StringBuilder((pSource.Length * 5 / 4));<br /> bool inside = false;<br />            <br /> for (int i = 0; i <= ca.Length - 1; i++)         <br /> {             <br />  char oTempChar = ca[i];<br />  if (oTempChar == '<'){ inside = true; continue; }<br />  if (oTempChar == '>'){ inside = false; continue; }<br />  if (!inside) { sb.Append(oTempChar); }<br /> }<br /><br /> return sb.ToString();<br />}<br /></pre></code>
 
             <!--*********************FOOTER'ISH************************-->
             <div id="graphcomment"></div>
@@ -38,7 +60,9 @@
                     fixed_header_height: 0,
                 };
                 (function () {
-                    var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+                    var gc = document.createElement('script');
+                    gc.type = 'text/javascript';
+                    gc.async = true;
                     gc.src = 'https://graphcomment.com/js/integration.js';
                     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
                 })();
@@ -50,10 +74,14 @@
     <script src="/javascripts/scale.fix.js"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
         gtag('js', new Date());
 
         gtag('config', 'UA-140795658-1');
     </script>
 </body>
+
 </html>

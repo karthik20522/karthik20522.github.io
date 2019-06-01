@@ -1,5 +1,6 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
@@ -12,6 +13,7 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 </head>
+
 <body>
     <div class="wrapper">
         <header>
@@ -20,15 +22,50 @@
             </div>
             <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
             <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
-            <p class="view" style="margin:0;"><a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a></p>
-            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a></p>
-            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a></p>
-            <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
+            <p class="view" style="margin:0;">
+                <a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a>
+            </p>
+            <p class="view" style="margin:0;">
+                <a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a>
+            </p>
+            <p class="view" style="margin:0;">
+                <a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a>
+            </p>
+            <p class="view">
+                <a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a>
+            </p>
         </header>
         <section>
-            <h1>SignalR - Web Sockets Intro</h1>
-
-            SignalR is a cool asynchronous signaling library for ASP.NET to build real-time applications or for any push based notifications. SignalR is similar to Socket.IO or NowJS. Before the workd of web-sockets, there was Comet which was basically a long-held HTTP requests.<br /><br />SignalR can be downloaded from NuGet [http://www.nuget.org] and downloading the files manually from Git [https://github.com/SignalR/SignalR]<br /><br />More descriptive information on SignalR can be found at Scott Hanselman's site [http://www.hanselman.com/blog/AsynchronousScalableWebApplicationsWithRealtimePersistentLongrunningConnectionsWithSignalR.aspx]<br /><br />To get SignalR up and running following are few todo's on server side:<br /><br />Step 1 is to create a PersistentConnection class like follows<br /><br /><code style="font-size:12px;"><pre><br /> using SignalR;<br /> using System.Threading.Tasks;<br /><br /> namespace Services<br /> {<br />  public class MyConnection : PersistentConnection<br />  {<br />   protected override Task OnReceivedAsync(string clientId, string data)<br />   {<br />    // Broadcast data to all clients<br />    return Connection.Broadcast(data);<br />   }<br />  }<br /> }<br /></pre></code><br />Note that Connection.Broadcast would send the data to all connected clients. If you need to sent to a particular client you can use the Send method.<br /><br />Send(string clientId, object value);<br /><br />Note Send requires the intended clientId. If you were to be building a chat client or a custom push service, you probably would be storing clientId's somewhere in a local object or a central repo.<br /><br />Other useful functions that PersistantConnection class provides that can be overridden:<br /><br /><code style="font-size:12px;"><pre><br /> public void AddToGroup(string clientId, string groupName);<br /> protected virtual void OnConnected(HttpContextBase context, string clientId);<br /> protected virtual Task OnConnectedAsync(HttpContextBase context, string clientId);<br /> protected virtual void OnDisconnect(string clientId);<br /> protected virtual Task OnDisconnectAsync(string clientId);<br /> protected virtual void OnError(Exception e);<br /> protected virtual Task OnErrorAsync(Exception e);<br /> protected virtual void OnReceived(string clientId, string data);<br /> protected virtual Task OnReceivedAsync(string clientId, string data);<br /> public void RemoveFromGroup(string clientId, string groupName);<br /> public void Send(object value);<br /> public void Send(string clientId, object value);<br /> public void SendToGroup(string groupName, object value);<br /></pre></code><br /><br /><br />Step 2 is to add the routes if you are using MVC. This route needs to be registered in Global.asax<br /><code style="font-size:12px;"><pre><br /> protected void Application_Start()<br /> {<br />  Bootstrapper.Run();<br />  RouteTable.Routes.MapConnection<Services.MyConnection>("Notification", "Notification/{*operation}");<br />  RegisterRoutes(RouteTable.Routes);            <br />  AreaRegistration.RegisterAllAreas();<br /> }<br /></pre></code><br /><br />That's pretty much it on the server side<br /><br />Step 3, if the intended client is a web browser it's as easy as follows:<br /><br />
+            <h1>SignalR - Web Sockets Intro</h1> SignalR is a cool asynchronous signaling library for ASP.NET to build real-time applications or for any push based notifications. SignalR is similar to Socket.IO or NowJS. Before the workd of web-sockets, there was Comet which was basically a long-held HTTP requests.
+            <br />
+            <br />SignalR can be downloaded from NuGet [http://www.nuget.org] and downloading the files manually from Git [https://github.com/SignalR/SignalR]
+            <br />
+            <br />More descriptive information on SignalR can be found at Scott Hanselman's site [http://www.hanselman.com/blog/AsynchronousScalableWebApplicationsWithRealtimePersistentLongrunningConnectionsWithSignalR.aspx]
+            <br />
+            <br />To get SignalR up and running following are few todo's on server side:
+            <br />
+            <br />Step 1 is to create a PersistentConnection class like follows
+            <br />
+            <br /><code style="font-size:12px;"><pre><br /> using SignalR;<br /> using System.Threading.Tasks;<br /><br /> namespace Services<br /> {<br />  public class MyConnection : PersistentConnection<br />  {<br />   protected override Task OnReceivedAsync(string clientId, string data)<br />   {<br />    // Broadcast data to all clients<br />    return Connection.Broadcast(data);<br />   }<br />  }<br /> }<br /></pre></code>
+            <br />Note that Connection.Broadcast would send the data to all connected clients. If you need to sent to a particular client you can use the Send method.
+            <br />
+            <br />Send(string clientId, object value);
+            <br />
+            <br />Note Send requires the intended clientId. If you were to be building a chat client or a custom push service, you probably would be storing clientId's somewhere in a local object or a central repo.
+            <br />
+            <br />Other useful functions that PersistantConnection class provides that can be overridden:
+            <br />
+            <br /><code style="font-size:12px;"><pre><br /> public void AddToGroup(string clientId, string groupName);<br /> protected virtual void OnConnected(HttpContextBase context, string clientId);<br /> protected virtual Task OnConnectedAsync(HttpContextBase context, string clientId);<br /> protected virtual void OnDisconnect(string clientId);<br /> protected virtual Task OnDisconnectAsync(string clientId);<br /> protected virtual void OnError(Exception e);<br /> protected virtual Task OnErrorAsync(Exception e);<br /> protected virtual void OnReceived(string clientId, string data);<br /> protected virtual Task OnReceivedAsync(string clientId, string data);<br /> public void RemoveFromGroup(string clientId, string groupName);<br /> public void Send(object value);<br /> public void Send(string clientId, object value);<br /> public void SendToGroup(string groupName, object value);<br /></pre></code>
+            <br />
+            <br />
+            <br />Step 2 is to add the routes if you are using MVC. This route needs to be registered in Global.asax
+            <br /><code style="font-size:12px;"><pre><br /> protected void Application_Start()<br /> {<br />  Bootstrapper.Run();<br />  RouteTable.Routes.MapConnection<Services.MyConnection>("Notification", "Notification/{*operation}");<br />  RegisterRoutes(RouteTable.Routes);            <br />  AreaRegistration.RegisterAllAreas();<br /> }<br /></pre></code>
+            <br />
+            <br />That's pretty much it on the server side
+            <br />
+            <br />Step 3, if the intended client is a web browser it's as easy as follows:
+            <br />
+            <br />
             <code style="font-size:12px;">
                 <pre>
 $(function () {
@@ -65,8 +102,7 @@ $(function () {
             <br />
             <code style="font-size:12px;"><pre><br /> var pushInstance= PushClass.Instance;<br /> pushInstance.Broadcast('blah');<br /></pre></code>
             <br />Another way but fancier way to achieve the same persistant effect could be like follows:
-            <code style="font-size:12px;"><pre><br />public class PushClass<br />{<br />public static void Broadcast(string data)<br />{<br />try<br />{<br />var client = new SignalR.Client.Connection("http://localhost/Notification");<br />var tx =    client.Start().ContinueWith(t =><br />{<br />if(t.IsFaulted)        Console.WriteLine(t.Exception.GetBaseException());    client.Send(data).ContinueWith(t2 =>{ if(t2.IsFaulted)        Console.WriteLine(t2.Exception.GetBaseException());<br />});<br />});<br />tx.ContinueWith(y =>{<br />if (y.IsFaulted  || y.Exception != null)<br />Console.WriteLine(y.Exception.Message);<br />});<br />tx.Wait();<br />}<br />catch(Exception ex)<br />{<br />Console.WriteLine(ex.Message);<br />}<br />}<br />}<br /></pre></code>
-            The calling class can do the following:
+            <code style="font-size:12px;"><pre><br />public class PushClass<br />{<br />public static void Broadcast(string data)<br />{<br />try<br />{<br />var client = new SignalR.Client.Connection("http://localhost/Notification");<br />var tx =    client.Start().ContinueWith(t =><br />{<br />if(t.IsFaulted)        Console.WriteLine(t.Exception.GetBaseException());    client.Send(data).ContinueWith(t2 =>{ if(t2.IsFaulted)        Console.WriteLine(t2.Exception.GetBaseException());<br />});<br />});<br />tx.ContinueWith(y =>{<br />if (y.IsFaulted  || y.Exception != null)<br />Console.WriteLine(y.Exception.Message);<br />});<br />tx.Wait();<br />}<br />catch(Exception ex)<br />{<br />Console.WriteLine(ex.Message);<br />}<br />}<br />}<br /></pre></code> The calling class can do the following:
             <br />
             <code style="font-size:12px;"><pre><br /> Task asyncSignalr = Task.Factory.StartNew(() => PushClass.Broadcast("blah");<br /><br /> asyncSignalr.ContinueWith(t =><br />     {<br />      if (t.IsFaulted)<br />       Console.WriteLine(t.Exception.Flatten().ToString());<br />     });<br /></pre></code>
 
@@ -78,7 +114,9 @@ $(function () {
                     fixed_header_height: 0,
                 };
                 (function () {
-                    var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+                    var gc = document.createElement('script');
+                    gc.type = 'text/javascript';
+                    gc.async = true;
                     gc.src = 'https://graphcomment.com/js/integration.js';
                     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
                 })();
@@ -90,10 +128,14 @@ $(function () {
     <script src="/javascripts/scale.fix.js"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
         gtag('js', new Date());
 
         gtag('config', 'UA-140795658-1');
     </script>
 </body>
+
 </html>
