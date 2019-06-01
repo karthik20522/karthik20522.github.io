@@ -26,8 +26,54 @@
             <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
         </header>
         <section>
-            <h1 style="text-align: center; text-transform: uppercase; font-size:65px; font-weight:bold;">Beers In My Belly</h1>
-
+            <!--<h1 style="text-align: center; text-transform: uppercase; font-size:60px; font-weight:bold;">Beers In My Belly</h1>-->
+            <div id="beerstats">
+                <div id="beer2">
+                    <div class="cup">
+                        <div></div>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                        <i class="bolha"></i>
+                    </div>
+                </div>
+            </div>
             <div id="beerinthebellydiv" style="width: 100%;text-align: center;margin-left: 12px;">
 
             </div>
@@ -66,7 +112,7 @@
                 for (var j = 0; j < groupedBeers[i]["beers"].length; j++) {
                     for (var k = 0; k < groupedBeers[i]["beers"][j]["beers"].length; k++) {
                         beerDrank += '<div id="' + groupedBeers[i]["beers"][j]["beers"][k] + '" class="smallBox" style="background-image:url(\'' + "/images/thumbs/180/" + groupedBeers[i]["beers"][j]["beers"][k] + ".png" + '\'); background-size:cover;"></div>';
-                    }                    
+                    }
                 }
                 /*var beerTemplate = '<div class="box">' + beerDrank +
                     '<p><br><span class="note">' + groupedBeers[i].date + '</span></p>' +
@@ -80,7 +126,7 @@
                 for (var j = 0; j < groupedBeers[i]["beers"].length; j++) {
                     for (var k = 0; k < groupedBeers[i]["beers"][j]["beers"].length; k++) {
                         beerDrank += '<div class="smallBox" style="background-image:url(\'' + "/images/thumbs/180/" + groupedBeers[i]["beers"][j]["beers"][k] + ".png" + '\'); background-size:cover;"></div>';
-                    }                    
+                    }
                 }
                 var beerTemplate = '<div class="box">' + beerDrank +
                     '<p><br><span class="note">' + groupedBeers[i].date + '</span></p>' +
@@ -90,7 +136,7 @@
             }*/
         }
 
-        fetchBeers();
+         fetchBeers();
     </script>
     <script>
         window.dataLayer = window.dataLayer || [];
