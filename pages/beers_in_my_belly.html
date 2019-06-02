@@ -107,36 +107,31 @@
         }
 
         function parseBeers(groupedBeers) {
+            var datedGroup = {};
+
             for (var i = 0; i < groupedBeers.length; i++) {
                 var beerDrank = '';
-                for (var j = 0; j < groupedBeers[i]["beers"].length; j++) {
-                    for (var k = 0; k < groupedBeers[i]["beers"][j]["beers"].length; k++) {
-                        beerDrank += '<div id="' + groupedBeers[i]["beers"][j]["beers"][k] + '" class="smallBox" style="background-image:url(\'' + "/images/thumbs/180/" + groupedBeers[i]["beers"][j]["beers"][k] + ".png" + '\'); background-size:cover;"></div>';
-                    }
-                }
-                /*var beerTemplate = '<div class="box">' + beerDrank +
-                    '<p><br><span class="note">' + groupedBeers[i].date + '</span></p>' +
-                    '</div > ';*/
+                if (datedGroup[groupedBeers[i].date.split('/')[0]] === undefined)
+                    datedGroup[groupedBeers[i].date.split('/')[0]] = [];
 
-                document.getElementById('beerinthebellydiv').innerHTML += beerDrank;
+                for (var j = 0; j < groupedBeers[i]["beers"].length; j++) {
+                    datedGroup[groupedBeers[i].date.split('/')[0]].push(groupedBeers[i]["beers"][j]["beers"]);
+                }
+
+                datedGroup[groupedBeers[i].date.split('/')[0]] = [].concat.apply([], datedGroup[groupedBeers[i].date.split('/')[0]]);
             }
 
-            /*for (var i = 0; i < groupedBeers.length; i++) {
-                var beerDrank = '';
-                for (var j = 0; j < groupedBeers[i]["beers"].length; j++) {
-                    for (var k = 0; k < groupedBeers[i]["beers"][j]["beers"].length; k++) {
-                        beerDrank += '<div class="smallBox" style="background-image:url(\'' + "/images/thumbs/180/" + groupedBeers[i]["beers"][j]["beers"][k] + ".png" + '\'); background-size:cover;"></div>';
-                    }
+            for (var year in datedGroup) {
+                var beerDrank = '<div class="parentBeerYear"><div class="yearOfBeer">' + year + '</div>';
+                for (var i = 0; i < datedGroup[year].length; i++) {
+                    beerDrank += '<div id="' + datedGroup[year][i] + '" class="smallBox" style="background-image:url(\'' + "/images/thumbs/180/" + datedGroup[year][i] + ".png" + '\'); background-size:cover; border-radius:50%;"></div>';
                 }
-                var beerTemplate = '<div class="box">' + beerDrank +
-                    '<p><br><span class="note">' + groupedBeers[i].date + '</span></p>' +
-                    '</div > ';
 
-                document.getElementById('beerinthebellydiv').innerHTML += beerTemplate;
-            }*/
+                document.getElementById('beerinthebellydiv').innerHTML += beerDrank + '</div>';
+            }
         }
 
-         fetchBeers();
+        fetchBeers();
     </script>
     <script>
         window.dataLayer = window.dataLayer || [];
