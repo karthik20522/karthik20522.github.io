@@ -1,0 +1,81 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Everyone meet Karthik</title>
+
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div style="width:100%; text-align: center;">
+                <a href="/"><img src="/images/0.jpg" style="border-radius: 50%;" /></a>
+            </div>
+            <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
+            <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
+            <p class="view" style="margin:0;"><a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a></p>
+            <p class="view" style="margin:0;"><a href="/pages/beers_in_my_belly.html" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a></p>
+            <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
+        </header>
+        <section>
+<h1>Event Viewer - Image Search</h1>
+<p>Oct, 2013</p>
+<!-- WRITE UR BLOG HERE-->
+            "Event Viewer" is an yet another attempt to visualize images similar to my <a href="http://kufli.blogspot.com/2012/11/research-timeline-how-did-i-build-this.html">{re}Search Timeline</a> project.
+<br>
+            Demo at : <a href="http://karthik20522.github.io/EventViewer">http://karthik20522.github.io/EventViewer</a>
+<br><br>
+<a href="http://1.bp.blogspot.com/-QGEwRCWDC2U/UleAwNCw_AI/AAAAAAAAEBg/5vuwuiKGx-U/s1600/eventViewer_new.png" imageanchor="1"><img border="0" src="http://1.bp.blogspot.com/-QGEwRCWDC2U/UleAwNCw_AI/AAAAAAAAEBg/5vuwuiKGx-U/s480/eventViewer_new.png" /></a>
+
+<br><br>
+
+            The whole point of this proof-of-concept project is to visualize the images from the perspective of the events rather than just displaying an grid of images. For example, a search on GettyImages.com website basically displays a list of images in a tabular fashion which provides no sense of association between individual images being displayed. But having them grouped together as part of an event provides a sense of association and correlation between images.
+
+<br><br>
+            Displaying images is always a tricky business. A dominant color filter technique could probably provide an alternate way of scanning thru images as user might be more interested in images of particular color than the fine details of an image.
+
+<br><br>
+            From a technology standpoint for building this project was nothing special.
+<ul>
+    <li>ASP.NET MVC 4 - Razor</li>
+    <li>Amazon SQS - for event scrapping from GettyImages</li>
+    <li>Connect API for event and image detail lookup</li>
+    <li>MongoDB</li>
+    <li><a href="https://github.com/karthik20522/DominantBackgroundColor">Dominant Color Extraction</a></li>
+</ul>
+
+            Source code at: <a href="https://github.com/karthik20522/EventViewer">https://github.com/karthik20522/EventViewer</a><!--*********************FOOTER'ISH************************-->
+<div id="graphcomment"></div>
+<script type="text/javascript">
+    window.gc_params = {
+        graphcomment_id: 'Karthik-Github',
+        fixed_header_height: 0,
+    };
+    (function () {
+        var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+        gc.src = 'https://graphcomment.com/js/integration.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
+    })();
+</script>
+
+</section>
+<footer></footer>
+    </div>
+<script src="/javascripts/scale.fix.js"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-140795658-1');
+</script>
+</body>
+</html>

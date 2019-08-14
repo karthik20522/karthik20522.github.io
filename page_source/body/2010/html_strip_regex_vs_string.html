@@ -1,0 +1,17 @@
+﻿<h1>HTML Strip [ RegEx vs String ]</h1>
+<p>Aug, 2014</p>
+            Since I work on a extremely user driven content web site, I have to make sure that there is no user inputted HTML on the page that break the CSS or the layout of the page. So we had to build a HTML Stripping functionality to strip out the HTML on the fly. We had initially used the obvious RegEx technique to strip out the HTML. But as the traffic increased the page performance/page load time started increasing. So we decided to enable trace on the page to determine the most expensive operation. So while re factoring the code we realized that the HTML stripping functionality was adding on the page load time.
+<br />
+<br />So while digging around the internet to find a optimized stripping code, I came across two site. 1) DotNet Pearls [http://dotnetperls.com/remove-html-tags] and 2) StackOverflow [http://stackoverflow.com/questions/473087/string-benchmarks-in-c-refactoring-for-speed-maintainability].
+<br />
+<br />Both these sites spoke about string operations vs RegEx and I decided to implement the technique mentioned on their site and following is the result from Page.Trace
+<br />
+<br />
+<a onblur="try {parent.deselectBloggerImageGracefully();} catch(e) {}" href="http://2.bp.blogspot.com/_x9-hQNFipOw/SjU99a-948I/AAAAAAAAA9A/w24WKCtOp1Y/s1600-h/ASP_NET_REGEX_HTML_STRIP.jpg"><img style="cursor: pointer; width: 400px; height: 315px;" src="http://2.bp.blogspot.com/_x9-hQNFipOw/SjU99a-948I/AAAAAAAAA9A/w24WKCtOp1Y/s400/ASP_NET_REGEX_HTML_STRIP.jpg" alt="" id="BLOGGER_PHOTO_ID_5347248257997071298" border="0" /></a>
+<br />
+<br />
+<br />As you can see from above data that there is a huge speed difference (thou it�s in milliseconds factor!!) but still much faster and there are fewer objects (string) used which is good for memory usage.
+<br />
+<br />Though the original string index code worked wonders, but since we are optimizing code for performance (speed and memory usage) we can re-factor the code to use stringbuilder (better memory management).
+<br />
+<br /><code style="font-size:12px;"><pre><br />private static string StripHTML(string pSource)<br />{<br /> char[] ca = pSource.ToCharArray();<br /> StringBuilder sb = new StringBuilder((pSource.Length * 5 / 4));<br /> bool inside = false;<br />            <br /> for (int i = 0; i <= ca.Length - 1; i++)         <br /> {             <br />  char oTempChar = ca[i];<br />  if (oTempChar == '<'){ inside = true; continue; }<br />  if (oTempChar == '>'){ inside = false; continue; }<br />  if (!inside) { sb.Append(oTempChar); }<br /> }<br /><br /> return sb.ToString();<br />}<br /></pre></code>

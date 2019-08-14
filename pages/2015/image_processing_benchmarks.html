@@ -1,0 +1,113 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Everyone meet Karthik</title>
+
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div style="width:100%; text-align: center;">
+                <a href="/"><img src="/images/0.jpg" style="border-radius: 50%;" /></a>
+            </div>
+            <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
+            <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
+            <p class="view" style="margin:0;"><a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a></p>
+            <p class="view" style="margin:0;"><a href="/pages/beers_in_my_belly.html" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a></p>
+            <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
+        </header>
+        <section>
+<h1>Image processing Benchmarks</h1>
+<p>Aug, 2015</p>
+<br>
+            For this benchmark the following most widely used image processing libraries were considered.
+<br><br>
+<ul>
+    <li>imagemagick [http://www.imagemagick.org/script/index.php]</li>
+    <li>graphicsmagick [http://www.graphicsmagick.org/]</li>
+    <li>epeg [https://github.com/mattes/epeg]</li>
+    <li>opencv [http://opencv.org/]</li>
+    <li>vips</li>
+</ul>
+<h4>Test environment</h4>
+<ul>
+    <li>
+        Memory: 5.8 GB
+    </li>
+    <li>
+        Processor: Intel Xeon CPU W3530 @ 2.80Ghz x 4 Core
+    </li>
+    <li>
+        OS: Ubuntu 13.04 / 64 bit
+    </li>
+    <li>
+        Graphics: Gallium 0.4 on AMD Redwood
+    </li>
+</ul>
+<code style="font-size:12px;">
+    <pre>
+Original Image - 350KB - 3168x3168 pixels | Resized to 640x480
+imagemagick x 3.69 ops/sec (+/-) 2.27% (23 runs sampled)
+gm x 5.03 ops/sec (+/-) 0.68% (29 runs sampled)
+opencv x 19.18 ops/sec (+/-) 1.27% (49 runs sampled)
+epeg x 35.49 ops/sec (+/-) 1.16% (60 runs sampled)
+vips x 40.62 ops/sec (+/-) 5.01% (69 runs sampled)
+
+Original Image - 1 MB - 3000x2000 | Resized to 640x480
+imagemagick x 4.97 ops/sec (+/-) 2.35% (29 runs sampled)
+gm x 5.00 ops/sec (+/-) 0.54% (29 runs sampled)
+opencv x 15.15 ops/sec (+/-) 1.36% (41 runs sampled)
+epeg x 27.47 ops/sec (+/-) 0.98% (69 runs sampled)
+vips x 36.26 ops/sec (+/-) 6.05% (89 runs sampled)
+
+Original Image - 15MB - 5382x6254 pixels | Resized to 640x480
+imagemagick x 0.87 ops/sec (+/-) 1.20% (9 runs sampled)
+gm x 0.87 ops/sec (+/-) 0.66% (9 runs sampled)
+vips x 1.74 ops/sec (+/-) 0.43% (13 runs sampled)
+opencv x 1.88 ops/sec (+/-) 4.09% (9 runs sampled)
+epeg x 3.87 ops/sec (+/-) 0.78% (14 runs sampled)</pre>
+</code>
+<br>
+            From the above results, VIPS seems to be the fastest among all followed by epeg and opencv.
+            But one thing to consider is the features provided vs performance. Libraries such as VIPS
+            and EPEG are more optimized towards image resizing and image cropping while opencv,
+            graphicsmagick and imagemagick provides a slew of image processing and analysis features.
+<br><br>
+
+<h4>Source code for benchmarking: </h4>
+<script src="https://gist.github.com/karthik20522/7605083.js"></script><!--*********************FOOTER'ISH************************-->
+<div id="graphcomment"></div>
+<script type="text/javascript">
+    window.gc_params = {
+        graphcomment_id: 'Karthik-Github',
+        fixed_header_height: 0,
+    };
+    (function () {
+        var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+        gc.src = 'https://graphcomment.com/js/integration.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
+    })();
+</script>
+
+</section>
+<footer></footer>
+    </div>
+<script src="/javascripts/scale.fix.js"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-140795658-1');
+</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Everyone meet Karthik</title>
+
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div style="width:100%; text-align: center;">
+                <a href="/"><img src="/images/0.jpg" style="border-radius: 50%;" /></a>
+            </div>
+            <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
+            <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
+            <p class="view" style="margin:0;"><a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a></p>
+            <p class="view" style="margin:0;"><a href="/pages/beers_in_my_belly.html" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a></p>
+            <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
+        </header>
+        <section>
+<h1>ASP.NET Least Recently Used (LRU) Caching c#</h1>
+<p>Jan, 2010</p>
+            I would probably assume that anyone who is or has been a web-developer would have at some point used ASP.NET caching feature. A very powerful but yet so easily implementable. As a web-developer one fine day I decided to start caching all common objects on the website such as Auto-complete data, Rewritten urls and other database intensive objects/functionality. Though it worked fine and helped us reduce our DB load by more than 30-40% but unfortunately all these 1000's of objects started building up private bytes (memory) on the server and ended up recycling IIS (App recycle) more often than before (mainly because of out-of-memory exception). Just to confirm the extent of memory build-up I wrote a simple CacheViewer handler and after 20mins of data there were more than 20K objects in the server memory being severed with a very long TTL (time to live)!! Following is a screen shot of the Cache size after 20 mins (extracted Memory dump using DebugDiag and used Tess's DotNetMemoryAnalysis script to extract the information)
+<br />
+<br />
+<a onblur="try {parent.deselectBloggerImageGracefully();} catch(e) {}" href="http://1.bp.blogspot.com/_x9-hQNFipOw/SjV-tFzVHtI/AAAAAAAAA9Y/65-W1nh8BNU/s1600-h/ASP_NET_CACHE_SIZE.jpg"><img style="cursor: pointer; width: 400px; height: 66px;" src="http://1.bp.blogspot.com/_x9-hQNFipOw/SjV-tFzVHtI/AAAAAAAAA9Y/65-W1nh8BNU/s400/ASP_NET_CACHE_SIZE.jpg" alt="" id="BLOGGER_PHOTO_ID_5347319445689016018" border="0" /></a>
+<br />
+<br />
+<br />In order to solve this caching problem, I had to implement LRU (Least Recently Used) based caching to cache only most used/accessed data. Though there were many implementation of LRU Caching online, but it just seemed a little complicated for such simple functionality. Following is the source code of my implementation. To my surprise it works like a charm :). So basically the way it works is that there is counter for each key in the Cache and the counter is incremented when the particular object/key is requested. Incase if the LRULimit is reached the least accessed object is replaced by the new object. Following is a screen shot of what the LRUCache looks like:
+<br />
+<br />
+<a onblur="try {parent.deselectBloggerImageGracefully();} catch(e) {}" href="http://4.bp.blogspot.com/_x9-hQNFipOw/SjWDx5nptyI/AAAAAAAAA9g/o5uDFr4Vros/s1600-h/ASP_NET_CACHE_LRU_DATA.jpg"><img style="cursor: pointer; width: 400px; height: 74px;" src="http://4.bp.blogspot.com/_x9-hQNFipOw/SjWDx5nptyI/AAAAAAAAA9g/o5uDFr4Vros/s400/ASP_NET_CACHE_LRU_DATA.jpg" alt="" id="BLOGGER_PHOTO_ID_5347325025876293410" border="0" /></a>
+<br />
+<br />
+<br />Syntax:
+<br />[Add] LRUCache.Add("keyName", object);
+<br />[Add with TTL] LRUCache.Add("keyName",object, 100);
+<br />[Get Cache] object Value = LRUCache.Get("keyName");
+<br />[Delete from Cache] LRUCache.Clear("keyName");
+<br />
+<br /><code style="font-size:12px;"><pre><br />      public static class LRUCache<br />    {<br />        private static object CacheLocker = new object();<br />        //Holds the Key and the number of hits. <br />        private static Dictionary<string, int> CacheDictionary = new Dictionary<string, int>();<br /><br />        private static int CacheTimer = 180; //Cache Time<br />        private static int LRULimit = 10000; //Only Cache 10000 Objects<br /><br />      <br />        /// Insert value into the cache<br />        public static void Add(string pKey, object o)<br />        {<br />            Add(pKey, o, CacheTimer);<br />        }<br /><br />      <br />        /// Insert value into the cache<br />        public static void Add(string pKey, object o, int pCacheTimer)<br />        {           <br />            if (o != null) <br />            {<br />                lock (CacheLocker) <br />                {<br />                    //make sure the key is not added if already exists<br />                    if (HttpRuntime.Cache[pKey] == null) <br />                    {<br />                        HttpRuntime.Cache.Insert(pKey, o, null, DateTime.Now.AddMinutes(pCacheTimer), System.Web.Caching.Cache.NoSlidingExpiration, System.Web.Caching.CacheItemPriority.Normal, new CacheItemRemovedCallback(ItemRemovedCallback));<br />                        AddToCacheDictionary(pKey);<br />                    }<br />                }<br />            }<br />        }<br /><br />      <br />        /// Remove Key from Dictionary when the Cache Expires <br />        public static void ItemRemovedCallback(String key, object value, CacheItemRemovedReason removedReason)<br />        {<br />            lock (CacheLocker) {<br />                //Remove from Dictionary once the Cache Expires<br />                if (CacheDictionary.ContainsKey(key)) { CacheDictionary.Remove(key); }<br />            }<br />        }<br /><br /><br />      <br />        /// get Total cache hits for that pKey <br />        public static int GetLRUCount(string pKey)<br />        {<br />            if (CacheDictionary.ContainsKey(pKey)) <br />            {<br />                return CacheDictionary[pKey];<br />            }<br />            return -1;<br />        }<br /><br />      <br />        /// Add to Dictionary <br />        private static void AddToCacheDictionary(string pKey)<br />        {<br />            try <br />            {<br />                //remove least accessed object if the count exceded.<br />                if (CacheDictionary.Count > LRULimit) { Clear(GetLeastAccessedObject()); }<br /><br />                //Only add if the object not already exists in dictionary <br />                if (!CacheDictionary.ContainsKey(pKey)) { CacheDictionary.Add(pKey, 1); }<br />            }<br />            catch (Exception ex) <br />            {<br />                throw ex;<br />            }<br />        }<br /><br />      <br />        /// Get pKey from Dictionary which was least accessed <br />        private static string GetLeastAccessedObject()<br />        {<br />            List<string> keys = new List<string>(CacheDictionary.Keys);<br /><br />            int oTempVal = CacheDictionary[keys[0]];<br />            string oTempKey = keys[0];<br /><br />            for (int i = 0; i < keys.Count; i++) <br />            {<br />                if (CacheDictionary[keys[i]] < oTempVal) <br />                {<br />                    oTempKey = keys[i];<br />                    oTempVal = CacheDictionary[keys[i]];<br /><br />                    if (oTempVal == 1) break; //Stop the loop if any object has only one hit. Help in reducing the iteration.<br />                }<br />            }<br /><br />            return oTempKey;<br />        }<br /><br />      <br />        /// Remove item from cache <br />        public static void Clear(string pKey)<br />        {<br />            //make sure the object did not expire.<br />            if (HttpRuntime.Cache[pKey] != null) { HttpRuntime.Cache.Remove(pKey); }<br /><br />            //remove from Dictionary<br />            if (CacheDictionary.ContainsKey(pKey)) { CacheDictionary.Remove(pKey); }<br />        }<br /><br />      <br />        /// Check for item in cache <br />        public static bool Exists(string pKey)<br />        {<br />            if (HttpRuntime.Cache[pKey] != null)<br />            {<br />                if (CacheDictionary.ContainsKey(pKey))<br />                {<br />                    CacheDictionary[pKey] = CacheDictionary[pKey] + 1; //increment cache hits<br />                }<br />                return true;<br />            }<br />            return false;<br />        }<br /><br />      <br />        /// Get Cached item <br />        public static object Get(string pKey)<br />        {<br />            if (Exists(pKey))<br />            {<br />                return HttpRuntime.Cache[pKey];<br />            }<br /><br />            return null;<br />        }<br />    }<br /></pre></code>
+<!--*********************FOOTER'ISH************************-->
+<div id="graphcomment"></div>
+<script type="text/javascript">
+    window.gc_params = {
+        graphcomment_id: 'Karthik-Github',
+        fixed_header_height: 0,
+    };
+    (function () {
+        var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+        gc.src = 'https://graphcomment.com/js/integration.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
+    })();
+</script>
+
+</section>
+<footer></footer>
+    </div>
+<script src="/javascripts/scale.fix.js"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-140795658-1');
+</script>
+</body>
+</html>

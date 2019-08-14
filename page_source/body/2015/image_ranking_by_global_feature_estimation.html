@@ -1,0 +1,133 @@
+<h1>Image Ranking by global feature estimation</h1>
+<p>Feb, 2015</p>
+            Having an automated image ranking process would be very beneficial to companies such as <a href="http://500px.com">500px</a> or <a href="http://gettyimages.com">Gettyimages </a>where 1000's of images are ingested/uploaded every day and are traditionally ranked manually by an editor or by crowdsourcing. This human intervention can be temporarily avoided if images can be ranked by estimating it's quality.
+<br><br>
+            To build an image quality estimator, following image quality properties were used for this proof-of-concept:
+<ul>
+    <li>
+        Blur Estimation:<br>
+        &nbsp;&nbsp;&nbsp;Basically, this technique estimates the proportion of blurred pixels. Results are in the range 0-1. A higher number implies a sharper image. <br>
+        Example code: <a href="https://github.com/tokenrove/blur-detection">Blur-detection</a>
+    </li>
+    <li>
+        Sharpness:<br>
+        &nbsp;&nbsp;&nbsp;Sharpness measures the clarity and level of detail of an image.<br>
+        Example code: <a href="http://opencv-users.1802565.n2.nabble.com/Estimation-of-Image-Sharpness-td6052239.html">Estimation-of-Image-Sharpness</a>
+    </li>
+    <li>
+        Colorfulness: <br>
+        &nbsp;&nbsp;&nbsp;Though there is no real way to estimate the colorfulness of an image but there are various algorithms to measure the quality of image based on compression. One such algorithm is from Hasler and Susstruck's colorfulness metrics. <a href="http://infoscience.epfl.ch/record/33994/files/HaslerS03.pdf?version=1">Paper</a>
+    </li>
+    <li>
+        Naturalness: <br>
+        &nbsp;&nbsp;&nbsp;Naturalness is basically a single valued summary of how natural the colours in an image are. One such algorithm is Color Naturalness index (CNI) defined by Huang, Qiao & Wu. <a href="http://cilab.knu.ac.kr/seminar/Seminar/2007/20070804%20Natural%20color%20image%20enhancement%20and%20evaluation%20algorithm%20based%20on%20human%20visual%20system.pdf">Paper</a>
+    </li>
+    <li>
+        Image Contrast:<br>
+        &nbsp;&nbsp;&nbsp;Estimating the contrast of an image.
+    </li>
+    <li>
+        Colour Contrast:<br>
+        &nbsp;&nbsp;&nbsp;This is basically weighted average of the average colour difference of all the segments in the image.
+    </li>
+    <li>
+        Brightness: <br>
+        &nbsp;&nbsp;&nbsp;Extract the average brightness of an image.
+    </li>
+</ul>
+
+            In this following examples, I have 3 ranks. Rank 1 = Good quality, Rank 2 = Medium and Rank 3 = Bad Quality images. Following is a snippet of my rank calculation.
+<br /><br />
+<code style="font-size:12px;">
+    <pre>
+//Blur range: 0 to 1, where higher the value less blur the image is
+//Sharpness range: 0 to 1, higher the better
+//Color range: 0 to 0.5
+//Naturalness range:0 to 1
+val imageRank = (blurValue.get.value + sharpnessValue.get.value + colorValue.get.value + naturalnessValue.get.value) match {
+    case t if t >= 2 => 1
+    case t if t >= 1 && t < 2 => 2
+    case _ => 3
+}
+            </pre>
+</code>
+
+<br>
+<table>
+    <tr><td colspan="3"><b>Image Rank 1 Examples</b></td></tr>
+    <tr>
+        <td><img width="230px" src="http://ppcdn.500px.org/68047517/b0f701bdc2dd313f0f4742aec4d236b031877a28/3.jpg" /></td>
+        <td><img width="230px" src="http://ppcdn.500px.org/68051789/088a642837c8f7075cb8dc8f1f4f0f19f122ab1f/3.jpg" /></td>
+        <td><img width="230px" src="http://ppcdn.500px.org/68040551/9d3e5415700c31dc38871e7ed8b2fee13da4ebff/3.jpg" /></td>
+    </tr>
+    <tr>
+        <td>
+            "blur":0.9660969387755102<br>
+            "sharpness":0.5067756918923018<br>
+            "color":0.1462474560577043<br>
+            "quality":0.8798513615119794<br>
+            "contrast":0.08234799394638759<br>
+            "colorContrast":8.328080618896797<br>
+            "brightness":0.14739056340426107
+        </td>
+        <td>
+            "blur":0.966530612244898<br>
+            "sharpness":0.49986904977578045<br>
+            "color":0.19059606130699966<br>
+            "quality":0.8476687344507642<br>
+            "contrast":0.08834899629937157<br>
+            "colorContrast":25.384664271394108<br>
+            "brightness":0.24995158193079098<br>
+        </td>
+        <td>
+
+            "blur":0.7220025510204081<br>
+            "sharpness":0.15089643141301262<br>
+            "color":0.4003952223119604<br>
+            "quality":0.9609951671164367<br>
+            "contrast":0.2292792429036637<br>
+            "colorContrast":32.053295457355276<br>
+            "brightness":0.4115245849574555<br>
+        </td>
+    </tr>
+
+    <tr><td colspan="3"><b>Image Rank 2 Examples</b></td></tr>
+    <tr>
+        <td><img width="230px" src="http://ppcdn.500px.org/68054375/3fe15ce1af0a413e54d3f6f71dab4c3d69f00efd/3.jpg" /></td>
+        <td><img width="230px" src="http://ppcdn.500px.org/57327734/b406167f2b1ca7e929654680c1c4cde2e9583ab6/3.jpg" /></td>
+        <td><img width="230px" src="http://ppcdn.500px.org/5392284/6dd034b976749d9bee7ffc119e52ea169c7e34b6/3.jpg" /></td>
+    </tr>
+    <tr>
+        <td>
+            "blur":0.8221428571428572<br>
+            "sharpness":0.15935783910386503<br>
+            "color":0.04443692154503701<br>
+            "quality":0.5085070823398357<br>
+            "contrast":0.14823618660855284<br>
+            "colorContrast":26.781796490365295<br>
+            "brightness":0.27380289202677777<br>
+        </td>
+        <td>
+            "blur":0.9705484693877551<br>
+            "sharpness":0.41994123003434913<br>
+            "color":0.19996393727671855<br>
+            "quality":0.3153617863913573<br>
+            "contrast":0.10908353919667178<br>
+            "colorContrast":43.63807505087183<br>
+            "brightness":0.18082135350839887<br>
+        <td>
+            "blur":0.8633290816326531<br>
+            "sharpness":0.2271008743069167<br>
+            "color":0.12817043260208896<br>
+            "quality":0.6680113666484762<br>
+            "contrast":0.05242860949574584<br>
+            "colorContrast":44.47249174965709<br>
+            "brightness":0.222476585047196<br>
+        </td>
+    </tr>
+</table>
+
+<br>
+            From the above results, an simple image ranking system can be automatically performed by estimating the global image features values. More complex algorithms can be used to further improve the image quality estimation process such as Bokeh Estimator which can be used to detect background blur and camera focus[<a href="http://www.bobatkins.com/photography/technical/bokeh_background_blur.html">link</a>].<br>
+
+<i>Note: source code to follow soon at my <a href="http://github.com/karthik20522">github</a></i>

@@ -1,0 +1,28 @@
+<h1>AKKA.NET Actor Creation - Typed, Untyped, Receive Actor</h1>
+
+            There are three potential ways of creating Actors using Akka.net (v0.6.2).
+
+<br><br>
+            1. Using <b>Receive Actor</b>: In order to use the Receive() method inside an actor the actor must inherit from ReceiveActor. All message handling must be part of the constructor. Please note that handler matches, the one that appears first is used. More info <a href="http://akkadotnet.github.io/wiki/ReceiveActor">Akka.net documentation</a>.
+
+<br><br>
+            2. Using <b>Typed Actor</b>: In typed actor, you explicitly provide the message types that the actor would receive. This is very helpful in code readability as you are ware if type of message that the actor receives. For receive message, you need to define a overloaded "Handle" function with message types.
+
+<br><br>
+            3. Using <b>Untyped Actor</b>: Untyped Actor, similar to Receive actor requires to pattern match the message type. For using Untyped actor, the OnReceive function needs to be overridden.
+<br /><br />
+<script src="https://gist.github.com/karthik20522/c5e54ff3f88fa1456a1acd22f68b074a.js"></script>
+
+            Handling unknown messages can be done 2 ways:
+<code style="font-size:12px;">
+    <pre>
+//Using Any:
+Receive < string > (s => Console.WriteLine("Received string: " + ) s);
+ReceiveAny(o => Console.WriteLine("Received object: " + o);
+
+//overriding Unhandled
+protected override void Unhandled(object message) {
+//Do something with the message.
+}
+            </pre>
+</code>

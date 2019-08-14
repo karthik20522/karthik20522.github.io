@@ -1,0 +1,136 @@
+<h1>Dominant Background color extraction in Images</h1>
+<p>Aug, 2013</p>
+            Following is a continuation to my github project at <a href="https://github.com/karthik20522/DominantBackgroundColor">https://github.com/karthik20522/DominantBackgroundColor</a>
+<br>
+<br>
+            The problem of background color extraction hit me when I was trying to dynamically
+            set background color based on dominant color of the image which usually is background color. Part of my solution was to average out the colors and perform a histogram equalization to extract a dominant color.
+
+<br><br>
+
+            Since there are 255 x 255 x 255 possible combinations of colors it would more useful to reduce the result to more limited color space. For example if you want to provide filtering or sorting functionality of images with particular color it would be more user friendly to provide a limited/controlled set of color options instead of displaying 100's or 1000's of colors for the user to pick! In this project I used monochrome values of rainbow colors as my closest matching color subset for matching purposes.
+<br><br>
+            Following is some examples of how the code performed:
+
+<br>
+
+<table>
+    <tr>
+        <td>
+            <a href="http://cache4.asset-cache.net/xt/157493052.jpg?v=1&g=fs2|0|editorial116|93|052&s=1" imageanchor="1" style=""><img border="0" height="113" width="170" src="http://cache4.asset-cache.net/xt/157493052.jpg?v=1&g=fs2|0|editorial116|93|052&s=1" /></a>
+        </td>
+        <td>
+            <a href="http://cache4.asset-cache.net/xt/157326295.jpg?v=1&g=fs2|0|editorial116|26|295&s=1" imageanchor="1" style=""><img border="0" height="120" width="170" src="http://cache4.asset-cache.net/xt/157326295.jpg?v=1&g=fs2|0|editorial116|26|295&s=1" /></a>
+        </td>
+        <td>
+            <a href="http://cache1.asset-cache.net/xt/157319706.jpg?v=1&g=fs2|0|editorial116|19|706&s=1" imageanchor="1" style=""><img border="0" height="119" width="170" src="http://cache1.asset-cache.net/xt/157319706.jpg?v=1&g=fs2|0|editorial116|19|706&s=1" /></a>
+        </td>
+        <td>
+            <a href="http://cache1.asset-cache.net/xt/157337839.jpg?v=1&g=fs2|0|editorial116|37|839&s=1" imageanchor="1" style=""><img border="0" height="108" width="170" src="http://cache1.asset-cache.net/xt/157337839.jpg?v=1&g=fs2|0|editorial116|37|839&s=1" /></a>
+        </td>
+    </tr>
+    <tr>
+        <td style='background-color:#c0eefb; height:15px; text-align:center;'>
+            Result
+        </td>
+        <td style='background-color:#539c65; height:15px; text-align:center;'>
+            Result
+        </td>
+        <td style='background-color:#a2a2a2; height:15px; text-align:center;'>
+            Result
+        </td>
+        <td style='background-color:#28232A; height:15px; text-align:center;color:white;'>
+            Result
+        </td>
+    </tr>
+</table>
+<br><br>
+            There are two main functions in the code that can be utilized:
+<br>
+<br>
+<b>1. To Extract the most dominant color in the image:</b>
+<code style="font-size:12px;">
+    <pre>
+   //This function would return the most dominant color in the image. The examples above are the result of this function
+   var dominantHTMLColor = await new DominantColor().GetDominantColor(imageURI);
+</pre>
+</code>
+<br>
+<b>2. Convert the dominantHTMLColor to a smaller subset result</b>
+<code style="font-size:12px;">
+    <pre>
+   //This function would return the closest match to rainbow colors
+    var closestHTMLColor = _dominantColor.GetClosestColor(dominantHTMLColor);
+</pre>
+</code>
+<br>
+            Examples of the above Subset/Closest match code:
+<br>
+<table>
+    <tr>
+        <td>
+            <a href="http://cache4.asset-cache.net/xt/157493052.jpg?v=1&g=fs2|0|editorial116|93|052&s=1" imageanchor="1" style=""><img border="0" height="113" width="170" src="http://cache4.asset-cache.net/xt/157493052.jpg?v=1&g=fs2|0|editorial116|93|052&s=1" /></a>
+        </td>
+        <td>
+            <a href="http://cache4.asset-cache.net/xt/157326295.jpg?v=1&g=fs2|0|editorial116|26|295&s=1" imageanchor="1" style=""><img border="0" height="120" width="170" src="http://cache4.asset-cache.net/xt/157326295.jpg?v=1&g=fs2|0|editorial116|26|295&s=1" /></a>
+        </td>
+        <td>
+            <a href="http://cache1.asset-cache.net/xt/157319706.jpg?v=1&g=fs2|0|editorial116|19|706&s=1" imageanchor="1" style=""><img border="0" height="119" width="170" src="http://cache1.asset-cache.net/xt/157319706.jpg?v=1&g=fs2|0|editorial116|19|706&s=1" /></a>
+        </td>
+        <td>
+            <a href="http://cache1.asset-cache.net/xt/157337839.jpg?v=1&g=fs2|0|editorial116|37|839&s=1" imageanchor="1" style=""><img border="0" height="108" width="170" src="http://cache1.asset-cache.net/xt/157337839.jpg?v=1&g=fs2|0|editorial116|37|839&s=1" /></a>
+        </td>
+    </tr>
+    <tr>
+        <td style='background-color:#c0eefb; height:15px; text-align:center;'>
+            Actual
+        </td>
+        <td style='background-color:#539c65; height:15px; text-align:center;'>
+            Actual
+        </td>
+        <td style='background-color:#a2a2a2; height:15px; text-align:center;'>
+            Actual
+        </td>
+        <td style='background-color:#28232A; height:15px; text-align:center;color:white;'>
+            Actual
+        </td>
+    </tr>
+    </tr>
+    <tr>
+        <td style='background-color:#ccffff; height:15px; text-align:center;'>
+            Subset
+        </td>
+        <td style='background-color:#339966; height:15px; text-align:center;'>
+            Subset
+        </td>
+        <td style='background-color:#afafaf; height:15px; text-align:center;'>
+            Subset
+        </td>
+        <td style='background-color:#414141; height:15px; text-align:center;color:white;'>
+            Subset
+        </td>
+    </tr>
+</table>
+
+<br>For the most part the results are very close to the original dominant color. The whole idea was to match the resulting dominant color to one of the following rainbow colors:
+<br><br>
+<div class="separator" style="clear: both; text-align: center;">
+    <a href="http://3.bp.blogspot.com/-HXBCCLoD2Rw/UMEM0NqbVTI/AAAAAAAADBQ/I8ROFPVcyIU/s1600/rainbowColors.png" imageanchor="1" style="margin-left:1em; margin-right:1em"><img border="0" height="255" width="257" src="http://3.bp.blogspot.com/-HXBCCLoD2Rw/UMEM0NqbVTI/AAAAAAAADBQ/I8ROFPVcyIU/s400/rainbowColors.png" /></a>
+</div>
+
+<br><br>
+            But what if you want the code to return a list of top 5 colors. Well, you can modify the code as per your requirement by making this simple change to the linq query (which is currently set to pick the top color):<br>
+<code style="font-size:12px;">
+    <pre>
+var colorsWithCount = GetPixels(bitmap)
+    .GroupBy(color => color)
+    .Select(grp =>
+        new
+        {
+            Color = grp.Key,
+            Count = grp.Count()
+        })
+    .OrderByDescending(x => x.Count)
+    .Take(5); //take top 5 color
+</pre>
+</code>

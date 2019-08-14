@@ -1,0 +1,83 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Everyone meet Karthik</title>
+
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div style="width:100%; text-align: center;">
+                <a href="/"><img src="/images/0.jpg" style="border-radius: 50%;" /></a>
+            </div>
+            <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
+            <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
+            <p class="view" style="margin:0;"><a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a></p>
+            <p class="view" style="margin:0;"><a href="/pages/beers_in_my_belly.html" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a></p>
+            <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
+        </header>
+        <section>
+<h1>Calling SOAP Service in Scala</h1>
+<p>March, 2015</p>
+
+            Scala out of the box has limited capability to call SOAP service neither does libraries such as http-dispatch or spray client. SOAP service in reality is just a xml request/response
+            service and lo and behold, XML is a first class citizen in Scala. <br> <br>
+            One of the widely used library is <a href="http://scalaxb.org/">ScalaXB</a> which helps in generating case classes given a xsd or wsdl file.
+            Scalaxb is an XML data-binding tool for Scala that supports W3C XML Schema (xsd) and Web Services Description Language (wsdl) as the input file.
+            This is great but it's quite hard to maintain and the code readability goes down the drain as the code is dynamically generated. For example,
+            the following screen shot is what scalaxb generates when either a wsdl or xsd is provided
+<br>
+<a href="http://1.bp.blogspot.com/-0k2lecSMhbg/VXyT7-wuwWI/AAAAAAAAEO8/nGv2Yp4fu2Y/s1600/scalaxb.JPG" imageanchor="1"><img border="0" src="http://1.bp.blogspot.com/-0k2lecSMhbg/VXyT7-wuwWI/AAAAAAAAEO8/nGv2Yp4fu2Y/s200/scalaxb.JPG" /></a>
+<br>
+<br>
+            But what we really need is a trivial way to call a webservice using our existing http clients. Following is one way of doing so.
+            In this below example, i am calling a service that returns back a list of keywords given a list of keywordId's.
+<br><br>
+
+<script src="https://gist.github.com/karthik20522/efed2e48b3a69132f7e76b7824112730.js"></script>
+
+<br>
+            In the above script, all that i am doing is constructing the soap request headers manually and performing a POST operation. There are couple of things to be noted:
+<ul>
+    <li>"SOAPAction" header is manually added to let the service know which service operation it is intended for</li>
+    <li>Setting the charset to UTF-8 and removing unicode characters "[^\\x20-\\x7e]"</li>
+    <li>Removing the unicode characters are necessary as scala fails to parse the response. This mostly seems to happens when calling .NET WCF services</li>
+</ul>
+<i>GetKeywordDetailsRequest</i> is a class that has the input parameters and has a function that generates the formatted xml for the soap request
+<br /><br />
+<script src="https://gist.github.com/karthik20522/bb3c7d984a51e88eec248619890c9c01.js"></script><!--*********************FOOTER'ISH************************-->
+<div id="graphcomment"></div>
+<script type="text/javascript">
+    window.gc_params = {
+        graphcomment_id: 'Karthik-Github',
+        fixed_header_height: 0,
+    };
+    (function () {
+        var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+        gc.src = 'https://graphcomment.com/js/integration.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
+    })();
+</script>
+
+</section>
+<footer></footer>
+    </div>
+<script src="/javascripts/scale.fix.js"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-140795658-1');
+</script>
+</body>
+</html>

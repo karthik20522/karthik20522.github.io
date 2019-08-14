@@ -1,0 +1,248 @@
+<h1>Elasticsearch - Dynamic Data Mapping</h1>
+<p>Sep, 2014</p>
+            Data in Elasticsearch can be indexed without providing any information about it's content as ES accepts dynamic properties and ES detects if the property value is a string, integer, datetime, boolean etc. In this article, lets work on getting dynamic mapping setup the right way along with some commonly performed search operations.
+
+<br><br>
+
+            To start with a simple example. Lets consider the following object:
+
+
+<code style="font-size:12px;">
+    <pre>            
+$ curl -XPOST http://localhost:9200/keywords/keyword/61669 -d
+'{
+    "keywordId": 61669,
+    "keywordText": "Massaging",
+    "keywordType": "Submitted"
+}'
+</pre>
+</code>
+
+
+            Given the above Json blob and indexing into the elasticsearch would result in the following mapping:
+
+<code style="font-size:12px;">
+    <pre>
+            
+{
+  "keywords": {
+    "mappings": {
+      "keyword": {
+        "properties": {
+          "keywordId": {
+            "type": "long"
+          },
+          "keywordText": {
+            "type": "string"
+          },
+          "keywordType": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
+</pre>
+</code>
+
+            This is great that Elasticsearch automatically detected id to be long and text & type to be a string. But if you look carefully, the keywordText and KeywordType are set to default type of "analyzed". This means that those two fields are now available for partial text search. But I want keywordType to be "not_analyzed" as users would never partial text search it. To overcome this but preserve the dynamic nature of this index, we can create a Keywords Index with mapping provided for certain fields:
+
+<code style="font-size:12px;">
+    <pre>
+$ curl -XPUT http://localhost:9200/keywords -d
+'{
+  "mappings": {
+    "keyword": {
+      "dynamic": "true",
+      "properties": {
+        "keywordType": {
+          "type": "string",
+          "index": "not_analyzed"
+        }
+      }
+    }
+  }
+}'
+            </pre>
+</code>
+
+            As you can see from above, we have set dynamic to "true" but let the index know that if any field that matches "keywordType" to use a specific mapping rather instead of ES figuring it out for us.
+
+<br><br>
+            Now that we have KeywordType to "not_analyzed" which basically now is an "exact match" search including the case (upper and lower case). But how do I make KeywordType to be a case insensitive exact match? One way is to to lower the keywordType and have the calling system provide a lower case searches only. For this, the following mapping changes need to happen:
+
+
+<code style="font-size:12px;">
+    <pre>
+$ curl -XPUT http://localhost:9200/keywords -d
+'{
+  "settings": {
+    "index": {
+      "analysis": {
+        "analyzer": {
+          "analyzer_keyword": {
+            "tokenizer": "keyword",
+            "filter": "lowercase"
+          }
+        }
+      }
+    }
+  },
+  "mappings": {
+    "keyword": {
+      "dynamic": "true",
+      "properties": {
+        "keywordType": {
+          "type": "string",
+          "analyzer": "analyzer_keyword"
+        }
+      }
+    }
+  }
+}'
+            </pre>
+</code>
+
+            We are basically using the "Keyword tokenizer" that Elasticsearch provides that makes it exact match search and "filter" of lowercase which automatically converts the input to lower case. More info on at <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/analysis-tokenizers.html">Elasticsearch tokensizers</a>
+<br><br>
+
+            So far so good but I dont want users to search on all fields which Elasticsearch by default provides. I would rather have the user provide which field they want to search on. Why? Doing a "_all" search on an index with 100's of fields is a very expensive operation; that's why! To disable "_all" search:
+
+<code style="font-size:12px;">
+    <pre>
+#mapping configuration from above
+
+"mappings": {
+    "keyword": {
+        "_ttl" : { "enabled" : true, "default" : "5d" },
+        "dynamic": "true",
+        "_all": {
+            "enabled": false
+        },
+    ...
+}
+            </pre>
+</code>
+
+            OK great, now that _all field search is disabled but now since dynamic is turned on which means any new fields can automagically be indexed, I don't want elasticsearch to index any binary blob as it would consume too much memory; but rather just store it and not index it. For this, the updated mapping would look like:
+
+<code style="font-size:12px;">
+    <pre>
+#mapping configuration from above
+...
+"properties": {
+    "keywordType": {
+        "type": "string",
+        "analyzer": "analyzer_keyword"
+        },
+    "blob": {
+        "type": "string",
+        "enabled": false
+    }
+}
+...
+            </pre>
+</code>
+
+            Setting "enabled: false" lets elasticsearch know that this field should not be indexed for search purposes but would be part of the document result. So basically it's stored but not searchable.
+
+<br><br>
+
+            Since dynamic mapping is enabled, Elasticsearch parses thru every single property to determine it;s type. As much I would love for Elasticsearch to perform all the magic mappings, let give it a helping hand by letting the Elasticsearch know that certain properties are DateTime type based on it;s name.
+
+<code style="font-size:12px;">
+    <pre>
+#mapping configuration from above
+...
+"mappings": {
+"keyword": {
+    "dynamic": "true",
+    "date_detection": false,
+    "dynamic_templates": [
+        {
+            "date_index": {
+                "mapping": {
+                    "type": "date"
+                },
+                "match": ".*Date|date",
+                "match_pattern": "regex"
+            }
+        }
+    ]
+...
+</pre>
+</code>
+
+            So basically, if any property that has either "date" or "Date" at it's ending then assume it's a DateTime object. For example "createDate" or "updateDate" would match the above template. Also as you may notice, "date_detection" is set to false.
+<br><br>
+            How about make all string into exact lower case match?
+
+<code style="font-size:12px;">
+    <pre>
+#mapping configuration from above
+...
+"dynamic_templates": [
+    {
+        "date_index": {
+            "mapping": {
+                "type": "date"
+            },
+            "match": ".*Date|date",
+            "match_pattern": "regex"
+        }
+    },
+    {
+        "string_index": {
+            "mapping": {
+                "analyzer": "analyzer_keyword",
+                "type": "string"
+            },
+            "match": "*",
+            "match_mapping_type": "string"
+        }
+    }
+]
+...
+            </pre>
+</code>
+            So providing dynamic templates when the properties are unknown helps a lot and not have every single field "analyzed" which takes up too memory and extra processing time. The memory consumption analysis will be for another blog post.
+<br><br>
+            Just as an extra, Elasticsearch provides a way to match templates to index names. This means that we provide elasticsearch a template file with mapping information and when an index is created, ES automatically matches the index name with the give template and auto applies the mappings. This template needs to be saved in the "/etc/elasticsearch/templates" folder. An example template file:
+
+<code style="font-size:12px;">
+    <pre>
+#/etc/elasticsearch/templates/keywords_template.json
+{
+  "keywords_template": {
+    "template": "keywords",
+    "order": 0,
+    "settings": {
+      "index.number_of_shards": 7,
+      "index.number_of_replicas": 1
+    },
+    "mappings": {
+      "keyword": {
+        "dynamic": "true",
+        "dynamic_templates": [
+          {
+            "disable_string_index": {
+              "mapping": {
+                "type": "string",
+                "index": "not_analyzed",
+                "enabled": false
+              },
+              "match": "*",
+              "match_mapping_type": "string"
+            }
+          }
+        ],
+        "_all": {
+          "enabled": false
+        }
+      }
+    }
+  }
+}
+            </pre>
+</code>

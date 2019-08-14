@@ -1,0 +1,23 @@
+{
+  "name": "karthik20522",
+  "version": "1.0.0",
+  "description": "",
+  "main": "mergefiles.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/karthik20522/karthik20522.github.io.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/karthik20522/karthik20522.github.io/issues"
+  },
+  "homepage": "https://github.com/karthik20522/karthik20522.github.io#readme",
+  "dependencies": {
+    "concat-files": "^0.1.1",
+    "glob": "^7.1.4"
+  }
+}

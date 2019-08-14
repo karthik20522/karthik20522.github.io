@@ -1,0 +1,38 @@
+<h1>Using Debug Diagnostics to extract and analyse Memory Dump</h1> 
+<p>Nov, 2010</p>
+Download Links:
+<br />
+<br />TinyGet: http://www.microsoft.com/downloads/details.aspx?FamilyID=56FC92EE-A71A-4C73-B628-ADE629C89499&amp;displaylang=en
+<br />
+<br />DebugDiag: http://www.microsoft.com/DOWNLOADS/details.aspx?FamilyID=28bd5941-c458-46f1-b24d-f60151d875a3&amp;displaylang=en
+<br />
+<br />Since I primarily work on web-applications (ASP.NET 2.0) it has become a reflexive action to check for any memory leaks or memory buildup and always try to refactor the code for smaller memory footprint and speed optimization. Since most of the primary test is done on the development machine (Windows XP IIS 5.5), I use TinyGet to simulate traffic to the particular page that I intend to test. Though I am a big fan of JMeter but I still prefer using TinyGet due to the ease-of-use.
+<br />
+<br />* Before we can use TinyGet to simulate the traffic, we need to activate the DebugDiag to capture the memory of the IIS worker process. In the Debug Diagnostics tool, navigate to the "Processes" tab and right click on the w3wp.exe or aspnet_wp.exe process and select the "Monitor for leaks" option.
+<br />
+<br />
+<a onblur="try {parent.deselectBloggerImageGracefully();} catch(e) {}" href="http://3.bp.blogspot.com/_x9-hQNFipOw/SjHD4VdGwBI/AAAAAAAAA7k/6BZAoPJXvmY/s1600-h/8_Debug_diag_setup.png"><img style="cursor: pointer; width: 400px; height: 266px;" src="http://3.bp.blogspot.com/_x9-hQNFipOw/SjHD4VdGwBI/AAAAAAAAA7k/6BZAoPJXvmY/s400/8_Debug_diag_setup.png" alt="" id="BLOGGER_PHOTO_ID_5346269605264801810" border="0" /></a>
+<br />
+<br />* Once Monitoring is tracking use tinyget to simulate request to the test page. Below command simulates 900 requests to the default.aspx page on localhost (server) and running on port 80. The "-h" parameter displays the header information of the page requested.
+<br />
+<br />c:\>tinyget -srv:localhost -port:80 -uri:/default.aspx -loop:900 -h
+<br />
+<br />
+<a onblur="try {parent.deselectBloggerImageGracefully();} catch(e) {}" href="http://3.bp.blogspot.com/_x9-hQNFipOw/SjGx-_wASoI/AAAAAAAAA60/DGJXeeh2T0Y/s1600-h/3_TinyGet_Loop_Header.png"><img style="cursor: pointer; width: 400px; height: 200px;" src="http://3.bp.blogspot.com/_x9-hQNFipOw/SjGx-_wASoI/AAAAAAAAA60/DGJXeeh2T0Y/s400/3_TinyGet_Loop_Header.png" alt="" id="BLOGGER_PHOTO_ID_5346249928488274562" border="0" /></a>
+<br />
+<br />* Once the traffic simulation is done using TinyGet, extract the memory dump by right clicking the aspnet_wp process and selecting the "create full memory dump" option.
+<br />
+<br />
+<a onblur="try {parent.deselectBloggerImageGracefully();} catch(e) {}" href="http://1.bp.blogspot.com/_x9-hQNFipOw/SjG0oZ-0b6I/AAAAAAAAA68/jfzT1OClvwA/s1600-h/4_Debug_Diag_Full_Dump.png"><img style="cursor: pointer; width: 400px; height: 226px;" src="http://1.bp.blogspot.com/_x9-hQNFipOw/SjG0oZ-0b6I/AAAAAAAAA68/jfzT1OClvwA/s400/4_Debug_Diag_Full_Dump.png" alt="" id="BLOGGER_PHOTO_ID_5346252838927626146" border="0" /></a>
+<br />
+<br />* After extracting the memory dump file, navigate to the "Advanced Analysis" and choose "Memory Pressure Analyzer" and selected the dump file as the Data File.
+<br />
+<br />
+<a onblur="try {parent.deselectBloggerImageGracefully();} catch(e) {}" href="http://4.bp.blogspot.com/_x9-hQNFipOw/SjHE8td20LI/AAAAAAAAA7s/kQYLfN9-ivQ/s1600-h/9_Debug_diag_Analysis.png"><img style="cursor: pointer; width: 400px; height: 263px;" src="http://4.bp.blogspot.com/_x9-hQNFipOw/SjHE8td20LI/AAAAAAAAA7s/kQYLfN9-ivQ/s400/9_Debug_diag_Analysis.png" alt="" id="BLOGGER_PHOTO_ID_5346270779941507250" border="0" /></a>
+<br />
+<br />By default Debug Diagnostics tool has two Analysis Scripts namely "Crash/Hang Analyzers" and "Memory pressure Analyzers". One another useful script is the "DotNetMemoryAnalysis" script written by Tess Ferrandez [http://blogs.msdn.com/tess/archive/2009/05/12/debug-diag-script-for-troubleshooting-net-2-0-memory-leaks.aspx]. Following is an example screen shot of analysis result:
+<br />
+<br />
+<a href="http://4.bp.blogspot.com/_x9-hQNFipOw/SjGxngsqh2I/AAAAAAAAA6s/dCNpLBLtNa0/s1600-h/1_Debug_diag_String_Memory.png" onblur="try {parent.deselectBloggerImageGracefully();} catch(e) {}"><img id="BLOGGER_PHOTO_ID_5346249525015775074" alt="" src="http://4.bp.blogspot.com/_x9-hQNFipOw/SjGxngsqh2I/AAAAAAAAA6s/dCNpLBLtNa0/s400/1_Debug_diag_String_Memory.png" style="cursor: pointer; width: 400px; height: 395px;" border="0" /></a>
+<br />
+<br />Debug Diagnostics is a pretty useful and powerful tool for a quick analysis of memory and crash dump analysis. It gives you a quick peak into number of threads, memory usage and availability in the Heap and fragmentation information and lot's more data to drool about. A very handy tool for a performance and debug engineer!

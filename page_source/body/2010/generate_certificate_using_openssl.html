@@ -1,0 +1,21 @@
+<h1>Generate Certificate using Open SSL</h1>
+<p>Dec, 2010</p>
+            Though creating HTTPS Certificate using IIS 7 is very simple but I needed more control over the information about the certificate. OpenSSL was the answere. OpenSSL documentation on my first read was a little complicated or a little too much information on how to create a certificate. So for all the people out there trying to create SSL certificate using OpenSSL hear is how it's done:
+<br />
+<br />1) First we need to create a "key" file which holds the password phrase. The Command to generate a key file is as follows:
+<br />c:\>openssl genrsa -des3 -out kufli.key 2048
+<br />Basically the above command would create a RSA encrypted key file. The above command would require you to type in the pass-phrase.
+<br />
+<a href="http://2.bp.blogspot.com/_x9-hQNFipOw/SjB0ORX2crI/AAAAAAAAA6M/ywKNqpKjkKU/s1600-h/1_OpenSSL_RSA_Key_Generation.png"><img style="WIDTH: 381px; HEIGHT: 400px; CURSOR: hand" id="BLOGGER_PHOTO_ID_5345900546219209394" border="0" alt="" src="http://2.bp.blogspot.com/_x9-hQNFipOw/SjB0ORX2crI/AAAAAAAAA6M/ywKNqpKjkKU/s400/1_OpenSSL_RSA_Key_Generation.png" /></a>
+<br />
+<br />2)Once the Key file is generated, we can go ahead and create the Certificate file. Following command is used for creating a certificate file:
+<br />c:\>openssl req -new -key kufli.key -x509 -out kufli.crt -config openssl.CNF
+<br />The above command would prompt you to fill-in Country Name, State or Province Code, Locality Name, Organization Name, Organizational Unit Name, Command Name and Email Address.
+<br />
+<a href="http://4.bp.blogspot.com/_x9-hQNFipOw/SjB1Xe6Y0wI/AAAAAAAAA6U/vDBVWyMxnG0/s1600-h/2_OpenSSL_Certificate_Key_Config.png"><img style="WIDTH: 323px; HEIGHT: 400px; CURSOR: hand" id="BLOGGER_PHOTO_ID_5345901803984179970" border="0" alt="" src="http://4.bp.blogspot.com/_x9-hQNFipOw/SjB1Xe6Y0wI/AAAAAAAAA6U/vDBVWyMxnG0/s400/2_OpenSSL_Certificate_Key_Config.png" /></a>
+<br />
+<br />That;s it. The above command creates the Certificate file needed for Https protocol. Bellow screenshots displays the certificate information:
+<br />
+<a href="http://1.bp.blogspot.com/_x9-hQNFipOw/SjB1_6FfBYI/AAAAAAAAA6c/uF-U-n1Ha9Q/s1600-h/3_OpenSSL_Certificate_CRT.png"><img style="cursor:pointer; cursor:hand;width: 338px; height: 400px;" src="http://1.bp.blogspot.com/_x9-hQNFipOw/SjB1_6FfBYI/AAAAAAAAA6c/uF-U-n1Ha9Q/s400/3_OpenSSL_Certificate_CRT.png" border="0" alt="" id="BLOGGER_PHOTO_ID_5345902498473248130" /></a>
+<br />
+<a href="http://2.bp.blogspot.com/_x9-hQNFipOw/SjB2J4uAopI/AAAAAAAAA6k/oZGutrrktdM/s1600-h/4_OpenSSL_Certificate_Information.png"><img style="cursor:pointer; cursor:hand;width: 320px; height: 400px;" src="http://2.bp.blogspot.com/_x9-hQNFipOw/SjB2J4uAopI/AAAAAAAAA6k/oZGutrrktdM/s400/4_OpenSSL_Certificate_Information.png" border="0" alt="" id="BLOGGER_PHOTO_ID_5345902669905044114" /></a>

@@ -1,0 +1,57 @@
+<h1>Google first, Code second and Learn later</h1>
+<p>Oct, 2014</p>
+
+<center>
+    <a href="http://4.bp.blogspot.com/-kyMVzU9428E/UWCuZZH7vhI/AAAAAAAADaQ/D_OORWx9CcQ/s1600/drivein12-hp.jpg" imageanchor="1"><img border="0" src="http://4.bp.blogspot.com/-kyMVzU9428E/UWCuZZH7vhI/AAAAAAAADaQ/D_OORWx9CcQ/s320/drivein12-hp.jpg" /></a>
+</center>
+<br><br>
+            In my mind, there are 2 types of programmers, someone who can write code and others who cannot (but offcourse there are 5 types <a href="http://stevenbenner.com/2010/07/the-5-types-of-programmers/">http://stevenbenner.com/2010/07/the-5-types-of-programmers/</a>). Nevertheless how many types there are I am slowly turning out to be programmer who can write code without understanding!! I am not talking about code that I am writing (like business logic) but rather the underlying technologies, frameworks, code snippets that abstracts the implementation. Why?
+
+<br><br>Well almost every technical challenge may have been encountered by someone else and they probably shared their thoughts and their code to the world in the form of blog post, open source projects, stackoverflow questions etc. Keeping this in mind reinventing the wheel is a waste of time but rather reusing the shared code and modifying to your problem statement is much smarter, faster and better use of your time.
+
+<br><br>
+            I do believe it is true that best programmers know how to use google pretty well (<a href="http://www.reddit.com/r/programming/comments/197n65/the_best_programmers_are_the_quickest_to_google/">http://www.reddit.com/r/programming/comments/197n65/the_best_programmers_are_the_quickest_to_google/</a>). Lets take a problem that I had to solve
+<br><br>
+<b>Problem statement</b>: was to build a imaging library to perform image manipulation (resizing, watermark & captioning) and metadata processing (both read and write from and to the images).
+<br><br>
+            Following is what I ended up doing to get the task done:<br>
+<i>Note: I am only discussing about how I went about getting the code from Internet and adjusting to fit my solution.</i><br>
+
+<ul>
+    <li>Since I was restricted from using libraries like Aforge, ImageMagick for performance reasons, so I started with looking for generic image processing code in C# at google but ended up at koders.com for partial~complete solutions.</li>
+    <li>Found few hundred implementations but drilled down to two components: GDI based processing and WIC (Windows Imaging Component) based processing</li>
+    <li>Wrote test cases to verify the open source code/snippet met all functional requirements of the problem statement like resizing, watermarking etc</li>
+    <li>
+        Once the functionality verified, I reorganized the code to fit the programming standards like naming conventions, reusability etc.
+        <ul>
+            <li>
+                Note that I only moved the code around but left the original core code untouched like the real image processing section (calculations, memory handling etc)
+            </li>
+        </ul>
+    </li>
+    <li>Now that I had image processing part done, I looked for Metadata processing solutions online as we had to write custom metadata (IPTC, XMP) into images</li>
+    <li>
+        This metadata took a while since in real world, software's like photoshop etc wrote metadata differently and the code had to be smart enough to read any metadata format.
+        <ul>
+            <li>
+                This is the part where I had to learn the open sourced code to figure out rest of the implementation
+            </li>
+        </ul>
+    </li>
+    <li>Then more testing, testing and testing (unit testing) to verify the implementation and stability of the code</li>
+    <li>
+        Once all the business requirement was completed, this was the stage where I got to learn/read thru the original code and as part of refactoring, I rewrote the entire business logic/image processing layer from scratch but with all the edge case considerations and imaging algorithms that the open source code provided.
+    </li>
+</ul>
+<br>
+            So how did I fare? Well, if I had to write the image processing code from scratch it would have taken months and probably missed tons of edge cases that would have haunted me if the self-written code went to deal with real world images. To recap, first I google'd already written image processing code that was closest solution to my problem and then I eventually learnt the code logic and finally as part of refactoring strategy, I rewrote the entire code (with my new understanding of the open source code) and verified it by using the test cases that was originally implemented to verify the functionality of the open sourced code.
+
+<br><br>
+            Is this cheating? YES but when you are trying to solve complex problems like image processing, it is better to pick where other ppl have left off. Smart, maybe! Lazy, most likely.
+
+<br><br>
+            How about this; what if i asked you to implement a TRIE data structure to search a collection of strings? Would you go about implementing from scratch or would you rather just use an pre-existing implementation? Like this one <a href="http://geekyisawesome.blogspot.com/2010/07/c-trie.html">http://geekyisawesome.blogspot.com/2010/07/c-trie.html</a>? So are you cheating or just being smart?
+
+
+<br><br>
+            So my friends, learn to google first and then code. It definitely saved me a ton.

@@ -1,0 +1,77 @@
+<h1>Elasticsearch - Cautionary and Useful Tips</h1>
+<p>Sep, 2014</p>
+<p>
+    <h3>Update/Delete Gotcha:</h3>
+    In elasticsearch, an <b>update</b> to a document is basically a delete and reinsert. A <b>delete</b> operation in elasticsearch is basically marking the document to be deleted and not actually deleted. This is problem especially when you have heavy updates/delete operations as the documents are not actually purged but instead just marked for deletion, which takes up disk space. Following screen shot is an example where the total number of documents in the index (where documents can be searched) is not the same as the actual total documents in the index.
+    <br> <br>
+    <a href="http://1.bp.blogspot.com/-0l_DTumcpk0/VKmPid6F9lI/AAAAAAAAEM4/mgxXSqtUmsA/s1600/elasticsearch_delete_update.JPG" imageanchor="1"><img border="0" src="http://1.bp.blogspot.com/-0l_DTumcpk0/VKmPid6F9lI/AAAAAAAAEM4/mgxXSqtUmsA/s640/elasticsearch_delete_update.JPG" /></a>
+    <br><br>
+    To reclaim disk space, you have to optimize the index:
+    <pre style="font-size:12px;"><code>curl -XPOST 'http://localhost:9200/_optimize?only_expunge_deletes=true'</code></pre>
+    More information at: <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-optimize.html">http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-optimize.html</a>
+</p>
+<p>
+    <h3>Memory Limitation - Max ES Heap size:</h3>
+    By default elasticsearch allocates 1GB of heap to it's process. This is ok for development purposes but in production you should generally provide half of the server memory to Elasticsearch. To set the heap size:
+    <pre style="font-size:12px;"><code>export ES_HEAP_SIZE=10g</code></pre>
+    More the memory given to elasticsearch is better as more data is held in the memory for faster search/seeks but there are few gotchas to be aware of:
+    <ul>
+        <li>
+            <b>Do not cross 32GB</b>
+            <br>
+            As it turns out, the JVM uses a trick to compress object pointers when heaps are less than ~32 GB. Once you cross that magical ~30-32 GB boundary,
+            the pointers switch back to ordinary object pointers. The size of each pointer grows, more CPU-memory bandwidth is used, and you effectively lose memory.
+        </li>
+        <li>
+            <b>Give half of the memory to Lucene</b><br>
+            Lucene is designed to leverage the underlying OS for caching in-memory data structures. If you give all available memory to Elasticsearch's heap, there won't be any left over for Lucene.
+            This can seriously impact the performance of full-text search.
+        </li>
+        <li>
+            <b>Disable Memory Swapping</b><br>
+            Swapping main memory to disk will basically affect server and elasticsearch performance. If memory swaps to disk, a 100-microsecond operation becomes one that take 10 milliseconds.
+            To avoid this you should enable mlockall. This allows the JVM to lock its memory and prevent it from being swapped by the OS. In your elasticsearch.yml, set this:
+            <pre style="font-size:12px;"><code>bootstrap.mlockall: true</code></pre>
+        </li>
+    </ul>
+    More information at : <a href="http://www.elasticsearch.org/guide/en/elasticsearch/guide/current/heap-sizing.html">http://www.elasticsearch.org/guide/en/elasticsearch/guide/current/heap-sizing.html</a>
+</p>
+<p>
+    <h3>Index name - Alias</h3>
+    It's always advisable to provide an alias to the index and have the application use the alias name instead of the actual index name. This is useful as we can switch index's without affecting the calling application. For example, we can create a brand new index with new mappings and basically delete the alias from the old index and assign it to the new index. This way re-indexing operations would be a zero downtime operations.
+    <pre style="font-size:12px;"><code>
+curl -XPOST 'http://localhost:9200/_aliases' -d '
+{
+    "actions" : [
+        { "remove" : { "index" : "kIndex_v1", "alias" : "assets" } },
+        { "add" : { "index" : "kIndex_v2", "alias" : "assets" } }
+    ]
+}'
+                </code></pre>
+</p>
+<p>
+    <h3>Logging - Debug/Info/Error:</h3>
+    By default, elasticsearch log level is set to debug in the logging.yml file. This is probably not a good choice as ES tends to log everything which takes up a lot of disk space. I learned this the hard way where I copied data from one index to another index for reindexing purposes and elasticsearch
+    logged every single payload and the log size was almost the size of the index itself! It;s best to have the log level to WARN instead of DEBUG or INFO.
+</p>
+<p>
+    <h3>Document Versioning:</h3>
+    For every insert or document update, elasticsearch either auto assigns a version number of expects the user to provide a version number. This is useful for concurrency control. There are 4 types of version mechanism:
+    <ul>
+        <li><b>internal</b>: (Default) Auto assigned by elasticsearch</li>
+        <li><b>external</b>: Version number provided by user. Must always be greater than the existing version of the document</li>
+        <li><b>external_gte</b>: Version number provided by user but the version number should be at the very least equal to the existing document version.</li>
+        <li><b>force</b>: Version number provided by the user where the number can be anything. But not recommended</li>
+    </ul>
+
+    The above four version options are not very well documented, but can be understood by reading the ES source code at: <a href="https://github.com/elasticsearch/elasticsearch/blob/1816951b6b0320e7a011436c7c7519ec2bfabc6e/src/main/java/org/elasticsearch/index/VersionType.java#L275">Source</a>
+
+    <pre style="font-size:12px;"><code>
+//external_gte example
+curl -XPOST "http://localhost:9200/designs/shirt/1?version=4&version_type=external_gte" -d'
+{
+    "name": "elasticsearch",
+    "votes": 1
+}'
+                </code></pre>
+</p>

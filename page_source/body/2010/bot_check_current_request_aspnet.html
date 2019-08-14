@@ -1,0 +1,8 @@
+<h1>Bot/Crawler/Spider Check Current.Request ASP.NET</h1>
+<p>Feb 2010</p>
+            While implementing a Caching Solution (LRU caching) for a project that I was working on, I realized that search engine crawlers were flooding the IIS cache which led to "out of memory exception". So for this I had to make sure that if the current request was from a Crawler then do not add to the Cache. So following is a simple implementation of WebCrawler check in C#
+<br />
+<br /><code style="font-size:12px;"><pre><br />public static bool IsCrawler(HttpRequest request)<br />  {<br />      if (request != null)<br />      {<br />          bool isCrawler = request.Browser.Crawler;<br />          if (!isCrawler)<br />          {<br />              // put any additional known crawlers in the Regex below<br />              Regex regEx = new Regex("Twiceler|twiceler|BaiDuSpider|baduspider|Slurp|slurp|<br />ask|Ask|Teoma|teoma|Yahoo|yahoo");<br />              isCrawler = regEx.Match(request.UserAgent).Success;<br />          }<br />          return isCrawler;<br />      }<br />      return true;<br />  }<br /></pre></code>
+<br />
+<br />USAGE:
+<br /><code style="font-size:12px;"><pre><br />if(IsCrawler(HttpContext.Current.Request))<br />{<br /> response.write("You are a bot. Piss off!!");<br />}<br />else { ... }<br /></pre></code>

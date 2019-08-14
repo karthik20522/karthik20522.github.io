@@ -1,0 +1,61 @@
+<h1>Scala Parser Combinators - SQL Parser Example</h1>
+<p>Mar, 2016</p>
+            Scala Parser Combinators: <a href="https://github.com/scala/scala-parser-combinators">https://github.com/scala/scala-parser-combinators</a><br><br>
+
+            Scala Parser Combinators is basically a parsing framework for extracting data when there is a pattern in the given input. This framework provides a more statically typed,
+            functional way of extracting instead of using regex expression which can get hard to read. <br><br>
+            In this post, lets build a SQL parser where given a valid sql statement we can identify the "table" name, "column" names and other sql properties.
+            Following are some fundamental functions, operations that Scala combinator provides which would help in parsing:
+
+<ul>
+    <li>
+        "<b> | </b>": says "succeed if either the left or right operand parse successfully"
+    </li>
+    <li>
+        "<b> ~ </b>": says "succeed if the left operand parses successfully, and then the right parses successfully on the remaining input"
+    </li>
+    <li>
+        "<b> ~> </b>": says "succeed if the left operand parses successfully followed by the right, but do not include the left content in the result"
+    </li>
+    <li>
+        "<b> <~ </b>": is the reverse, "succeed if the left operand is parsed successfully followed by the right, but do not include the right content in the result"
+    </li>
+    <li>
+        "<b> ^^ </b>": says "if the left operand parses successfully, transform the result using the function on the right"
+    </li>
+    <li>
+        "<b> ^^^ </b>": says "if the left operand parses successfully, ignore the result and use the value from the right"
+    </li>
+    <li>
+        " rep(fn) ": says "parse the given input using the parser function fn"
+    </li>
+    <li>
+        " repsep(ident, char) ": says "parse the given input and split the input using the given 'char'"
+    </li>
+</ul>
+
+            Lets start out with a set of SQL statements and it's associated Parser code
+
+<h4><i>select * from users</i></h4>
+<script src="https://gist.github.com/karthik20522/ce20c37d2f19edb8de2588732684bc47.js"></script>
+
+<h4><i>select name,age from users</i></h4>
+<script src="https://gist.github.com/karthik20522/cc0de39c2b8ef2d83707fed298161c8e.js"></script>
+
+<h4><i>select count(name) from users</i></h4>
+<script src="https://gist.github.com/karthik20522/4de772104294f678bd65660f0f9e77a1.js"></script>
+
+<h4><i>select * from users order by age desc</i></h4>
+<script src="https://gist.github.com/karthik20522/ee21e0f6311ba42c4fb0e8f087a98fb8.js"></script>
+
+<h4><i>select * from users order by name, age desc</i></h4>
+<script src="https://gist.github.com/karthik20522/8d7e569d10f8b43e5675bc7be3ccf1ab.js"></script>
+
+<h4><i>select age from users where age>30</i></h4>
+<script src="https://gist.github.com/karthik20522/853fab15bee528a4c554365da27a2acb.js"></script>
+
+<h4 style="color:red;">PUTTING IT ALL TOGETHER</h4>
+<script src="https://gist.github.com/karthik20522/5c03b99e95cddc616fa0d53d9f3a3f14.js"></script>
+
+<h4 style="color:red;">TEST CASES</h4>
+<script src="https://gist.github.com/karthik20522/e10623b0273d204d750906d587a54ed2.js"></script>

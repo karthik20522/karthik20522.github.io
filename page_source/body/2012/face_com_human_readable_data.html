@@ -1,0 +1,46 @@
+<h1>Face.com human readable Data</h1>
+<p>Dec, 2012</p>
+            Face.com is without any doubt one of the best Face detection API out there. Considering the fact that Face.com provides 5000 request per hour is quite a good API access for a small or personal project. But unfortunately not all Data provided by face.com is human readable. Following is an example of face.com api result
+<br />
+<br /><code style="font-size:12px;"><pre><br />{<br /><br />    -<br />    photos: [<br />        -<br />        {<br />            url: http://4.bp.blogspot.com/-iJu-Mpq2YbU/TvyEdWnGc8I/AAAAAAAAA_8/0AmcGwM3Pz4/s1600/demi_lovato_red_hair.jpg<br />            pid: "F@383bba385bef538dea790d3a7ab63c42_4b4b4c6d54c37"<br />            width: 400<br />            height: 550<br />            -<br />            tags: [<br />                -<br />                {<br />                    tid: "TEMP_F@383bba385bef538dea790d3a7ab63c42_4b4b4c6d54c37_32.50_36.91_0_1"<br />                    recognizable: false<br />                    threshold: null<br />                    uids: [ ]<br />                    gid: null<br />                    label: ""<br />                    confirmed: false<br />                    manual: false<br />                    tagger_id: null<br />                    width: 38.5<br />                    height: 28<br />                    +<br />                    center: { ... }<br />                    +<br />                    eye_left: { ... }<br />                    +<br />                    eye_right: { ... }<br />                    +<br />                    mouth_left: { ... }<br />                    +<br />                    mouth_center: { ... }<br />                    +<br />                    mouth_right: { ... }<br />                    +<br />                    nose: { ... }<br />                    ear_left: null<br />                    ear_right: null<br />                    chin: null<br />                    yaw: -86.48<br />                    roll: 11.16<br />                    pitch: 1.19<br />                    +<br />                    attributes: { ... }<br />                }<br />            ]<br />        }<br />    ]<br />    status: "success"<br />    -<br />    usage: {<br />        used: 61<br />        remaining: "unlimited"<br />        limit: "unlimited"<br />        reset_time_text: "unlimited"<br />        reset_time: 0<br />    }<br /><br />}<br /></pre></code>
+<br />
+<br />All the data that face.com provides is a percentage relation with the height and width of the image. This is very advantageous since even if we resize the image, the percentage of the face on the image would remain excatly the same and the same place on the image. Offcourse while resizing the image, the aspect ratio must be maintained. Besides the coordinates of eye, mouth and nose there are other values like size of head (width, hight) and yaw, roll and pitch. Lets say you are building an application to identify if the person in the face is facing the camera or to check if the image is a potrait image or a full body shot, face.com doesn't provide these information as words but rather as numbers. Following is a translation of the obove numbers into more human readable words:
+<br />
+<br />For determining the angle of the face:
+<br />
+<br />
+<code style="font-size:12px;">
+    <pre>
+if (tag.yaw < 10 && tag.yaw > -10)
+                return "Forward looking face";
+
+            if (tag.yaw < 20 && tag.yaw > -20)
+                return "Slightly Angled face";
+
+            if (tag.yaw < 60 && tag.yaw > -60)
+                return "Angled face";
+
+            if (tag.yaw < 90 && tag.yaw > -90)
+                return "Side face";
+</pre>
+</code> For determining if the image is a portrait image:
+
+<code style="font-size:12px;">
+    <pre>
+if (tag.height > 40 || tag.width > 40)
+                return "Headshot or Potrait";
+
+            if ((tag.height < 40 && tag.height > 15) || (tag.width < 40 && tag.width > 15))
+                return "HalfLength body shot";
+
+            else
+                return "FullLength body shot";
+</pre>
+</code>
+<br />
+<br />Note: above calculations are based on my opinion of the image based on trail and error.
+<br />
+<br />Other attributes that Face.com provides (more human readable) are as follows:
+<br />
+<br />
+<code style="font-size:12px;"><pre><br />attributes: {<br />    -<br />    age_est: {<br />        value: 36<br />        confidence: 76<br />    }<br />    -<br />    age_max: {<br />        value: 40<br />        confidence: null<br />    }<br />    -<br />    age_min: {<br />        value: 33<br />        confidence: null<br />    }<br />    -<br />    face: {<br />        value: "true"<br />        confidence: 98<br />    }<br />    -<br />    gender: {<br />        value: "male"<br />        confidence: 82<br />    }<br />    -<br />    glasses: {<br />        value: "false"<br />        confidence: 98<br />    }<br />    -<br />    lips: {<br />        value: "sealed"<br />        confidence: 81<br />    }<br />    -<br />    mood: {<br />        value: "happy"<br />        confidence: 34<br />    }<br />    -<br />    smiling: {<br />        value: "false"<br />        confidence: 66<br />    }<br />}<br /><br /></pre></code>

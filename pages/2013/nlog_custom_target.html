@@ -1,0 +1,157 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Everyone meet Karthik</title>
+
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div style="width:100%; text-align: center;">
+                <a href="/"><img src="/images/0.jpg" style="border-radius: 50%;" /></a>
+            </div>
+            <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
+            <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
+            <p class="view" style="margin:0;"><a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a></p>
+            <p class="view" style="margin:0;"><a href="/pages/beers_in_my_belly.html" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a></p>
+            <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
+        </header>
+        <section>
+<h1>NLog - Custom Target</h1>
+<p>May, 2013</p>
+<!-- WRITE UR BLOG HERE-->
+            Nlog similar to log4net is quite a powerful logging library. Though out of the box it provides logging to text files, windows event log, database, Sentinal etc but how about about custom logging? Extending NLog to write to your own custom target is as quite simple as follows:
+<br><br>
+<b>Create the target class:</b>
+
+<code style="font-size:12px;">
+    <pre>
+   using System.ComponentModel.DataAnnotations;
+   using NLog;
+   using NLog.Targets;
+   using Dapper;
+
+   [Target("RDSAuditLogger")] 
+    public sealed class RDSAuditLogger : TargetWithLayout 
+    {
+        public RDSAuditLogger()
+        {
+            this.Host = "localhost";
+        }
+ 
+        [Required] 
+        public string Host { get; set; }
+ 
+        protected override void Write(LogEventInfo logEvent) 
+        { 
+            string logMessage = this.Layout.Render(logEvent); 
+
+            if(logEvent.Parameters != null && logEvent.Parameters.Count() > 1)
+                SendTheMessageToRemoteHost(logEvent.Parameters[0] as string, logEvent.Message, logEvent.Parameters[1] as string); 
+        } 
+ 
+        //Yours custom logging - Over here I am storing an Id, the message and a custom type 
+        //that my logger is logging
+        private void SendTheMessageToRemoteHost(string id, string body, string type) 
+        {
+   //Make the logging async
+            Task.Factory.StartNew(() =>
+            {
+    //Dapper.NET - write to sql using a Stored procedure
+    using (var connection = DataAccessManager.GetOpenConnection())
+    {
+     connection.Execute("AddToLog", new { Id = id, Type = type, Body = body},
+      commandType: CommandType.StoredProcedure);
+    }
+             
+            });
+        } 
+    }
+</pre>
+</code>
+<br>
+<b>Register the target class:</b>
+<code style="font-size:12px;">
+    <pre>
+using NLog;
+using NLog.Config;
+using NLog.Targets;
+
+public static class Log
+{
+ public static Logger Instance { get; private set; }
+ static Log()
+ {
+  //Register the custom target
+  ConfigurationItemFactory.Default.Targets.RegisterDefinition("RDSAuditLogger", 
+    typeof(MyLibrary.RDSAuditLogger));
+
+  LogManager.ReconfigExistingLoggers();
+  Instance = LogManager.GetCurrentClassLogger();
+ }
+}
+</pre>
+</code>
+<br>
+<b>Add to nlog configuration to assign log level:</b>
+<code style="font-size:12px;">
+    <pre>
+  &lt;nlog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"&gt;
+    &lt;extensions&gt;
+      &lt;add assembly="MyLibrary"/&gt;
+    &lt;/extensions&gt;
+    &lt;targets&gt;
+      &lt;target name="eventlog" xsi:type="EventLog" layout="${message}" log="Application" source="SomeName" /&gt;
+      &lt;target name="rdsAuditLogger" type="RDSAuditLogger" host="localhost"/&gt;
+    &lt;/targets&gt;
+    &lt;rules&gt;
+      &lt;logger name="*" levels="Error,Fatal,Warn" writeTo="eventlog" /&gt;
+      &lt;logger name="*" levels="Info" writeTo="rdsAuditLogger" /&gt;
+    &lt;/rules&gt;
+  &lt;/nlog&gt;
+                </pre>
+</code>
+<br>
+            Example:
+<code style="font-size:12px;">
+    <pre>
+Log.Instance.Info("This is a test log", "123", "AM-Start");
+</pre>
+</code>
+
+<i>Note that the example above is specific to my custom logger.</i><!--*********************FOOTER'ISH************************-->
+<div id="graphcomment"></div>
+<script type="text/javascript">
+    window.gc_params = {
+        graphcomment_id: 'Karthik-Github',
+        fixed_header_height: 0,
+    };
+    (function () {
+        var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+        gc.src = 'https://graphcomment.com/js/integration.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
+    })();
+</script>
+
+</section>
+<footer></footer>
+    </div>
+<script src="/javascripts/scale.fix.js"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-140795658-1');
+</script>
+</body>
+</html>

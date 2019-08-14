@@ -1,0 +1,174 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Everyone meet Karthik</title>
+
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div style="width:100%; text-align: center;">
+                <a href="/"><img src="/images/0.jpg" style="border-radius: 50%;" /></a>
+            </div>
+            <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
+            <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
+            <p class="view" style="margin:0;"><a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a></p>
+            <p class="view" style="margin:0;"><a href="/pages/beers_in_my_belly.html" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a></p>
+            <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
+        </header>
+        <section>
+<h1>Elasticsearch - Zen, AWS Cluster Setup</h1>
+<p>Sep, 2014</p>
+            In a cluster environment, multiple elasticsearch nodes/servers join to form a cluster where the shards are distributed and replicated among these servers but to the outside world it is presented as a single system. For elasticsearch to connect to different nodes, ES provides two discovery methods. One being Zen discovery and other being cloud based discovery via plugins for Azure, AWS and Google Compute engine.
+
+<h3>Zen Discovery</h3>
+
+<code style="font-size:12px;">
+    <pre>
+#elasticsearch.yml
+# Cluster name
+cluster.name: es-test-cluster
+
+#discovery
+discovery.type: zen
+
+# Minimum nodes alive to constitute an operational cluster
+discovery.zen.minimum_master_nodes: 2
+
+# Unicast Discovery
+discovery.zen.ping.multicast.enabled: false
+discovery.zen.ping.unicast.hosts: [ "192.168.1.1", "192.168.1.2", "192.168.1.3" ]
+
+#failure detection
+discovery.zen.ping.fd.ping_interval: 60s
+discovery.zen.ping.fd.ping_timeout: 60s
+discovery.zen.ping.fd.ping_retries: 10
+                </pre>
+</code>
+
+            From the above snippet, it's pretty straightforward to understand that the discover.type is "zen" and the minimum number of nodes required to form a cluster is "2" and using "unicast" to find other hosts and provide some sort of recovery mechanism (fault detection) if a server went offline or some network problems. This is probably all that Zen discovery has to offer, simple and easy! More info at
+<a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-discovery-zen.html">Zen discovery</a>
+<br /><br />
+<h3>AWS/EC2 Discovery</h3>
+            For EC2 discovery, we first need to install the cloud-aws plugin if not already installed
+
+<code style="font-size:12px;">
+    <pre>
+$ /usr/share/elasticsearch/bin/plugin -install elasticsearch/elasticsearch-cloud-aws/2.3.0
+            </pre>
+</code>
+
+<code style="font-size:12px;">
+    <pre>
+#elasticsearch.yml
+# Cluster name
+cluster.name: es-test-cluster
+
+#discovery type
+discovery.type: ec2
+
+#optional -Region setting to discover nodes
+cloud.aws.region: us-west-2
+
+#optional - Security groups
+discovery.ec2.groups: sg-xxxxxxx
+
+#optional - to store aws attributes to the nodes - for node awareness
+cloud.node.auto_attributes: true
+
+#If not using IAM roles
+cloud.aws.access_key: xxxxxxxxxxxxx
+cloud.aws.secret_key: xxxxxxxxxxxxxxxxx
+            </pre>
+</code>
+
+            From the above config, the discovery type is ec2 and optionally given a region for the plugin to discover other nodes and security group. If there is no IAM role associated with the server, then AWS secret_key and access_key needs to be provided in-order for the plugin to query AWS for node information.
+<br>
+<br>
+
+
+
+            Having the node.auto_attributes set to true would add aws_availability_zone to the node attributes properties which helps in node awareness. What this means is that, given an index with replication factor of 1, ES uses this attribute to determine which node this particular shard is sitting on but makes sure the replicated shard is on a different box. More info at
+<a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-cluster.html#allocation-awareness">Shard Awareness</a>
+
+<code style="font-size:12px;">
+    <pre>
+#running the following should provide you with region information in the attributes section
+$ curl http://{ec2-esurl}/_nodes/process?pretty
+{
+  "cluster_name": "es-cluster-test",
+  "nodes": {
+    "Oaa7jVWNSeyHlmhyYCr32g": {
+      "name": "Mister Fear",
+      ...
+      "attributes": {
+        "aws_availability_zone": "us-west-2a",
+        "master": "true"
+      }
+    },
+    "QibV2okLRyuH0ti6bxvANA": {
+      "name": "Blackheath",
+      ...
+      "attributes": {
+        "aws_availability_zone": "us-west-2b",
+        "master": "true"
+      }
+    },
+    "bEL8b2-lRZ2Cif1nM4WmIQ": {
+      "name": "Sayge",
+      ...
+      "attributes": {
+        "aws_availability_zone": "us-west-2a",
+        "master": "true"
+      }
+    }
+  }
+}
+             </pre>
+</code>
+
+            We can make the Elasticsearch node discovery a little bit faster by filtering the number of servers it needs to ping during the discovery process. This filter can achieved by using the ec2.tag if they are assigned to EC2 servers. In a enterprise environment where there are 100's of ec2 servers deployed on AWS, pinging every single one of them would take a very long time, this should help speed things up.
+
+<code style="font-size:12px;">
+    <pre>
+#elasticsearch.yml
+discovery.ec2.tag.env: prod</pre>
+</code>
+            More information for this EC2 discovery plugin at
+<a href="https://github.com/elasticsearch/elasticsearch-cloud-aws">cloud-aws</a> and various discovery at
+<a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-discovery.html">elasticsearch-dsicovery</a><!--*********************FOOTER'ISH************************-->
+<div id="graphcomment"></div>
+<script type="text/javascript">
+    window.gc_params = {
+        graphcomment_id: 'Karthik-Github',
+        fixed_header_height: 0,
+    };
+    (function () {
+        var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+        gc.src = 'https://graphcomment.com/js/integration.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
+    })();
+</script>
+
+</section>
+<footer></footer>
+    </div>
+<script src="/javascripts/scale.fix.js"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-140795658-1');
+</script>
+</body>
+</html>
