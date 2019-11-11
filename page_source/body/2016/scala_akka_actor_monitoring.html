@@ -1,0 +1,17 @@
+<h1>Monitoring Akka actors</h1>
+<p>May, 2016</p>
+
+<dt>What you can with this tool</dt>
+<ul>
+    <li>See the whole actor tree</li>
+    <li>See top actors (with maximum nr of messages in mailbox) </li>
+    <li>See all MessageDispatchers (default Dispatcher)</li>
+</ul>
+
+<dt>Usage</dt>
+<pre style="font-size:11px;">
+val system: ActorSystem = ...
+AkkaSampling.print(system) //stdout every 5 seconds
+</pre>
+
+<script src="https://gist.github.com/karthik20522/0725b842fcccce32e01b84c45c5270b7.js"></script>

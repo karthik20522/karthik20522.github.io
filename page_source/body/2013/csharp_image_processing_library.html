@@ -1,0 +1,66 @@
+<h1>SimpleDotImage</h1>
+<p>Aug, 2013</p>
+<p>Simple Image Processing library using WIC (Windows Imaging Component). CSharp based Image Processing library to perform simple image processing operation like Image Resizing, Image Watermarking etc. This library is tested to process 1000's of images while keeping WIC thread count/handles in check and with realitvely stable memory usage.</p>
+Source: <a href="https://github.com/karthik20522/SimpleDotImage">https://github.com/karthik20522/SimpleDotImage</a>
+<p>Example usage:</p>
+<p>Resize:</p>
+<pre><code>            	var _resizedImage = _imgProcessing.Process(  
+                                        imagePath: _testFileName, 
+                                        resize: 1024   
+                                );
+</code></pre>
+<p>Watermark using Image:</p>
+<pre><code>	    var _waterMarkedImage = _imgProcessing.Process(
+            	                    imagePath: _testFileName,
+                            	    resize:1024,
+                                    waterMarkPath: _waterMarkFileName,
+                                    waterMarkOpacity: 0.9
+                    ); 	
+</code></pre>
+<p>Watermark using Text:</p>
+<pre><code>	var _waterMarkedImage = _imgProcessing.Process(
+					imagePath: _testFileName,						
+					waterMarkText: "karthik20522",
+					waterMarkOpacity: 0.2
+	);
+</code></pre>
+<p>Watermark positioning:</p>
+<pre><code>	 var _waterMarkedImage = _imgProcessing.Process(
+                                            imagePath: _testFileName,
+                                            waterMarkText: "karthik20522",
+                                            waterMarkOpacity: 0.3,
+                                            waterMarkPosition: WaterMarkPosition.BottomRight 
+                                            // TopLeft, TopRight, BottomRight, BottomLeft, Center
+                                    );
+</code></pre>
+<p>Watermark using Both Text and Image:</p>
+<pre><code>        var _waterMarkedImage = _imgProcessing.Process(
+        							imagePath: _testFileName,
+    								resize: 1024,
+    								waterMarkPath: _waterMarkFileName,
+    								waterMarkText: "karthik20522",
+    								waterMarkOpacity: 0.3
+    						);
+</code></pre>
+<p>Rotate Image:</p>
+<pre><code>         var _rotatedImage = _imgProcessing.Process(
+        								imagePath: _testFileName,
+    									rotate: Rotation.Rotate90
+    							);
+</code></pre>
+<p>Flip Image:</p>
+<pre><code>    var _flipImage = _imgProcessing.Process(
+							imagePath: _testFileName,
+							flipHorizontal: true,
+							flipVertical: false
+					);
+</code></pre>
+<p>Convert To Gray Scale:</p>
+<pre><code>var _grayImage = _imgProcessing.Process(
+							imagePath: _testFileName,
+							colorFormat: ColorFormat.Gray //Gray, BlackAndWhite, RGB, BGR, CMYK
+					);
+</code></pre>
+<ul>
+    <li>Review test cases for further implementation how-to's</li>
+</ul>

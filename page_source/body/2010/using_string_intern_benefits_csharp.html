@@ -1,0 +1,30 @@
+<h1>Using String.Intern Benefits C#</h1> Recently I was given a daunting task of figuring out why the web-server (IIS) was recycling every couple of hrs and when I analyzed the Crash Dump file there it was obvious that "System.String" type objects were occupying about ~250MB in memory and probably not being released or garbage collected fast enough. While some of String objects were all greater than 85000 bytes it was stored in Gen 2 [LOH - Large Object Heap] instead of Gen 0 and probably highly fragmented. So I decided to try to replicate same issue of my development machine so I hooked up the DebugDiag Memory leak process to my "aspnet_wp.exe" process and simulated traffic using "tinyget" (Microsoft IIS Tool) to one of my test pages which performed similar string manipulation as the live page.
+<br />
+<br />
+<a onblur="try {parent.deselectBloggerImageGracefully();} catch(e) {}" href="http://4.bp.blogspot.com/_x9-hQNFipOw/SjGxngsqh2I/AAAAAAAAA6s/dCNpLBLtNa0/s1600-h/1_Debug_diag_String_Memory.png"><img style="cursor: pointer; width: 400px; height: 395px;" src="http://4.bp.blogspot.com/_x9-hQNFipOw/SjGxngsqh2I/AAAAAAAAA6s/dCNpLBLtNa0/s400/1_Debug_diag_String_Memory.png" alt="" id="BLOGGER_PHOTO_ID_5346249525015775074" border="0" /></a>
+<br />
+<br />From above screen shot we can see that the String.Object type is ~10MB with 109894 objects in memory which looked quite a lot just to display data from DB and some simple string manipulation.
+<br />
+<br />So while digging around MSDN [http://msdn.microsoft.com/en-us/library/system.string.intern.aspx], I was introduced to String.Intern method. Basically .NET creates a Intern Pool which contains a single reference to each unique literal string declared or created programmatically.
+<br />
+<br />After I modified my application to use String.Intern (basically I added String.Intern in my property (get;set)) in my Business Entity class's and simulated the traffic again and created a new memory dump and following was the result:
+<br />
+<br />
+<a onblur="try {parent.deselectBloggerImageGracefully();} catch(e) {}" href="http://4.bp.blogspot.com/_x9-hQNFipOw/SjG3VCjYrHI/AAAAAAAAA7M/A9T5ZtxqZ_k/s1600-h/2_Debug_diag_String_Intern_Memory.png"><img style="cursor: pointer; width: 375px; height: 400px;" src="http://4.bp.blogspot.com/_x9-hQNFipOw/SjG3VCjYrHI/AAAAAAAAA7M/A9T5ZtxqZ_k/s400/2_Debug_diag_String_Intern_Memory.png" alt="" id="BLOGGER_PHOTO_ID_5346255804755913842" border="0" /></a>
+<br />
+<br />As you can see from my above screen shot, the "string.object" memory and the number of instances have reduced to ~3.5MB and 21447 respectively when compared to ~10MB and over 100K objects. Though this string.intern has reduced the string.objects but one main drawback is the fact that the intern pool is not flushed until app recycles. This pool is global and objects in the pool remain for life of the app.
+<br />
+<br />Following is a sample of my BusinessEntity Class:
+<br />
+<br />
+<a onblur="try {parent.deselectBloggerImageGracefully();} catch(e) {}" href="http://1.bp.blogspot.com/_x9-hQNFipOw/SjG54n2_V5I/AAAAAAAAA7U/ghW617l6NQU/s1600-h/6_string_intern_Class.png"><img style="cursor: pointer; width: 400px; height: 331px;" src="http://1.bp.blogspot.com/_x9-hQNFipOw/SjG54n2_V5I/AAAAAAAAA7U/ghW617l6NQU/s400/6_string_intern_Class.png" alt="" id="BLOGGER_PHOTO_ID_5346258615088928658" border="0" /></a>
+<br />
+<br />Syntax: string.intern("string object" or "text")
+<br />The reason why I used "string.intern(value ?? "")" is because string.intern does not accept null values. Since I added string.intern in Getter's and Setter's, I had to make sure the value is not NULL and by default I set it to "". Also another example would be string concatenating the same data over and over again like the following example:
+<br />
+<br />
+<a onblur="try {parent.deselectBloggerImageGracefully();} catch(e) {}" href="http://2.bp.blogspot.com/_x9-hQNFipOw/SjG8UExGYnI/AAAAAAAAA7c/G9JWvXmfzNQ/s1600-h/7_String_Intern_Alternative.png"><img style="cursor: pointer; width: 400px; height: 31px;" src="http://2.bp.blogspot.com/_x9-hQNFipOw/SjG8UExGYnI/AAAAAAAAA7c/G9JWvXmfzNQ/s400/7_String_Intern_Alternative.png" alt="" id="BLOGGER_PHOTO_ID_5346261285728576114" border="0" /></a>
+<br />
+<br />As you can see above that "/images/ratingBig-" is being concatenated or basically a constant value which over hear would make sense to use String.Intern to create only one instance of the global string object.
+<br />
+<br />I personally feel that String.intern works wonders or atleast works for my situation but word of caution about it's global scope of intern pool objects.

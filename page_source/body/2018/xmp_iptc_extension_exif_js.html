@@ -1,0 +1,37 @@
+<h1>XMP Support in Exif.js</h1>
+<p>Nov, 2018</p>
+
+Extending exif.js library to support Adobe XMP data
+
+<br /><br />
+<dt>Step 1. Read the raw xmp data from the file</dt>
+
+<script src="https://gist.github.com/karthik20522/0833a7ece209fc9dd80e67f88d22b970.js"></script>
+
+<dt>Step 2: Convert xml to js object</dt>
+
+<script src="https://gist.github.com/karthik20522/4e113919793a644b2a0739b098d166e1.js"></script>
+
+<dt>Step 3: Update the exif.js file handler</dt>
+<script src="https://gist.github.com/karthik20522/00d0c6079c99f0eb82b77e66b0efd7fa.js"></script>
+
+<i>Pull request: https://github.com/exif-js/exif-js/pull/28</i>
+
+<dt>
+    Usage:
+    </dt>
+<pre style="font-size:11px;">
+  document.getElementById("file-input").onchange = function(e) {
+        EXIF.getData(e.target.files[0], function() {
+              var exifData = JSON.stringify(this.exifdata, null, 2)
+              var iptcData = JSON.stringify(this.iptcdata, null, 2)
+              var xmpData = JSON.stringify(this.xmpdata, null, 2)
+
+        var prettPrinter = "IPTC DATA: " + iptcData +
+               "\n\nXMP DATA: " + xmpData +
+               "\n\nEXIF DATA: " + exifData;
+
+        document.getElementById('data').innerHTML = prettPrinter;          
+    });
+}
+</pre>

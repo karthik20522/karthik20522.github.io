@@ -2,8 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\pages",
-    "\\stylesheets"
+    "\\pages\\2016",
+    "\\page_source",
+    "\\page_source\\body",
+    "\\page_source\\header"
   ],
-  "SelectedNode": "\\pages\\akka_net_actor_creation_typed_untyped_receive_actor.html",
+  "SelectedNode": "\\bloglist.txt",
   "PreviewInSolutionExplorer": false
 }

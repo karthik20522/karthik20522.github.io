@@ -1,0 +1,108 @@
+<h1>Teacup UI - Fun, simple to use jQuery plugin</h1>
+<p>Oct, 2013</p>
+
+            Download the code at <a href="https://github.com/karthik20522/TeacupUI">https://github.com/karthik20522/TeacupUI</a>
+
+<br><br>
+
+            A simple representation of percentage data as a layer of ingredients in a tea cup. Yes, a tea cup!! Why? Well just for fun I built it. For whom? Possibly for some one who has a coffee or a tea site and want to present their mix in a teacup ui or possibly for a online info-graphics. Usage is limited by imagination only!
+
+<br><br>
+
+            Anyways, how to get this setup and working. Just follow these steps:
+<br><br>
+
+<b>- Add the css</b>
+<code style="font-size:12px;">
+    <pre>
+&lt;link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz' rel='stylesheet' type='text/css'&gt;
+&lt;link href='teacup.css' rel='stylesheet' type='text/css'&gt;
+                </pre>
+</code>
+
+<br>
+<b>- Add the js file and include jQuery</b>
+<code style="font-size:12px;">
+    <pre>
+&lt;script type='text/javascript' src='http://www.google.com/jsapi'&gt;&lt;/script&gt;
+&lt;script type = 'text/javascript' &gt;
+google.load('jquery', '1.7.1');
+&lt;/script&gt;
+&lt;script type = "text/javascript" src = "teacup.js" &gt;&lt;/script&gt;
+</pre>
+</code>
+<br>
+
+<b>- Add your data</b>
+<code style="font-size:12px;">
+    <pre>
+&lt;div id="Latte"&gt;
+	&lt;a value="20" href="#"&gt;Milk Foam&lt;/a&gt;
+	&lt;a value="50" href="#"&gt;Steamed Milk&lt;/a&gt;
+	&lt;a value="30" href="#"&gt;Expresso&lt;/a&gt;
+&lt;/div&gt;
+                                </pre>
+</code>
+            Note that your values should add up to 100 to fill up the teacup. Your
+            value can be larger but it would look funny and if your value is
+            lesser than 100 that's OK as the plugin would fill the rest up with emptiness. Also note that each of the href's are clickable within the teacup.
+<br><br>
+<b>- Bind the plugin</b>
+<code style="font-size:12px;">
+    <pre>
+$("#Latte").teacup();
+</pre>
+</code>
+<br>
+<div class="separator" style="clear: both; text-align: center;">
+    <a href="http://2.bp.blogspot.com/-sucD2fguB3U/UM_cGKcUdzI/AAAAAAAADFA/BRWpwD2UI-k/s1600/teacupUI.png" imageanchor="1" style="margin-left:1em; margin-right:1em"><img border="0" height="225" width="281" src="http://2.bp.blogspot.com/-sucD2fguB3U/UM_cGKcUdzI/AAAAAAAADFA/BRWpwD2UI-k/s400/teacupUI.png" /></a>
+</div>
+
+
+<br><br>
+<b><i>What else:</i></b><br><br>
+<b>- How about custom colors</b>
+<code style="font-size:12px;">
+    <pre>
+&lt;div id="Americano"&gt;
+	&lt;a value="65" href="http://kufli.blogspot.com"&gt;Water&lt;/a&gt;
+	&lt;a value="35" href="http://github.com/karthik20522"&gt;Expresso&lt;/a&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+	$("#Americano").teacup({colors: ["#42749F", "#E2640F"] });
+&lt;/script&gt;
+</pre>
+</code>
+<b>- How about multiple teacups on same page</b>
+<code style="font-size:12px;">
+    <pre>
+&lt;div class="parentDiv"&gt;
+	&lt;div id="Mocha"&gt;
+		&lt;a value="20" href="#"&gt;Whipped Cream&lt;/a&gt;
+		&lt;a value="35" href="#"&gt;Steamed Milk&lt;/a&gt;
+		&lt;a value="15" href="#"&gt;Chocolate Syrup&lt;/a&gt;
+		&lt;a value="30" href="#"&gt;Expresso&lt;/a&gt;
+	&lt;/div&gt;
+	&lt;div class="note"&gt;Caffe Mocha&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="parentDiv"&gt;
+	&lt;div id="White"&gt;
+		&lt;a value="50" href="#"&gt;Steamed Milk&lt;/a&gt;
+		&lt;a value="30" href="#"&gt;Expresso&lt;/a&gt;
+	&lt;/div&gt;
+	&lt;div class="note"&gt;Flat White&lt;/div&gt;
+&lt;/div&gt;
+
+$("#Mocha").teacup();
+$("#White").teacup({colors: ["#B9BC8D", "#E2640F"] });
+</pre>
+</code>
+<br><br>
+
+
+<div class="separator" style="clear: both; text-align: center;">
+    <a href="http://1.bp.blogspot.com/-XXsXsNHPaio/UM_fWc5a-WI/AAAAAAAADF8/O8vnW6aogcs/s1600/teacupUI_mulitple_jquery.png" imageanchor="1" style="margin-left:1em; margin-right:1em"><img border="0" height="161" width="400" src="http://1.bp.blogspot.com/-XXsXsNHPaio/UM_fWc5a-WI/AAAAAAAADF8/O8vnW6aogcs/s400/teacupUI_mulitple_jquery.png" /></a>
+</div>
+<br><br>
+            Download the code and example at <a href="https://github.com/karthik20522/TeacupUI">https://github.com/karthik20522/TeacupUI</a>

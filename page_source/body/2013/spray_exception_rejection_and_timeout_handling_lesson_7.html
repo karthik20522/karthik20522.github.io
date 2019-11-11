@@ -1,0 +1,87 @@
+<h1>Spray.io REST service - Exception, Rejection and Timeout Handling - Lesson 7</h1>
+View the lessons list at <a href="https://github.com/karthik20522/SprayLearning">https://github.com/karthik20522/SprayLearning</a>
+
+<br><br>
+
+<b>Handling exceptions</b> with the application and returning a valid http response with message is probably the way to go for building readable REST Api's. In spray,exceptions thrown during route execution bubble up thru the route structure up to the next enclosing handleExceptions directive. If you’d like to customize the way certain exceptions are handled simply bring a custom ExceptionHandler into implicit scope of the runRoute wrapper. For example:
+<br>
+
+<pre>
+
+    class CustomerServiceActor extends Actor with CustomerService with AjaxService {
+        implicit def json4sFormats: Formats = DefaultFormats
+        def actorRefFactory = context
+
+        def receive = runRoute(handleExceptions(myExceptionHandler)(
+        customerRoutes ~ ajaxRoutes))
+
+        //capture all exceptions within the above routes
+        implicit def myExceptionHandler(implicit log: LoggingContext) =
+        ExceptionHandler.apply {
+        case e: SomeCustomException => ctx => {
+            log.debug("%s %n%s %n%s".format(e.getMessage, e.getStackTraceString, e.getCause))
+            ctx.complete(404, e.getMessage)
+        }
+        case e: Exception => ctx => {
+            log.debug("%s %n%s %n%s".format(e.getMessage, e.getStackTraceString, e.getCause))
+            ctx.complete(500, e.getMessage)
+        }
+        }
+    }
+</pre>
+
+<br>
+
+More information on Handling Exceptions can be found at <a href="http://spray.io/documentation/1.2-M8/spray-routing/key-concepts/exception-handling/">spray-routing/key-concepts/exception-handling/</a>
+<br><br>
+
+How about handling <b>Rejections</b>? Similar to handling exceptions we can handle rejections in similar fashion. In this example I have created a separate trait with the rejection handler. I came across an issue with some conflict with shapeless syntax and rejection handler syntax "::"
+<br>
+<pre>
+    //separate trait file
+    trait CustomRejectionHandler extends HttpService {
+    implicit val myRejectionHandler = RejectionHandler {
+    case AuthenticationFailedRejection(credentials) :: _ => complete(Unauthorized, "Credential fail " + credentials)
+    case _ => complete(BadRequest, "Something went wrong here")
+    }
+
+
+    //HttpService
+    class CustomerServiceActor extends Actor with CustomerService with AjaxService with CustomRejectionHandler {
+
+    . . . .
+    def receive = runRoute(handleRejections(myRejectionHandler)(handleExceptions(myExceptionHandler)(
+    customerRoutes ~ ajaxRoutes)))
+
+    implicit def myExceptionHandler(implicit log: LoggingContext) =
+    ExceptionHandler.apply {
+    . . . .
+    }
+    }
+</pre>
+
+More information on Handling Rejections at <a href="http://spray.io/documentation/1.2-M8/spray-routing/key-concepts/rejections/">spray-routing/key-concepts/rejections/</a>
+
+<br><br>
+
+<b>Timeout</b> Handling: spray-routing itself does not perform any timeout checking, it relies on the underlying spray-can to watch for request timeouts. The timeout value is defined in the config file (application.conf)
+<pre>
+    //application.conf
+    spray.can.server {
+    request-timeout = 10s
+    }
+
+    //in HttpService class
+    class CustomerServiceActor extends Actor with CustomerService with AjaxService with CustomRejectionHandler {
+    . . . .
+    def receive = handleTimeouts orElse runRoute(handleRejections(myRejectionHandler)(handleExceptions(myExceptionHandler)(
+    customerRoutes ~ ajaxRoutes)))
+
+    def handleTimeouts: Receive = {
+    case Timedout(x: HttpRequest) =>
+    sender ! HttpResponse(StatusCodes.InternalServerError, "Something is taking way too long.")
+    }
+    . . . .
+</pre>
+
+More information on Timeout Handler at <a href="http://spray.io/documentation/1.2-M8/spray-routing/key-concepts/timeout-handling/">spray-routing/key-concepts/timeout-handling/</a>

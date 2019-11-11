@@ -1,0 +1,51 @@
+<h1>Swaggered Development</h1>
+<p>Mar, 2015</p>
+            The whole notion of interface based development model is to separate the backend developers from frontend developers by exposing the operations and models. While models represent the entity fields and its properties like required status, max length and other validation characteristics etc, operations represents the restful endpoints or API operations for the client to consume.
+
+<br>
+<table>
+    <tr>
+        <td>
+            <a href="http://4.bp.blogspot.com/-UpKbApyyct0/Ud8injWzxrI/AAAAAAAAD6s/8vpdbZXzPwo/s1600/swagger.png" imageanchor="1"><img border="0" src="http://4.bp.blogspot.com/-UpKbApyyct0/Ud8injWzxrI/AAAAAAAAD6s/8vpdbZXzPwo/s320/swagger.png" /></a>
+        </td>
+        <td>
+            Swagger is an API documentation framework that help define the operations and models that are both machine readable and human readable. Swagger exposes json schema (draft3 representation) of  operations and models for machine readability and a UI that represents the operations, request, responses, summary, error codes etc for human readability.
+        </td>
+    </tr>
+</table>
+<br>
+            By exposing the endpoints information and request and response parameters, you have effectively provided an insight to your operations. On any development project consisting on front end developers and backend developers, its always a waiting game for front end devs as they are dependent on api and its documentation for them to consume and develop. By providing an insight to the operations would allow consuming developers to start immediately mocking the REST service responses.
+<br><br>
+            Much said, let's build a simple swagger doc using Swagger.NET and WebApi.Swagger.net and SwaggerUi can be downloaded as nuget packages.
+<br>
+<a href="http://4.bp.blogspot.com/-HkwLkenPkNM/Ud8jJfwComI/AAAAAAAAD60/_xHD5Fm3NfE/s1600/swagger_net.png" imageanchor="1"><img border="0" src="http://4.bp.blogspot.com/-HkwLkenPkNM/Ud8jJfwComI/AAAAAAAAD60/_xHD5Fm3NfE/s520/swagger_net.png" /></a>
+<br><br>
+            Once these two packages are installed make sure to have the XML documentation enabled in the project properties of your solution.<br>
+<a href="http://3.bp.blogspot.com/-RVShHXmi57o/Ud8j-99ZjdI/AAAAAAAAD7E/OpXQ74sKOU0/s1600/swagger_xm;.png" imageanchor="1"><img border="0" src="http://3.bp.blogspot.com/-RVShHXmi57o/Ud8j-99ZjdI/AAAAAAAAD7E/OpXQ74sKOU0/s480/swagger_xm;.png" /></a>
+<br><br>
+
+            To get your API endpoints swaggerified, add XML comments, remarks and parameters information to your Action XML description such as follows:
+<br>
+<code style="font-size:12px;">
+    <pre>
+public class ValuesController : ApiController
+{
+ /// <summary>
+ /// Gets the resource by the specified ID.
+ /// </summary>
+ /// <param name="id">The id.</param>
+ /// <remarks>These remarks end up in the implementation notes of swagger</remarks>
+ public string Get(string id)
+ {
+  return "value";
+ }
+...
+</pre>
+</code>
+
+            Basically upon compilation, a resource list file (json) is created for machine readability and swaggerUI provides a very neat API explorer and documentation interface for human readability similar to below. <br>
+
+<a href="http://2.bp.blogspot.com/-zZ6DBr1WZdE/Ud8m8qSYoDI/AAAAAAAAD7U/CF2Zjjahqbg/s1600/swagger_op.png" imageanchor="1"><img border="0" src="http://2.bp.blogspot.com/-zZ6DBr1WZdE/Ud8m8qSYoDI/AAAAAAAAD7U/CF2Zjjahqbg/s640/swagger_op.png" /></a>
+
+<br><br>
+            In part 2 of Swaggered Development, I shall show how to generate class files from resource files and also validation.

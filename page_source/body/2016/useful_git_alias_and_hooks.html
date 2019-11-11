@@ -1,0 +1,79 @@
+<h1>Useful Git Alias and Hooks</h1>
+<p>Dec, 2016</p>
+<!-- WRITE UR BLOG HERE-->
+            Git by itself is very raw and sometime hard to read the console outputs. Following are some of git <b>alias</b> that I tend to use on a daily basis.
+
+<br>
+<h1>git lg</h1>
+
+            This is a replacement to <b>git log</b>. git log doesn't provide any useful information such as branch name nor it's pretty looking! Yes pretty looking like colors and such. Following git alias solves this mundane problem.
+
+<code style="font-size:12px;">
+    <pre>
+$ git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+</pre>
+</code>
+            Following is a comparison screenshot of <b>git lg</b> vs <b>git log</b><br>
+            Using <i>git log</i>:<br>
+<a href="http://4.bp.blogspot.com/-9L7ScPTCLwQ/Uij4j1b7u8I/AAAAAAAAEAI/3oPJWk1LBzA/s1600/git_log.png" imageanchor="1"><img border="0" src="http://4.bp.blogspot.com/-9L7ScPTCLwQ/Uij4j1b7u8I/AAAAAAAAEAI/3oPJWk1LBzA/s400/git_log.png" /></a>
+<br>
+            Using <i>git lg alias</i>:<br>
+<a href="http://4.bp.blogspot.com/-2wxWAjD5Wc0/Uij4jylzEjI/AAAAAAAAEAM/icI7CAIFsmI/s1600/git_lg_alias.png" imageanchor="1"><img border="0" src="http://4.bp.blogspot.com/-2wxWAjD5Wc0/Uij4jylzEjI/AAAAAAAAEAM/icI7CAIFsmI/s400/git_lg_alias.png" /></a>
+<br>
+<h1>git unpushed</h1>
+            Every now and then I try to look for all uncommitted changes. But this quite a pain to look for from git console. Problem solved with the following alias:
+
+<code style="font-size:12px;">
+    <pre>
+$ git config --global alias.unpushed "log --branches --not --remotes --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+</pre>
+</code>
+<br>
+<a href="http://2.bp.blogspot.com/-KTH4-E6yWgo/Uij5jMLBpGI/AAAAAAAAEAc/xaO_CIiTlzw/s1600/git_unpushed.png" imageanchor="1"><img border="0" src="http://2.bp.blogspot.com/-KTH4-E6yWgo/Uij5jMLBpGI/AAAAAAAAEAc/xaO_CIiTlzw/s400/git_unpushed.png" /></a>
+<br>
+
+<h1>git undo</h1>
+            git out-of-the-box doesn't provide an undo option to revert the previous commit. Pain! Following alias intends to solve the problem:
+
+<code style="font-size:12px;">
+    <pre>
+$ git config --global alias.undo "reset --hard HEAD~1"
+</pre>
+</code>
+
+<br>
+<a href="http://2.bp.blogspot.com/-VrmeDLTJ4ZQ/Uij6JMpPqXI/AAAAAAAAEAk/tnMZ5vd4Ahs/s1600/git_undo.png" imageanchor="1"><img border="0" src="http://2.bp.blogspot.com/-VrmeDLTJ4ZQ/Uij6JMpPqXI/AAAAAAAAEAk/tnMZ5vd4Ahs/s400/git_undo.png" /></a>
+<br><br>
+
+<h1>Pre-push hooks</h1>
+            One of the most important hooks that I use is a pre-push hook that executes unit tests before pushing to "master" branch. This is important as it can save broken test cases being pushed to master branch. Following hook script:
+
+<code style="font-size:12px;">
+    <pre>
+#.git/hooks/pre-push
+#!/bin/bash
+
+CMD="sbt test" # Command to run your tests - I use Sbt test
+protected_branch='master'
+
+# Check if we actually have commits to push
+commits=`git log @{u}..`
+if [ -z "$commits" ]; then
+exit 0
+fi
+
+current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+
+if [[ $current_branch = $protected_branch ]]; then
+    $CMD
+    RESULT=$?
+    if [ $RESULT -ne 0 ]; then
+echo "failed $CMD"
+        exit 1
+    fi
+fi
+exit 0
+
+</pre>
+</code>
+<a href="http://4.bp.blogspot.com/-HjaVMeETzIc/Uij9dAhehgI/AAAAAAAAEAw/c3QPE2x-0jE/s1600/git_pre_push_sbt.png" imageanchor="1"><img border="0" src="http://4.bp.blogspot.com/-HjaVMeETzIc/Uij9dAhehgI/AAAAAAAAEAw/c3QPE2x-0jE/s400/git_pre_push_sbt.png" /></a>

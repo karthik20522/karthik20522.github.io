@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -16,7 +16,7 @@
     <div class="wrapper">
         <header>
             <div style="width:100%; text-align: center;">
-                <a href="/"><img src="https://media.licdn.com/dms/image/C4E03AQFz7hl4dZryuw/profile-displayphoto-shrink_200_200/0?e=1564012800&v=beta&t=QLw4PP3jadNeL8A_T7nCgGOvPE3-RQKkO8qPjoI4pz4" style="border-radius: 50%;" /></a>
+                <a href="/"><img src="/images/0.jpg" style="border-radius: 50%;" /></a>
             </div>
             <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
             <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
@@ -26,21 +26,21 @@
             <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
         </header>
         <section>
-            <h1>Unhandled GZip Encoding - ASP.NET</h1>
-
+<h1>Unhandled GZip Encoding - ASP.NET</h1>
+<p>Mar, 2010</p>
             What happens when you have GZip turned on and there is an unhandled exception is thrown, look no further.. a completely cryptic garbage page is returned<br><br>
 
-            <a href="http://3.bp.blogspot.com/-2Y8RAX7Uj-g/UIlmLXLKRUI/AAAAAAAAC-w/nvwRIIvE_wA/s1600/gzip_compression.png" imageanchor="1" style=""><img border="0" height="153" width="400" src="http://3.bp.blogspot.com/-2Y8RAX7Uj-g/UIlmLXLKRUI/AAAAAAAAC-w/nvwRIIvE_wA/s400/gzip_compression.png" /></a>
+<a href="http://3.bp.blogspot.com/-2Y8RAX7Uj-g/UIlmLXLKRUI/AAAAAAAAC-w/nvwRIIvE_wA/s1600/gzip_compression.png" imageanchor="1" style=""><img border="0" height="153" width="400" src="http://3.bp.blogspot.com/-2Y8RAX7Uj-g/UIlmLXLKRUI/AAAAAAAAC-w/nvwRIIvE_wA/s400/gzip_compression.png" /></a>
 
-            <br><br>
+<br><br>
 
             So whats the problem, well when an unhandled exception is thrown ASP.NET/MVC removes the GZip header or any other custom header that was set and returns a non-zipped content while your IIS decides to send to browser that the content is GZipped when it's not really. So your browser is receiving a non-zipped content with GZIP content type, thus the garbage content.
 
-            <br><br>
+<br><br>
             To fix this in the global.ascx add the following to the Application_PreSendRequestHeaders function:
-            <br>
-            <code style="font-size:12px;">
-                <pre>
+<br>
+<code style="font-size:12px;">
+    <pre>
 protected void Application_PreSendRequestHeaders()
 {  
   if (HttpContext.Current != null && HttpContext.Current.Response != null)
@@ -59,33 +59,31 @@ protected void Application_PreSendRequestHeaders()
    }
 }
 </pre>
-            </code>
+</code>
+<!--*********************FOOTER'ISH************************-->
+<div id="graphcomment"></div>
+<script type="text/javascript">
+    /*window.gc_params = {
+        graphcomment_id: 'Karthik-Github',
+        fixed_header_height: 0,
+    };
+    (function () {
+        var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+        gc.src = 'https://graphcomment.com/js/integration.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
+    })();*/
+</script>
 
+</section>
+<footer></footer>
+</div>
+<script src="/javascripts/scale.fix.js"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
 
-            <!--*********************FOOTER'ISH************************-->
-            <div id="graphcomment"></div>
-            <script type="text/javascript">
-                window.gc_params = {
-                    graphcomment_id: 'Karthik-Github',
-                    fixed_header_height: 0,
-                };
-                (function () {
-                    var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
-                    gc.src = 'https://graphcomment.com/js/integration.js';
-                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
-                })();
-            </script>
-
-        </section>
-        <footer></footer>
-    </div>
-    <script src="/javascripts/scale.fix.js"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-140795658-1');
-    </script>
+    gtag('config', 'UA-140795658-1');
+</script>
 </body>
 </html>

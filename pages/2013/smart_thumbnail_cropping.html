@@ -1,0 +1,144 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Everyone meet Karthik</title>
+
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div style="width:100%; text-align: center;">
+                <a href="/"><img src="/images/0.jpg" style="border-radius: 50%;" /></a>
+            </div>
+            <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
+            <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
+            <p class="view" style="margin:0;"><a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a></p>
+            <p class="view" style="margin:0;"><a href="/pages/beers_in_my_belly.html" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a></p>
+            <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
+        </header>
+        <section>
+<h1>Smart Thumbnail Cropping</h1>
+<p>Jan, 2013</p>
+            Scaling an image down to a thumbnail size is a common practice when hosting it on websites to reduce page load time and save bandwidth and so on.. But very little has been done in optimization of those thumbnails from a human view-ability point of view. Human view-ability, what? Take a large image where background covers the major part of the image and shrink it down to a thumbnail size (say 192 px) and notice that the details of the image is subdued by the background.
+<br><br>
+            To solve this problem of smart cropping, I am using a variation of descriptors and image processing tricks to extract only the most feature rich part of the image and preserve the aspect ratio while cropping the image.
+            Following are the test results of algorithm used:
+<table>
+    <tr>
+        <td><b>Sample 1</b></td>
+    </tr>
+    <tr>
+        <td>
+            <a href="http://4.bp.blogspot.com/-Rz9evkBCFeA/UmiF5wiw35I/AAAAAAAAEBw/ez8gEWYd6EY/s1600/test1_original.jpg" imageanchor="1"><img border="0" src="http://4.bp.blogspot.com/-Rz9evkBCFeA/UmiF5wiw35I/AAAAAAAAEBw/ez8gEWYd6EY/s192/test1_original.jpg" /></a>
+        </td>
+        <td>
+            <a href="http://2.bp.blogspot.com/-Jj5yOP89EX0/UmiF5yVCtnI/AAAAAAAAEB0/xB_Gx_ftXsY/s1600/test1_surf.jpg" imageanchor="1"><img border="0" src="http://2.bp.blogspot.com/-Jj5yOP89EX0/UmiF5yVCtnI/AAAAAAAAEB0/xB_Gx_ftXsY/s192/test1_surf.jpg" /></a>
+        </td>
+        <td>
+            <a href="http://1.bp.blogspot.com/-q41M4hpHHR8/UmiF50rXuBI/AAAAAAAAEB8/1s5Cx4txaEU/s1600/test1.jpg" imageanchor="1"><img border="0" src="http://1.bp.blogspot.com/-q41M4hpHHR8/UmiF50rXuBI/AAAAAAAAEB8/1s5Cx4txaEU/s320/test1.jpg" /></a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <b>Original Thumbnail</b>
+        </td>
+        <td>
+            <b>Feature Extraction<b></b></b>
+        </td>
+        <td>
+            <b>Cropped Thumbnail</b>
+        </td>
+    </tr>
+    <tr>
+        <td><b>Sample </b>2</td>
+    </tr>
+
+    <tr>
+        <td>
+            <a href="http://1.bp.blogspot.com/-oGp-vdBdX5g/UmiHj2eczeI/AAAAAAAAECI/E0wqd6wbkbw/s1600/test2_original.jpg" imageanchor="1"><img border="0" src="http://1.bp.blogspot.com/-oGp-vdBdX5g/UmiHj2eczeI/AAAAAAAAECI/E0wqd6wbkbw/s200/test2_original.jpg" /></a>
+        </td>
+        <td>
+            <a href="http://1.bp.blogspot.com/-L0TjBJ27Yc0/UmiHqV6ZU9I/AAAAAAAAECQ/VpoZUD3ev_w/s1600/test2_surf.jpg" imageanchor="1"><img border="0" src="http://1.bp.blogspot.com/-L0TjBJ27Yc0/UmiHqV6ZU9I/AAAAAAAAECQ/VpoZUD3ev_w/s200/test2_surf.jpg" /></a>
+        </td>
+        <td>
+            <a href="http://1.bp.blogspot.com/-HGz75N47YH0/UmiHvZGrGJI/AAAAAAAAECY/8YZT84crSjc/s1600/test2.jpg" imageanchor="1"><img border="0" src="http://1.bp.blogspot.com/-HGz75N47YH0/UmiHvZGrGJI/AAAAAAAAECY/8YZT84crSjc/s320/test2.jpg" /></a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <b>Original Thumbnail</b>
+        </td>
+        <td>
+            <b>Feature Extraction<b></b></b>
+        </td>
+        <td>
+            <b>Cropped Thumbnail</b>
+        </td>
+    </tr>
+    <tr><td><b>Sample 3</b></td></tr>
+    <tr>
+        <td>
+            <a href="http://4.bp.blogspot.com/-IOLqkel8Cks/UmiIcfMwVLI/AAAAAAAAECg/J2ZajG7H9To/s1600/test4_original.jpg" imageanchor="1"><img border="0" src="http://4.bp.blogspot.com/-IOLqkel8Cks/UmiIcfMwVLI/AAAAAAAAECg/J2ZajG7H9To/s200/test4_original.jpg" /></a>
+        </td>
+        <td>
+            <a href="http://3.bp.blogspot.com/-kHnLIFQiroc/UmiIg39vgzI/AAAAAAAAECo/QIAidy47kkk/s1600/test4_surf.JPG" imageanchor="1"><img border="0" src="http://3.bp.blogspot.com/-kHnLIFQiroc/UmiIg39vgzI/AAAAAAAAECo/QIAidy47kkk/s200/test4_surf.JPG" /></a>
+        </td>
+        <td>
+            <a href="http://3.bp.blogspot.com/-jWRNcfq4mZ0/UmiIpJ_6eCI/AAAAAAAAECw/FJOdiLUHkpM/s1600/test4.jpg" imageanchor="1"><img border="0" src="http://3.bp.blogspot.com/-jWRNcfq4mZ0/UmiIpJ_6eCI/AAAAAAAAECw/FJOdiLUHkpM/s200/test4.jpg" /></a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <b>Original Thumbnail</b>
+        </td>
+        <td>
+            <b>Feature Extraction<b></b></b>
+        </td>
+        <td>
+            <b>Cropped Thumbnail</b>
+        </td>
+    </tr>
+</table>
+
+<br><br>
+            So what's in the pipeline:
+<ul>
+    <li>Open source the image processing code</li>
+    <li>Build a http handler (ASP.NET http handler) for dynamic cropping</li>
+</ul>
+            Thoughts?<!--*********************FOOTER'ISH************************-->
+<div id="graphcomment"></div>
+<script type="text/javascript">
+    /*window.gc_params = {
+        graphcomment_id: 'Karthik-Github',
+        fixed_header_height: 0,
+    };
+    (function () {
+        var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+        gc.src = 'https://graphcomment.com/js/integration.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
+    })();*/
+</script>
+
+</section>
+<footer></footer>
+</div>
+<script src="/javascripts/scale.fix.js"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-140795658-1');
+</script>
+</body>
+</html>

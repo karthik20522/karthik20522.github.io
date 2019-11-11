@@ -1,0 +1,115 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Everyone meet Karthik</title>
+
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div style="width:100%; text-align: center;">
+                <a href="/"><img src="/images/0.jpg" style="border-radius: 50%;" /></a>
+            </div>
+            <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
+            <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
+            <p class="view" style="margin:0;"><a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a></p>
+            <p class="view" style="margin:0;"><a href="/pages/beers_in_my_belly.html" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a></p>
+            <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
+        </header>
+        <section>
+<h1>Scala Parser Combinators - SQL Parser Example</h1>
+<p>Mar, 2016</p>
+            Scala Parser Combinators: <a href="https://github.com/scala/scala-parser-combinators">https://github.com/scala/scala-parser-combinators</a><br><br>
+
+            Scala Parser Combinators is basically a parsing framework for extracting data when there is a pattern in the given input. This framework provides a more statically typed,
+            functional way of extracting instead of using regex expression which can get hard to read. <br><br>
+            In this post, lets build a SQL parser where given a valid sql statement we can identify the "table" name, "column" names and other sql properties.
+            Following are some fundamental functions, operations that Scala combinator provides which would help in parsing:
+
+<ul>
+    <li>
+        "<b> | </b>": says "succeed if either the left or right operand parse successfully"
+    </li>
+    <li>
+        "<b> ~ </b>": says "succeed if the left operand parses successfully, and then the right parses successfully on the remaining input"
+    </li>
+    <li>
+        "<b> ~> </b>": says "succeed if the left operand parses successfully followed by the right, but do not include the left content in the result"
+    </li>
+    <li>
+        "<b> <~ </b>": is the reverse, "succeed if the left operand is parsed successfully followed by the right, but do not include the right content in the result"
+    </li>
+    <li>
+        "<b> ^^ </b>": says "if the left operand parses successfully, transform the result using the function on the right"
+    </li>
+    <li>
+        "<b> ^^^ </b>": says "if the left operand parses successfully, ignore the result and use the value from the right"
+    </li>
+    <li>
+        " rep(fn) ": says "parse the given input using the parser function fn"
+    </li>
+    <li>
+        " repsep(ident, char) ": says "parse the given input and split the input using the given 'char'"
+    </li>
+</ul>
+
+            Lets start out with a set of SQL statements and it's associated Parser code
+
+<h4><i>select * from users</i></h4>
+<script src="https://gist.github.com/karthik20522/ce20c37d2f19edb8de2588732684bc47.js"></script>
+
+<h4><i>select name,age from users</i></h4>
+<script src="https://gist.github.com/karthik20522/cc0de39c2b8ef2d83707fed298161c8e.js"></script>
+
+<h4><i>select count(name) from users</i></h4>
+<script src="https://gist.github.com/karthik20522/4de772104294f678bd65660f0f9e77a1.js"></script>
+
+<h4><i>select * from users order by age desc</i></h4>
+<script src="https://gist.github.com/karthik20522/ee21e0f6311ba42c4fb0e8f087a98fb8.js"></script>
+
+<h4><i>select * from users order by name, age desc</i></h4>
+<script src="https://gist.github.com/karthik20522/8d7e569d10f8b43e5675bc7be3ccf1ab.js"></script>
+
+<h4><i>select age from users where age>30</i></h4>
+<script src="https://gist.github.com/karthik20522/853fab15bee528a4c554365da27a2acb.js"></script>
+
+<h4 style="color:red;">PUTTING IT ALL TOGETHER</h4>
+<script src="https://gist.github.com/karthik20522/5c03b99e95cddc616fa0d53d9f3a3f14.js"></script>
+
+<h4 style="color:red;">TEST CASES</h4>
+<script src="https://gist.github.com/karthik20522/e10623b0273d204d750906d587a54ed2.js"></script><!--*********************FOOTER'ISH************************-->
+<div id="graphcomment"></div>
+<script type="text/javascript">
+    /*window.gc_params = {
+        graphcomment_id: 'Karthik-Github',
+        fixed_header_height: 0,
+    };
+    (function () {
+        var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+        gc.src = 'https://graphcomment.com/js/integration.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
+    })();*/
+</script>
+
+</section>
+<footer></footer>
+</div>
+<script src="/javascripts/scale.fix.js"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-140795658-1');
+</script>
+</body>
+</html>
