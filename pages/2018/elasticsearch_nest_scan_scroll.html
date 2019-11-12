@@ -1,0 +1,105 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Everyone meet Karthik</title>
+
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div style="width:100%; text-align: center;">
+                <a href="/"><img src="/images/0.jpg" style="border-radius: 50%;" /></a>
+            </div>
+            <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
+            <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
+            <p class="view" style="margin:0;"><a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a></p>
+            <p class="view" style="margin:0;"><a href="/pages/beers_in_my_belly.html" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a></p>
+            <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
+        </header>
+        <section>
+<h1 class="entry-title">Elasticsearch Nest Scroll API in C#</h1>
+<p>Feb 25, 2018</p>
+<p>Example of using Elasticsearch&rsquo;s scroll API with NEST in C#.</p>
+<pre class="language-markup"><code>private void GetAllDocumentsInConversions(string clientId, string yesterdaysDate, 
+string todaysDate, string scrollTimeout = "1m", int scrollSize = 200)
+        {
+            _conversions = new List&lt;Conversion&gt;();
+
+            var elasticClient = new ElasticClient(new Uri("http://root:1ddqd1dkfaJKL2O522@prod-escluster.pixibo.com"));
+
+            ISearchResponse&lt;Conversion&gt; initialResponse = elasticClient.Search&lt;Conversion&gt;
+                (scr =&gt; scr.Index("tracking_prod")
+                     .From(0)
+                     .Take(scrollSize)
+                     .Query(s =&gt;
+                        s.Term(d =&gt; d.Field(p =&gt; p.clientId).Value(clientId)) &amp;&amp;
+                        s.DateRange(d =&gt; d.Field(p =&gt; p.timestamp).GreaterThanOrEquals(yesterdaysDate).LessThanOrEquals(todaysDate)))
+                     .Scroll(scrollTimeout));
+
+            if (!initialResponse.IsValid || string.IsNullOrEmpty(initialResponse.ScrollId))
+                throw new Exception(initialResponse.ServerError.Error.Reason);
+
+            if (initialResponse.Documents?.Any() == true)
+                _conversions.AddRange(initialResponse.Documents.ToList());
+
+            string scrollid = initialResponse.ScrollId;
+            bool isScrollSetHasData = true;
+
+            while (isScrollSetHasData)
+            {
+                Console.WriteLine(clientId + ": Scrolling Conversions: " + _conversions.Count());
+
+                ISearchResponse&lt;Conversion&gt; loopingResponse = elasticClient.Scroll&lt;Conversion&gt;(scrollTimeout, scrollid);
+
+                if (loopingResponse.IsValid)
+                {
+                    _conversions.AddRange(loopingResponse.Documents.ToList());
+                    scrollid = loopingResponse.ScrollId;
+                }
+                isScrollSetHasData = loopingResponse.Documents.Any();
+            }
+
+            elasticClient.ClearScroll(new ClearScrollRequest(scrollid));
+        }</code></pre>
+<p>&nbsp;</p>
+<p>Things to notice in this example of the Elasticsearch Nest Scroll API in C#&hellip;</p>
+<ul>
+    <li>scrollTimeout only needs to be long enough to last between calls.&nbsp; Each call to the scroll API with the scrollid resets the timer.</li>
+    <li>After scrollTimeout expires Elasticsearch will delete the scroll dataset</li>
+    <li>scrollSize (take) in this case controls how many documents are returned with each call to the Scroll API</li>    
+</ul><!--*********************FOOTER'ISH************************-->
+<div id="graphcomment"></div>
+<script type="text/javascript">
+    /*window.gc_params = {
+        graphcomment_id: 'Karthik-Github',
+        fixed_header_height: 0,
+    };
+    (function () {
+        var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+        gc.src = 'https://graphcomment.com/js/integration.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
+    })();*/
+</script>
+
+</section>
+<footer></footer>
+</div>
+<script src="/javascripts/scale.fix.js"></script>
+<script>
+/*    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-140795658-1');*/
+</script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<h1 class="l-mt0 f-bold f-icon-bold l-mb4 f-c-white"><span class="f-c-white l-mr3">An Introduction to HTML Imports</span></h1>
+<p><span class="f-c-white l-mr3">July 2, 2016</span></p>
+<p><span class="f-c-white l-mr3"><a href="http://www.w3.org/TR/html-imports/">HTML Imports</a>&nbsp;are a way to include external HTML documents and web components on a page without making an Ajax request or loading an iframe. Because of this capability, HTML Imports may lead to better page load times as by default browsers cache import source files.</span></p>
+<p>HTML Imports support DRY development. Here is an example. Imagine that you have three messages that are repeated on several web pages, perhaps even web pages on different domains. Rather than copying and pasting or retyping these messages for each page or project, they could be included using the HTML Imports feature.</p>
+<p>Here is the HTML for a file called&nbsp;<code class="  language-undefined">messages.html</code>:</p>
+<pre class="language-markup"><code>&lt;div class="message-success"&gt;
+    &lt;h2&gt;Success&lt;/h2&gt;
+    &lt;p&gt;Worked!&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="message-failure"&gt;
+    &lt;h2&gt;Failure&lt;/h2&gt;
+    &lt;p&gt;Failed!&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+<p>To reuse the content from&nbsp;<code class="  language-undefined">messages.html</code>, first include the document via HTML Imports. This amounts to adding a&nbsp;<code class="  language-undefined">&lt;link&gt;</code>&nbsp;element with its&nbsp;<code class="  language-undefined">rel</code>&nbsp;attribute set to "import" and its&nbsp;<code class="  language-undefined">href</code>&nbsp;pointed at&nbsp;<code class="  language-undefined">messages.html</code>, like this:</p>
+<pre class="language-markup"><code>&lt;link rel="import" href="messages.html"&gt;</code></pre>
+<p>Using JavaScript to accesses the imported&nbsp;<code class="  language-undefined">messages.html</code>&nbsp;document and loads the "success" message on the page. Each of the other messages could also be loaded in the same way or all together depending on how one wanted to use them. Here&rsquo;s the code:</p>
+<pre class="language-markup"><code>var htmlImport = document.querySelector('link[rel="import"]');
+var htmlDoc = htmlImport.import;
+var htmlMessage = htmlDoc.querySelector('.message-success');
+document.body.appendChild(htmlMessage.cloneNode(true));</code></pre>
+<p>The success message is now included on the page, similar to how an Ajax request works.</p>
+<p>There are polyfills that will make the feature available in nearly any browser. Perhaps, the most robust is the aforementioned&nbsp;<a href="http://www.polymer-project.org/platform/html-imports.html">Polymer Imports polyfill</a>.</p>

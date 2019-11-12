@@ -1,0 +1,95 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Everyone meet Karthik</title>
+
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div style="width:100%; text-align: center;">
+                <a href="/"><img src="/images/0.jpg" style="border-radius: 50%;" /></a>
+            </div>
+            <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
+            <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
+            <p class="view" style="margin:0;"><a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a></p>
+            <p class="view" style="margin:0;"><a href="/pages/beers_in_my_belly.html" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a></p>
+            <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
+        </header>
+        <section>
+<h1>Deploying to AWS lambdas to multiple regions</h1>
+<p>March 5, 2019</p>
+<p>Bash script to deploy to all regions using <a href="https://github.com/apex/up">Apex UP</a></p>
+<p><a href="https://docs.aws.amazon.com/general/latest/gr/rande.html">List of all regions</a>&nbsp;where you can deploy with AWS Lambda:</p>
+<pre class="language-csharp"><code>#!/usr/bin/env bash
+
+produrls=()
+
+declare -a regions=(
+	us-east-2	#US East (Ohio)
+	us-east-1	#US East (N. Virginia)
+	us-west-1	#US West (N. California)
+	#us-west-2	#US West (Oregon)
+	ap-east-1	#Asia Pacific (Hong Kong)
+	ap-south-1	#Asia Pacific (Mumbai)
+	ap-northeast-2	#Asia Pacific (Seoul)
+	ap-southeast-1	#Asia Pacific (Singapore)
+	ap-southeast-2	#Asia Pacific (Sydney)
+	ap-northeast-1	#Asia Pacific (Tokyo)
+	ca-central-1	#Canada (Central)
+	cn-north-1		#China (Beijing)
+	cn-northwest-1	#China (Ningxia)
+	eu-central-1	#EU (Frankfurt)
+	eu-west-1	#EU (Ireland)
+	eu-west-2	#EU (London)
+	eu-west-3	#EU (Paris)
+	eu-north-1	#EU (Stockholm)
+	me-south-1	#Middle East (Bahrain)
+)
+
+for region in "${regions[@]}"
+do
+    echo "Deploying to $region"
+    AWS_REGION=$region up deploy production
+    echo "Deployed: " $(AWS_REGION=$region up url -s production)
+	produrls+=($(AWS_REGION=$region up url -s production))
+    echo # echo new line
+done
+
+echo "!DONE!"
+echo "${produrls[*]}"</code></pre><!--*********************FOOTER'ISH************************-->
+<div id="graphcomment"></div>
+<script type="text/javascript">
+    /*window.gc_params = {
+        graphcomment_id: 'Karthik-Github',
+        fixed_header_height: 0,
+    };
+    (function () {
+        var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+        gc.src = 'https://graphcomment.com/js/integration.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
+    })();*/
+</script>
+
+</section>
+<footer></footer>
+</div>
+<script src="/javascripts/scale.fix.js"></script>
+<script>
+/*    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-140795658-1');*/
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<h1 class="post-title">How to duplicate a MySQL table, including indexes and data?</h1>
+    <p class="post-meta"><time datetime="2018-11-14T00:00:00+00:00">November 14, 2017</time></p>
+<div class="post-content">
+    <p>First, this query will copy the data and structure, but the indexes are not included:</p>
+    <div class="highlighter-rouge">
+        <div class="highlight">
+            <pre class="language-markup"><code>CREATE TABLE new_table SELECT * FROM old_table;</code></pre>        
+        </div>
+    </div>
+    <p>Second, this query will copy the table structure and indexes, but not data:</p>
+    <div class="highlighter-rouge">        
+            <pre class="language-markup"><code>CREATE TABLE new_table LIKE old_table;</code></pre>
+        
+    </div>
+    <p>So, to copy everything, including database objects such as&nbsp;indexes,&nbsp;primary key constraint,&nbsp;foreign key constraints,&nbsp;triggers, etc., run these queries:</p>
+    <div class="highlighter-rouge">
+            <pre class="language-markup"><code>CREATE TABLE new_table LIKE old_table; 
+INSERT new_table SELECT * FROM old_table;</code></pre>        
+        </div>
+    </div>
+    <p>If you want to copy a table from one database to another database:</p>
+    <pre class="language-markup"><code>CREATE TABLE destination_db.new_table LIKE source_db.old_table;
+
+INSERT destination_db.new_table
+SELECT
+    *
+FROM
+    source_db.old_table;</code></pre>
+</div>

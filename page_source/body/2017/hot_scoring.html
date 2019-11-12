@@ -1,0 +1,25 @@
+<h1 class="entry-title">Hot Scoring Sort</h1>
+<p>Nov 10, 2017</p>
+<p>Based on the difference between ups/downs, and decays with time. Causes hive mind effects in large crowds.&nbsp;</p>
+<ul class="">
+    <li id="5769" class="gy gz db bh ha b hb hc hd he hf hg hh hi hj hk hl ji jj jk" data-selectable-paragraph="">Submission time has a big impact on the ranking and the algorithm will rank newer assets higher than older</li>
+    <li id="5d7c" class="gy gz db bh ha b hb jl hd jm hf jn hh jo hj jp hl ji jj jk" data-selectable-paragraph="">The score won&rsquo;t decrease as time goes by, but newer assets will get a higher score than older.</li>
+</ul>
+<p>This is based on Reddit Scoring system <a href="https://medium.com/hacking-and-gonzo/how-reddit-ranking-algorithms-work-ef111e33d0d9" rel="nofollow">blog post</a></p>
+<h3>Scala:</h3>
+<pre class="language-csharp"><code>private def getHotScore(pageViews: Double, conversionCount: Double, releaseDate: Option[String]): Double = {
+    import com.github.nscala_time.time.Imports._
+    try {
+      val decay: Double = 45000;
+      val skuScore: Double = (if (pageViews &lt;= 0) 0 else Math.log(pageViews)) + (if (conversionCount &lt;= 0) 0 else Math.log(conversionCount))
+      val sign: Double = Math.signum(skuScore)
+      val order: Double = Math.log(Math.max(Math.abs(skuScore), 1)) / 2.3025
+      val secAge: Double = if (releaseDate == None) 1000 else (DateTime.parse(releaseDate.get) to DateTime.now()).millis / 1000
+      (sign * order) - (secAge / decay)
+    } catch {
+      case e: Exception =&gt; {
+        println(releaseDate)
+        0
+      }
+    }
+  }</code></pre>

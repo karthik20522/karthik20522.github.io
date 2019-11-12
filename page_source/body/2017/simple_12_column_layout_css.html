@@ -1,0 +1,141 @@
+    <h1 class="main-subheading">Simple grid system based on Flexbox</h1>
+    <p class="post-meta"><time datetime="2018-11-14T00:00:00+00:00">Dec 25, 2017</time></p>
+<div class="post-content">
+    <h3 class="section-heading">Syntax</h3>
+    <p class="content">This grid system uses a 12-column grid and is fully responsive. Columns are wrapped within a&nbsp;<code>grid</code>&nbsp;class.</p>
+    <pre class="language-markup"><code>&lt;div class="grid"&gt;
+  &lt;div class="column-12 column-12"&gt;1&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    <h3 class="heading">Grid</h3>
+    <p class="content">Use&nbsp;<code>column-*</code>&nbsp;classes with values 1 through 12 to indicate the number of columns. By default, all columns are the same height.</p>
+    <pre class="language-markup"><code>&lt;div class="grid"&gt;
+  &lt;div class="column-1"&gt;1&lt;/div&gt;
+  ...
+  &lt;div class="column-12"&gt;12&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+    <h3 class="section-heading">Nesting</h3>
+    <p class="content"><code>grid</code>&nbsp;within a&nbsp;<code>grid</code>.</p>
+    <pre class="language-markup"><code>&lt;div class="grid"&gt;
+  &lt;div class="column-12"&gt;column-12
+    &lt;div class="grid"&gt;
+      &lt;div class="column-12 column-4"&gt;column-4&lt;/div&gt;
+      &lt;div class="column-12 column-4"&gt;column-4&lt;/div&gt;
+      &lt;div class="column-12 column-4"&gt;column-4&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  ...
+&lt;/div&gt;</code></pre>
+    <h3 class="section-heading">CSS Source:</h3>
+    <pre class="language-markup"><code>.container {
+    margin: auto;
+    width: 100%;
+}
+
+.grid {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-flow: row wrap;
+    flex-flow: row wrap;
+}
+
+.grid &gt; [class*="column-"] {
+	display: block;
+}
+
+.align-top {
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: start;
+}
+
+.align-center {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: center;
+}
+
+.align-bottom {
+    -webkit-box-align: end;
+    -ms-flex-align: end;
+    align-items: end;
+}
+
+.column-1 {
+    -ms-flex-preferred-size: 8.33333%;
+    flex-basis: 8.33333%;
+    max-width: 8.33333%;
+}
+
+.column-2 {
+    -ms-flex-preferred-size: 16.66667%;
+    flex-basis: 16.66667%;
+    max-width: 16.66667%;
+}
+
+.column-3 {
+    -ms-flex-preferred-size: 25%;
+    flex-basis: 25%;
+    max-width: 25%;
+}
+
+.column-4 {
+    -ms-flex-preferred-size: 33.33333%;
+    flex-basis: 33.33333%;
+    max-width: 33.33333%;
+}
+
+.column-5 {
+    -ms-flex-preferred-size: 41.66667%;
+    flex-basis: 41.66667%;
+    max-width: 41.66667%;
+}
+
+.column-6 {
+    -ms-flex-preferred-size: 50%;
+    flex-basis: 50%;
+    max-width: 50%;
+}
+
+.column-7 {
+    -ms-flex-preferred-size: 58.33333%;
+    flex-basis: 58.33333%;
+    max-width: 58.33333%;
+}
+
+.column-8 {
+    -ms-flex-preferred-size: 66.66667%;
+    flex-basis: 66.66667%;
+    max-width: 66.66667%;
+}
+
+.column-9 {
+    -ms-flex-preferred-size: 75%;
+    flex-basis: 75%;
+    max-width: 75%;
+}
+
+.column-10 {
+    -ms-flex-preferred-size: 83.33333%;
+    flex-basis: 83.33333%;
+    max-width: 83.33333%;
+}
+
+.column-11 {
+    -ms-flex-preferred-size: 91.66667%;
+    flex-basis: 91.66667%;
+    max-width: 91.66667%;
+}
+
+.column-12 {
+    -ms-flex-preferred-size: 100%;
+    flex-basis: 100%;
+    max-width: 100%;
+}
+</code></pre>
+</div>

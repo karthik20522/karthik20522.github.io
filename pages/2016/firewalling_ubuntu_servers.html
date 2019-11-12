@@ -1,0 +1,228 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Everyone meet Karthik</title>
+
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div style="width:100%; text-align: center;">
+                <a href="/"><img src="/images/0.jpg" style="border-radius: 50%;" /></a>
+            </div>
+            <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
+            <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
+            <p class="view" style="margin:0;"><a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a></p>
+            <p class="view" style="margin:0;"><a href="/pages/beers_in_my_belly.html" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a></p>
+            <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
+        </header>
+        <section>
+<h1 class="entry-title">Firewalling Ubuntu Servers</h1>
+<p>March 10, 2016</p>
+<p>The most important thing you need to know to firewall servers is;</p>
+<ol>
+    <li>Who (ip address) you wish to allow or restrict access.</li>
+    <li>What protocol (tcp / udp) and port is used by your server.</li>
+</ol>
+<p>A listing of ports is available&nbsp;<a href="http://en.wikipedia.org/wiki/List_of_TCP_and_UDP_port_numbers">here</a>.</p>
+<h2>Enable your firewall</h2>
+<p><strong>If you are accessing your server remotely be sure NOT to lock yourself out</strong></p>
+<p>Assuming you are accessing via ssh, allow ssh (we will restrict ssh access below, for now just do not lock yourself out).</p>
+<pre class="language-markup"><code>sudo ufw allow 22</code></pre>
+<p>Now enable your firewall. Except for ssh, which you allowed with the above rule, this will deny all incoming (udp/tcp) traffic to your server.</p>
+<pre class="language-markup"><code>sudo ufw enable
+sudo default deny</code></pre>
+<h2>Public servers</h2>
+<p>Examples of public servers would be Apache (http) or FTP servers (to name a few). Here we wish to allow access to just about everyone.</p>
+<p>Simply allow by port</p>
+<pre class="language-markup"><code>sudo ufw allow 80</code></pre>
+<p>Or if you wish, by protocol and port (most servers will be tcp).</p>
+<pre class="language-markup"><code>sudo ufw allow 80/tcp</code></pre>
+<p>You may specify multiple ports (comma separated list):</p>
+<pre class="language-markup"><code>sudo ufw allow 80,443/tcp</code></pre>
+<p>Or a range of ports, low:high:</p>
+<pre class="language-markup"><code>#Allow ports 6881 &ndash; 6999 (torrent)
+sudo ufw allow 6881:6999/tcp</code></pre>
+<p>You may specify most services by name.</p>
+<p>By Name :</p>
+<pre class="language-markup"><code>sudo ufw allow ssh</code></pre>
+<p>Some servers can be specified &ldquo;by application&rdquo;, although this is still by port and is not application specific. By that I mean : if you allow &ldquo;Apache&rdquo;, you open port 80, which can be used by any client application (firefox, wget, etc).</p>
+<p>List applications with &ndash;</p>
+<pre class="language-markup"><code>sudo ufw app list
+
+ufw app list
+Available applications:
+Apache
+Apache Full
+Apache Secure
+CUPS
+OpenSSH</code></pre>
+<p>To translate the cryptic output to English,</p>
+<pre class="language-markup"><code>Apache = http = port 80
+Apache Secure = https = port 443
+Apache Full = both ports</code></pre>
+<p>As you install servers, they will be added to the list.</p>
+<p>Now allow by application.</p>
+<p>Examples (you do not need to use all 3 rules):</p>
+<pre class="language-markup"><code>sudo ufw allow Apache
+
+#Note: Quotes are needed with &ldquo;Apache Full&rdquo;
+sudo ufw allow &ldquo;Apache Full&rdquo;
+
+sudo ufw allow from 192.168.0.0/24 app OpenSSH</code></pre>
+<p>You may add&nbsp;<strong>custom applications or custom ports</strong>&nbsp;to /etc/ufw/application.d</p>
+<p>As an example, /etc/ufw/applications.d/apache2.2-common contains</p>
+<pre class="language-markup"><code>[Apache]
+title=Web Server
+description=Apache v2 is the next generation of the omnipresent Apache web server.
+ports=80/tcp
+
+[Apache Secure]
+title=Web Server (HTTPS)
+description=Apache v2 is the next generation of the omnipresent Apache web server.
+ports=443/tcp
+
+[Apache Full]
+title=Web Server (HTTP,HTTPS)
+description=Apache v2 is the next generation of the omnipresent Apache web server.
+ports=80,443/tcp
+
+So if you changed the ssh port to 8822, add a file &ldquo;ssh-custom&rdquo;, at /etc/ufw/applications.d/ssh-custom
+
+[SSH Custom]
+title= SSH Custom port
+description=OpenSSH Server Custom port
+ports=8822/tcp</code></pre>
+<p>You will now see &ldquo;SSH Custom&rdquo; when you list apps and can use it as above.</p>
+<h2>Private servers</h2>
+<p>Examples may included NFS, Samba, ssh, VNC, and VPN. I will use ssh and Apache as an examples.</p>
+<p>For these examples we will assume your&nbsp;<strong>LAN is 192.168.0.0/24 and your server is 192.168.0.10</strong></p>
+<p>Here we almost always wish to restrict access to a single ip or perhaps range of IP. For example to restrict access for ssh to a single machine, say 192.168.0.20</p>
+<pre class="language-markup"><code>sudo ufw allow proto tcp from 192.168.0.20 to 192.168.0.10 port 22</code></pre>
+<p>The syntax is protocol from &lt;ip&gt; to &lt;server ip&gt; port</p>
+<p>To allow ssh from any client on your your lan use:</p>
+<pre class="language-markup"><code>sudo ufw allow proto tcp from 192.168.0.0/24 to 192.168.0.10 port 22</code></pre>
+<h2>Limiting access</h2>
+<p>Limiting access comes in two flavors, the first is to limit a DOS or brute force attempt, and the other blacklisting.</p>
+<h3>Brute Force</h3>
+<p>UFW will rate limit connection attempts:</p>
+<blockquote>
+    <p>ufw supports connection rate limiting, which is useful for protecting against brute-force login attacks. ufw will deny connections if an IP address has attempted to initiate 6 or more connections in the last 30 seconds.</p>
+</blockquote>
+<p>Example (using ssh):</p>
+<pre class="language-markup"><code>sudo ufw limit ssh</code></pre>
+<p><strong>&ldquo;Limit&rdquo; opens the port, so you do not need a second rule.</strong></p>
+<pre class="language-markup"><code>ufw status
+Status: active
+
+To Action From
+-- ------ ----
+22 LIMIT Anywhere</code></pre>
+<p>This output demonstrates &ndash;&nbsp;<strong>Port 22 is open and access is limited by ufw.</strong></p>
+<h3>Blacklist</h3>
+<p>Keep in mind the order of your rules is critical. As such I like to block first, accept second. So for example let us assume we wish to block a misbehaving client on our LAN, 192.168.0.20:</p>
+<pre class="language-markup"><code>sudo ufw insert 1 deny from 192.168.0.20</code></pre>
+<p>Here &ldquo;insert 1&rdquo; is specifying to ufw to insert the rule first (or near the top) of the chain.</p>
+<p><strong>Using UFW in this way blocks only NEW connections.</strong></p>
+<p>IMO better to use iptables or an application such as&nbsp;<a href="http://ubuntuforums.org/showthread.php?t=530183">iplist</a>.</p>
+<h2>Block ping</h2>
+<p>By default, UFW allows ping requests. In order to block these requests you will need to edit /etc/ufw/before.rules</p>
+<pre class="language-markup"><code>sudo -e /etc/ufw/before.rules
+
+Change
+# ok icmp codes
+-A ufw-before-input -p icmp --icmp-type destination-unreachable -j ACCEPT
+-A ufw-before-input -p icmp --icmp-type source-quench -j ACCEPT
+-A ufw-before-input -p icmp --icmp-type time-exceeded -j ACCEPT
+-A ufw-before-input -p icmp --icmp-type parameter-problem -j ACCEPT
+-A ufw-before-input -p icmp --icmp-type echo-request -j ACCEPT
+
+to
+
+# ok icmp codes
+-A ufw-before-input -p icmp &ndash;icmp-type destination-unreachable -j ACCEPT
+-A ufw-before-input -p icmp &ndash;icmp-type source-quench -j ACCEPT
+-A ufw-before-input -p icmp &ndash;icmp-type time-exceeded -j ACCEPT
+-A ufw-before-input -p icmp &ndash;icmp-type parameter-problem -j ACCEPT
+-A ufw-before-input -p icmp &ndash;icmp-type echo-request -j DROP</code></pre>
+<p>Restart UFW</p>
+<pre class="language-markup"><code>sudo ufw disable
+sudo ufw enable</code></pre>
+<h2>Deleting rules</h2>
+<p>Deleting a rule is also easy. Use the same syntax you used to add a rule to ufw with the word &ldquo;delete&rdquo; added.</p>
+<p>For example, using Apache as an example:</p>
+<pre class="language-markup"><code># sudo ufw allow Apache
+Rule added
+
+# ufw status
+Status: active
+
+To Action From
+&mdash; &mdash;&mdash; &mdash;-
+22 LIMIT Anywhere
+Apache ALLOW Anywhere
+
+# sudo ufw delete allow Apache
+Rule deleted
+
+# ufw status
+Status: active
+
+To Action From
+&mdash; &mdash;&mdash; &mdash;-
+22 LIMIT Anywhere</code></pre>
+<h2>Logs</h2>
+<p>ufw logs messages to&nbsp;<strong>/var/log/messages</strong>&nbsp;and logging is enabled / disabled from the command line.</p>
+<pre class="language-markup"><code>sudo ufw logging on
+sudo ufw logging off</code></pre>
+<p>The options are on, off, low, medium, high, and full.&nbsp;<strong>on = Low</strong>.</p>
+<p>&nbsp;</p>
+<h2>Iptables</h2>
+<p>Now that you have ufw under your belt, it is easier to understand iptables. If you are wanting to use iptables, best disable UFW first.</p>
+<pre class="language-markup"><code>sudo ufw disable</code></pre>
+<p class="code"><br />#These iptables rules clean up after UFW, deleting the custom tables</p>
+<pre class="language-markup"><code>sudo iptables -F
+sudo iptables -X</code></pre>
+<p class="code"><br />To deny all incoming traffic (take care not to lock yourself out form remote servers, allow ssh first !!!):</p>
+<pre class="language-markup"><code>sudo iptables -A INPUT -j DROP</code></pre>
+<p>You can set a Policy with iptables, but doing so makes it easy to lock yourself out if you issue the command &ldquo;iptables -F&rdquo;.</p>
+<p>To allow ssh</p>
+<pre class="language-markup"><code>sudo iptables -A INPUT -p tcp &ndash;dport 22 -j ACCEPT</code></pre>
+<p>To allow ssh only from your LAN:</p>
+<pre class="language-markup"><code>sudo iptables -A INPUT -s 192.168.0.0/24 -p tcp &ndash;dport 22 -j ACCEPT</code></pre>
+<p>iptables is much more feature rich than UFW but much more involved.</p><!--*********************FOOTER'ISH************************-->
+<div id="graphcomment"></div>
+<script type="text/javascript">
+    /*window.gc_params = {
+        graphcomment_id: 'Karthik-Github',
+        fixed_header_height: 0,
+    };
+    (function () {
+        var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+        gc.src = 'https://graphcomment.com/js/integration.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
+    })();*/
+</script>
+
+</section>
+<footer></footer>
+</div>
+<script src="/javascripts/scale.fix.js"></script>
+<script>
+/*    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-140795658-1');*/
+</script>
+</body>
+</html>

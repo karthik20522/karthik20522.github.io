@@ -1,0 +1,77 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Everyone meet Karthik</title>
+
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div style="width:100%; text-align: center;">
+                <a href="/"><img src="/images/0.jpg" style="border-radius: 50%;" /></a>
+            </div>
+            <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
+            <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
+            <p class="view" style="margin:0;"><a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a></p>
+            <p class="view" style="margin:0;"><a href="/pages/beers_in_my_belly.html" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a></p>
+            <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
+        </header>
+        <section>
+<h1 class="l-mt0 f-bold f-icon-bold l-mb4 f-c-white"><span class="f-c-white l-mr3">An Introduction to HTML Imports</span></h1>
+<p><span class="f-c-white l-mr3">July 2, 2016</span></p>
+<p><span class="f-c-white l-mr3"><a href="http://www.w3.org/TR/html-imports/">HTML Imports</a>&nbsp;are a way to include external HTML documents and web components on a page without making an Ajax request or loading an iframe. Because of this capability, HTML Imports may lead to better page load times as by default browsers cache import source files.</span></p>
+<p>HTML Imports support DRY development. Here is an example. Imagine that you have three messages that are repeated on several web pages, perhaps even web pages on different domains. Rather than copying and pasting or retyping these messages for each page or project, they could be included using the HTML Imports feature.</p>
+<p>Here is the HTML for a file called&nbsp;<code class="  language-undefined">messages.html</code>:</p>
+<pre class="language-markup"><code>&lt;div class="message-success"&gt;
+    &lt;h2&gt;Success&lt;/h2&gt;
+    &lt;p&gt;Worked!&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="message-failure"&gt;
+    &lt;h2&gt;Failure&lt;/h2&gt;
+    &lt;p&gt;Failed!&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+<p>To reuse the content from&nbsp;<code class="  language-undefined">messages.html</code>, first include the document via HTML Imports. This amounts to adding a&nbsp;<code class="  language-undefined">&lt;link&gt;</code>&nbsp;element with its&nbsp;<code class="  language-undefined">rel</code>&nbsp;attribute set to "import" and its&nbsp;<code class="  language-undefined">href</code>&nbsp;pointed at&nbsp;<code class="  language-undefined">messages.html</code>, like this:</p>
+<pre class="language-markup"><code>&lt;link rel="import" href="messages.html"&gt;</code></pre>
+<p>Using JavaScript to accesses the imported&nbsp;<code class="  language-undefined">messages.html</code>&nbsp;document and loads the "success" message on the page. Each of the other messages could also be loaded in the same way or all together depending on how one wanted to use them. Here&rsquo;s the code:</p>
+<pre class="language-markup"><code>var htmlImport = document.querySelector('link[rel="import"]');
+var htmlDoc = htmlImport.import;
+var htmlMessage = htmlDoc.querySelector('.message-success');
+document.body.appendChild(htmlMessage.cloneNode(true));</code></pre>
+<p>The success message is now included on the page, similar to how an Ajax request works.</p>
+<p>There are polyfills that will make the feature available in nearly any browser. Perhaps, the most robust is the aforementioned&nbsp;<a href="http://www.polymer-project.org/platform/html-imports.html">Polymer Imports polyfill</a>.</p><!--*********************FOOTER'ISH************************-->
+<div id="graphcomment"></div>
+<script type="text/javascript">
+    /*window.gc_params = {
+        graphcomment_id: 'Karthik-Github',
+        fixed_header_height: 0,
+    };
+    (function () {
+        var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+        gc.src = 'https://graphcomment.com/js/integration.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
+    })();*/
+</script>
+
+</section>
+<footer></footer>
+</div>
+<script src="/javascripts/scale.fix.js"></script>
+<script>
+/*    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-140795658-1');*/
+</script>
+</body>
+</html>

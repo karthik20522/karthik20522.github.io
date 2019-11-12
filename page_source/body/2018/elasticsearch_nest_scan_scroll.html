@@ -1,0 +1,51 @@
+<h1 class="entry-title">Elasticsearch Nest Scroll API in C#</h1>
+<p>Feb 25, 2018</p>
+<p>Example of using Elasticsearch&rsquo;s scroll API with NEST in C#.</p>
+<pre class="language-markup"><code>private void GetAllDocumentsInConversions(string clientId, string yesterdaysDate, 
+string todaysDate, string scrollTimeout = "1m", int scrollSize = 200)
+        {
+            _conversions = new List&lt;Conversion&gt;();
+
+            var elasticClient = new ElasticClient(new Uri("http://root:1ddqd1dkfaJKL2O522@prod-escluster.pixibo.com"));
+
+            ISearchResponse&lt;Conversion&gt; initialResponse = elasticClient.Search&lt;Conversion&gt;
+                (scr =&gt; scr.Index("tracking_prod")
+                     .From(0)
+                     .Take(scrollSize)
+                     .Query(s =&gt;
+                        s.Term(d =&gt; d.Field(p =&gt; p.clientId).Value(clientId)) &amp;&amp;
+                        s.DateRange(d =&gt; d.Field(p =&gt; p.timestamp).GreaterThanOrEquals(yesterdaysDate).LessThanOrEquals(todaysDate)))
+                     .Scroll(scrollTimeout));
+
+            if (!initialResponse.IsValid || string.IsNullOrEmpty(initialResponse.ScrollId))
+                throw new Exception(initialResponse.ServerError.Error.Reason);
+
+            if (initialResponse.Documents?.Any() == true)
+                _conversions.AddRange(initialResponse.Documents.ToList());
+
+            string scrollid = initialResponse.ScrollId;
+            bool isScrollSetHasData = true;
+
+            while (isScrollSetHasData)
+            {
+                Console.WriteLine(clientId + ": Scrolling Conversions: " + _conversions.Count());
+
+                ISearchResponse&lt;Conversion&gt; loopingResponse = elasticClient.Scroll&lt;Conversion&gt;(scrollTimeout, scrollid);
+
+                if (loopingResponse.IsValid)
+                {
+                    _conversions.AddRange(loopingResponse.Documents.ToList());
+                    scrollid = loopingResponse.ScrollId;
+                }
+                isScrollSetHasData = loopingResponse.Documents.Any();
+            }
+
+            elasticClient.ClearScroll(new ClearScrollRequest(scrollid));
+        }</code></pre>
+<p>&nbsp;</p>
+<p>Things to notice in this example of the Elasticsearch Nest Scroll API in C#&hellip;</p>
+<ul>
+    <li>scrollTimeout only needs to be long enough to last between calls.&nbsp; Each call to the scroll API with the scrollid resets the timer.</li>
+    <li>After scrollTimeout expires Elasticsearch will delete the scroll dataset</li>
+    <li>scrollSize (take) in this case controls how many documents are returned with each call to the Scroll API</li>    
+</ul>

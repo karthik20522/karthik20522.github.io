@@ -1,0 +1,36 @@
+<h2 class="single-post-title entry-title">High concurrency configuration for Node.js</h2>
+<p>
+    June 25, 2017
+</p>
+<p>After a lot of testing by generating users to create persistent connections to the server, was finally able to reach 320k connections in M3.xlarge EC2 instance. At this level of live persistent connections the CPU load is constantly at 100% on all CPUs on the server due to V8's (Node.js engine) garbage collection. The settings to reach the above load:</p>
+<h3>Node.js flags</h3>
+<p>Set the following flags to launch&nbsp;your node.js application:</p>
+<pre class="language-javascript"><code>node --nouse-idle-notification--expose-gc--max-new-space-size=2048--max-old-space-size=8192 ./server/userserver.js</code></pre>
+<p><strong>&ndash;nouse-idle-notification</strong></p>
+<p>Turns of the idle garbage collection which makes the GC constantly run and is devastating for a realtime server environment. If not turned off the system will get a long hickup for almost a second once every few seconds.</p>
+<p><strong>&ndash;expose-gc</strong></p>
+<p>Use the expose-gc command to enable manual control of the GC from your code. I recommend to call GC once every 30 seconds.</p>
+<p><strong>&ndash;max-old-space-size=8192</strong></p>
+<p>Increases the limit for each V8 node process to use max 8Gb of heap memory instead of the 1,4Gb default on 64-bit machines(512Mb on a 32-bit machine).</p>
+<p><strong>&ndash;max-new-space-size=2048</strong></p>
+<p>Specified in kb and setting this flag optimizes the V8 for a stable allround environment with short pauses and ok high peak performance.</p>
+<p>If this flag is not used the pauses will be a little bit longer but the machine will handle peaks a little bit better. What you need in this case depends on the project you are working on. My pick is to have an&nbsp;allround stable server instead of just handling peaks so I stick with this flag.</p>
+<h3>EC2 configuration</h3>
+<p>Set the &ldquo;soft&rdquo; and &ldquo;hard&rdquo; nofile limit to 1000000. Instead of using the &ldquo;ulimit -n&rdquo; as some people do I had to&nbsp;specify the &ldquo;soft&rdquo; and &ldquo;hard&rdquo; limits for both root and all other users, for some reason I had to specify them separately.</p>
+<p><strong>/etc/security/limits.d/custom.conf</strong></p>
+<pre class="language-markup"><code>root soft nofile 1000000
+root hard nofile 1000000
+* soft nofile 1000000
+* hard nofile 1000000</code></pre>
+<p>Now set the amount of possible opened file handles and the size of the NAT ip connection tracking table.</p>
+<p><strong>/etc/sysctl.conf</strong></p>
+<pre class="language-markup"><code>fs.file-max = 1000000
+ fs.nr_open = 1000000       
+ net.ipv4.netfilter.ip_conntrack_max = 1048576
+ net.nf_conntrack_max = 1048576</code></pre>
+<p><strong>&ldquo;fs.file-max&rdquo;<br /></strong></p>
+<p>The maximum file handles that can be allocated</p>
+<p><strong>&ldquo;fs.nr_open&rdquo;<br /></strong></p>
+<p>Max amount of file handles&nbsp;that can be opened</p>
+<p><strong>&ldquo;net.ipv4.netfilter.ip_conntrack_max&rdquo;<br /></strong></p>
+<p>Specifies how many connections the NAT can keep track of in the &ldquo;tracking&rdquo; table before it starts to drop packets and just break connections, this we totally want to avoid. The default value for this is 65536 so without this setting you wont be able to get more connections than that.</p>

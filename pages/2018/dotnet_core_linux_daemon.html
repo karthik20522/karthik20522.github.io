@@ -1,0 +1,141 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Everyone meet Karthik</title>
+
+    <link rel="stylesheet" href="/stylesheets/styles.css">
+    <link rel="stylesheet" href="/stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div style="width:100%; text-align: center;">
+                <a href="/"><img src="/images/0.jpg" style="border-radius: 50%;" /></a>
+            </div>
+            <h1 style="margin-bottom: 1px; text-align: center;">//Karthik Srinivasan</h1>
+            <p style="text-align: center;">Product Engineer, CTO & a Beer Enthusiast</p>
+            <p class="view" style="margin:0;"><a href="https://github.com/karthik20522?tab=repositories" target="_blank"><img src="/images/github.svg" height="15px" style="margin-right: 5px;" />Quirky Personal Projects</a></p>
+            <p class="view" style="margin:0;"><a href="https://linkedin.com/in/karthik-srinivasan-07b23493/" target="_blank"><img src="/images/linkedin-logo.png" height="15px" style="margin-right: 5px;" />LinkedIn</a></p>
+            <p class="view" style="margin:0;"><a href="/pages/beers_in_my_belly.html" target="_blank"><img src="/images/beer.png" height="15px" style="margin-right: 5px;" />Beers in my belly</a></p>
+            <p class="view"><a href="mailto:karthik20522 (at) yahoo (dot) com" target="_blank"><img src="/images/email.png" height="15px" style="margin-right: 5px;" />Email me</a></p>
+        </header>
+        <section>
+<h1 class="post-title p-name">Running a dotnet Core Linux daemon</h1>
+<p class="post-meta"><time class="dt-published" datetime="2017-04-05T00:00:00+00:00">Apr 5, 2018</time></p>
+<h2 id="environment">Environment</h2>
+<ul>
+    <li>Ubuntu 16.04 using&nbsp;<a href="https://www.freedesktop.org/wiki/Software/systemd/">SystemD</a></li>
+</ul>
+<h2 id="create-application">Create application</h2>
+<pre class="language-csharp"><code># Create application
+mkdir dnsvc
+cd dnsvc
+dotnet new console
+
+# Change Program.cs
+cat &gt; Program.cs &lt;&lt;EOF
+using System;
+using System.Threading;
+
+
+namespace dnsvc
+{
+  class Program
+  {
+    static void Main(
+      string[] args)
+    {
+      var sleep = 3000;
+      if (args.Length &gt; 0) { int.TryParse(args[0], out sleep); }
+      while (true)
+      {
+        Console.WriteLine($"Working, pausing for {sleep}ms");
+        Thread.Sleep(sleep);
+      }
+    }
+  }
+}
+EOF
+
+# Restore dependencies
+dotnet restore
+
+# Publish to a local bin sub directory
+dotnet publish --configuration Release --output bin
+
+# Run local to verify all is good
+dotnet ./bin/dnsvc.dll</code></pre>
+<p>&nbsp;</p>
+<h2 id="create-systemd-service-file">Create SystemD service file</h2>
+<p>Will run the application from the bin sub directory for now</p>
+<pre class="language-csharp"><code>cat &gt; dnsvc.service &lt;&lt;EOF
+[Unit]
+Description=Demo service
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/dotnet $(pwd)/bin/dnsvc.dll 5000
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOF</code></pre>
+<p>&nbsp;</p>
+<h2 id="configure-systemd-so-it-is-aware-of-the-new-service">Configure SystemD so it is aware of the new service</h2>
+<pre class="language-csharp"><code># Copy service file to a System location
+sudo cp dnsvc.service /lib/systemd/system
+
+# Reload SystemD and enable the service, so it will restart on reboots
+sudo systemctl daemon-reload 
+sudo systemctl enable dnsvc
+
+# Start service
+sudo systemctl start dnsvc 
+
+# View service status
+systemctl status dnsvc</code></pre>
+<p>&nbsp;</p>
+<h3 id="tail-the-service-log">Tail the service log</h3>
+<p>stdout output can be examined with&nbsp;<a href="https://www.freedesktop.org/software/systemd/man/journalctl.html">journalctl</a></p>
+<pre class="language-csharp"><code>journalctl --unit dnsvc --follow</code></pre>
+<p>&nbsp;</p>
+<h2 id="stopping-and-restarting-the-service">Stopping and restarting the service</h2>
+<pre class="language-csharp"><code># Stop service
+sudo systemctl stop dnsvc 
+systemctl status dnsvc 
+
+# Restart the service
+sudo systemctl start dnsvc 
+systemctl status dnsvc</code></pre><!--*********************FOOTER'ISH************************-->
+<div id="graphcomment"></div>
+<script type="text/javascript">
+    /*window.gc_params = {
+        graphcomment_id: 'Karthik-Github',
+        fixed_header_height: 0,
+    };
+    (function () {
+        var gc = document.createElement('script'); gc.type = 'text/javascript'; gc.async = true;
+        gc.src = 'https://graphcomment.com/js/integration.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(gc);
+    })();*/
+</script>
+
+</section>
+<footer></footer>
+</div>
+<script src="/javascripts/scale.fix.js"></script>
+<script>
+/*    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-140795658-1');*/
+</script>
+</body>
+</html>
