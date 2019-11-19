@@ -1,0 +1,118 @@
+<h1>Generating Image mosaics for fun</h1>
+<p>March 19, 2018</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+<div id="mainContainer">
+    <b id="loading">LOADING.....</b>
+</div>
+
+<br /><br />
+The idea behind building image mosaic is to take the original image and split it to a grid say 20x20 pixels (depending on the size of the image) and compute the average RGB within each of the blocks. <br><br>
+
+<a href="http://1.bp.blogspot.com/-m6_AWDK7JVw/UCFBcfjsoZI/AAAAAAAAC5k/E8h0QkZghfU/s1600/yearinimages_mosaic.jpg" imageanchor="1" style=""><img border="0" height="275" width="400" src="http://1.bp.blogspot.com/-m6_AWDK7JVw/UCFBcfjsoZI/AAAAAAAAC5k/E8h0QkZghfU/s400/yearinimages_mosaic.jpg" /></a>
+<br><br>
+Since we are splitting the image into square Grid, the thumbnails had to be resized to be uniform. Once the thumbnails were resized, their average RGB values were calculated.  Average color code snippet:
+
+<pre>
+    Point end = new Point(area.X + area.Width, area.Y + area.Height);
+
+    for (int x = area.X = 0; x < end.X; x += quality) {
+     for (int y = area.Y; y < end.Y; y += quality) {
+      c = bmp.GetPixel(x, y);
+      r += c.R;
+      g += c.G;
+      b += c.B;
+      p++;
+     }
+    }
+    return Color.FromArgb(255, (int)(r / p), (int)(g / p), (int)(b / p));
+</pre>
+<br><br>
+The next step was to iterate through each image and find the closest match to each block on the image. Since the image grid is basically a matrix of n x m, this can be serialized and stored in file/db. Following class model to store the matrix:<br>
+
+                                                                                                                                                                                                                                                                         <pre>
+    public class MosaicTile
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+        public string ImageFileName { get; set; }
+    }
+</pre>
+Upon page load, the browser builds a table/grid and places the image in the appropriate location (x,y) to make it look like a single mosaic. 
+As a side note, since the browser displays 100's of images for the mosaic, this potentially could lead to memory build up on the browser. This can be handled by using revokeObjectURL method. Code snippet:<br>
+                                                                                                                                                                                                            <br>
+<pre>
+    $('img').load(function () {
+        window.URL.revokeObjectURL($(this).attr('src'));
+    });
+</pre>
+
+<p>
+    Library for generating image mosaic in c# can be found at my github repo : https://github.com/karthik20522/ImageMosaic
+</p>
+
+<script>
+    fetch("/javascripts/tempImgSq_sports.txt").then(x => x.text()).then(data => {
+        var dataList = data.split("\n");
+        var index = -1;
+        var lis = '';
+        var finalDom = '';
+        var dataTile = [];
+
+        for (var i = 0; i < 39; i++) {
+            var tileList = dataList.filter(s => s.split("-")[1] == i);
+            tileList.map(s => {
+                dataTile.push({ Image: s.split("-")[2], X: i });
+            });
+        }
+
+        $.each(dataTile, function (k, v) {
+            console.log(v);
+            if (index == v.X) {
+                lis += "<li><img id='" + v.Image + "' src='/images/sports/" + v.Image + "' class='img20' alt=''></li>";
+            } else {
+                if (lis != '') {
+                    lis += '</ul>';
+                    finalDom += lis;
+                }
+
+                lis = '<ul class="horizontal-list">';
+            }
+            index = v.X;
+        });
+
+        var mainContainer = $("#mainContainer");
+        mainContainer.append(finalDom);
+        $("#loading").hide();
+    });
+</script>
+
+
+<style>
+    #mainContainer {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        text-align: center;
+    }
+
+    .img20 {
+        max-width: 13px;
+        max-height: 13px;
+    }
+
+    ul.horizontal-list {
+        width: 100%;
+        list-style: none;
+        height: 13px;
+        border: 0;
+        margin: 0;
+        margin-left: -40px;
+    }
+
+        ul.horizontal-list li {
+            display: inline;
+            height: 13px;
+        }
+</style>
