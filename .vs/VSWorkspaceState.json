@@ -1,12 +1,13 @@
 {
   "ExpandedNodes": [
     "",
+    "\\javascripts",
     "\\pages",
-    "\\pages\\2016",
     "\\page_source",
     "\\page_source\\body",
+    "\\page_source\\body\\2019",
     "\\page_source\\header"
   ],
-  "SelectedNode": "\\bloglist.txt",
+  "SelectedNode": "\\page_source\\header\\header.html",
   "PreviewInSolutionExplorer": false
 }
