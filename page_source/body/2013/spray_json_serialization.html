@@ -1,0 +1,109 @@
+<h1>Spray.io REST service - Json Serialization, De-serialization  - Lesson 3</h1>
+
+
+View the lessons list at <a href="https://github.com/karthik20522/SprayLearning">https://github.com/karthik20522/SprayLearning</a><br><br>
+
+For a REST based interface, JSON request and response is the norm. There are two ways to set the response format in Spray. <br><br>
+1) <b>using respondWithMediaType</b>
+
+
+<pre>
+get {
+  respondWithMediaType(`application/json`) {
+    complete {
+      //Some object response
+    }
+  }
+}
+
+</pre>
+
+In this method, each route/action would have to be explicitly set with media type of json. More info at <a href="https://github.com/spray/spray/wiki/Misc-Directives">https://github.com/spray/spray/wiki/Misc-Directives</a>
+<br><br>
+2) <b>Globally overriding the default format. </b>
+<br><br>
+For all Json related operations, I am using Json4s as the json library. In the build.scala add the following json4s dependency.
+
+<script type="syntaxhighlighter" class="brush: java">
+    libraryDependencies ++= Seq(
+    . . . . .
+    "org.json4s"    %% "json4s-native"   % "3.2.4"
+    )
+</script>
+<i>Note: you would need to reload the project in sbt and regenerate Eclipse. Eclipse does not refresh itself when new dependencies are added</i>
+<br><br>
+In the CustomerServiceActor we will need to set the default Format to json4sFormats by adding the implicit formatter
+
+    <pre>
+
+    import spray.httpx.Json4sSupport
+    import org.json4s.Formats
+    import org.json4s.DefaultFormats
+    import com.example.model.Customer
+
+    class CustomerServiceActor extends Actor with CustomerService with AjaxService {
+    implicit def json4sFormats: Formats = DefaultFormats
+    . . . .
+</pre>
+
+For example purpose, lets update the getCutomer action to return a mocked customer. The expected response should be a json formatted customer object.
+<pre>
+path("getCustomer" / Segment) { customerId =>
+  get {
+    complete {
+      val customer = Customer(
+        id = Some(customerId),
+        firstName = "Karthik",
+        lastName = "Srinivasan"
+      )
+      customer //return customer obj
+    }
+  }
+}
+
+/*
+[GET] http://localhost:8080/getCustomer/123
+[Response] {"firstName":"Karthik","lastName":"S","id":"123", "city":"New York","country":"USA"}
+*/
+</pre>
+<pre>
+    //The customer case class is as follows:
+    package com.example.model
+
+case class Customer(
+    firstName: String,
+    lastName: String,
+    id: Option[String] = None,
+    phoneNumber: Option[String] = None,
+    address: Option[String] = None,
+    city: Option[String] = Some("New York"),
+    country: Option[String] = Some("USA"),
+    zipcode: Option[String] = None
+) {}
+
+</pre>
+<br>
+To post a customer object and deserialize it to customer type, we can use spray entity [<a href="http://spray.io/documentation/1.1-M8/spray-httpx/unmarshalling/">http://spray.io/documentation/1.1-M8/spray-httpx/unmarshalling/</a>] and cast the post value to a JObject
+
+<pre>
+import org.json4s.JsonAST.JObject
+
+path("addCustomer") {
+  post {
+    entity(as[JObject]) { customerObj =>
+      complete {
+        val customer = customerObj.extract[Customer]
+        //insert customer information into a DB and return back customer obj
+        customer
+      }
+    }
+  }
+}
+
+/*
+[POST] http://localhost:8080/addCustomer { "firstName" : "karthik", "lastName" : "srinivasan", "zipcode" : "01010" }
+[Should return] {"firstName":"karthik","lastName":"srinivasan","city":"New York","country":"USA","zipcode":"01010"}
+*/
+</pre>
+
+Further reading on json4s at <a href="https://github.com/json4s/json4s">https://github.com/json4s/json4s</a>

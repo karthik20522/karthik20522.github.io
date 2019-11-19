@@ -1,0 +1,39 @@
+<h1>Spray.io REST service - Http Error Codes - Lesson 8</h1>
+
+View the lessons list at <a href="https://github.com/karthik20522/SprayLearning">https://github.com/karthik20522/SprayLearning</a>
+<br><br>
+In the<a href="https://github.com/karthik20522/SprayLearning"> previous post</a> in this series about Spray.io REST API, I talked about simple error handling and rejections. What about errors in the context of RESTful API best practices? From the perspective of the developer consuming your Web API, everything is a black box. When developing their applications, developers depend on well-designed errors when they are troubleshooting and resolving issues when using your API.
+
+<br><br>
+There are over 70 HTTP status codes but offcourse we don't need to use all of them. Check out this good Wikipedia entry for all <a href="http://en.wikipedia.org/wiki/Http_error_codes">HTTP Status codes</a>. So in Spray, we basically can implement all the status codes in the complete magnet depending on if its an Exception or Rejection.
+
+<br>
+<pre>
+implicit def myExceptionHandler(implicit log: LoggingContext) =
+  ExceptionHandler.apply {
+    case m: MappingException => {
+      respondWithMediaType(`application/json`) {
+        val errorMsg = ReponseError("MalformedBody", m.getMessage)
+        ctx => ctx.complete(415, errorMsg)
+      }
+    }
+    case e: SomeCustomException =>
+      ctx => {
+        val errorMsg = ReponseError("BadRequest", e.getMessage)
+        ctx.complete(400, errorMsg)
+      }
+    case e: Exception =>
+      ctx => {
+        val errorMsg = ReponseError("InternalServerError", e.getMessage)
+        ctx.complete(500, errorMsg)
+      }
+  }
+</pre>
+
+Checkout out these error/httpStatus code from various RestAPIs:
+<ul>
+    <li><a href="https://dev.twitter.com/docs/error-codes-responses">Twitter</a></li>
+    <li><a href="http://msdn.microsoft.com/en-us/library/windowsazure/dd179357.aspx">Microsoft Azure</a></li>
+    <li><a href="https://www.dropbox.com/developers/core/docs">Dropbox</a></li>
+    <li><a href="http://developer.yahoo.com/social/rest_api_guide/http-response-codes.html">Yahoo</a></li>
+</ul>

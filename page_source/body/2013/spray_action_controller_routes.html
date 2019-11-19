@@ -1,0 +1,105 @@
+<h1>Spray.io REST service - Controller, Actions, Multiple controllers - Lesson 2</h1>
+
+<i>View the lessons list at <a href="https://github.com/karthik20522/SprayLearning">https://github.com/karthik20522/SprayLearning</a></i><br><br>
+Once you have the Spray.io project setup (<a href="https://github.com/karthik20522/SprayLearning">https://github.com/karthik20522/SprayLearning</a>) you can find the boot file and controller files in the "src/main/scala/com/example" folder path. There are two files that are of interest. One is the Boot.scala and other MyService.scala. Boot.scala is basically the placeholder to define the controller (single, multi controllers) and the http binding. Actions of these controllers are coded in the MyService.scala file.
+<br><br>
+In the following example, I am renaming the MyService.scala to a more meaningful service to CustomerService.scala. Before we start working on the project would like to generate the eclipse project files for the code to be edited on Eclipse rather than Sublime or any text editor.
+<br><br>
+To get it setup on eclipse, you can run the "eclipse" command within the sbt console.
+<script type="syntaxhighlighter" class="brush: csharp">
+    $ sbt eclipse //
+    <- this should generate the required files to import the project into eclipse IDE
+</script>
+
+Note that, in plugins.sbt you should have sbteclipse plugin. View the initial project setup <a href="https://github.com/karthik20522/SprayLearning">https://github.com/karthik20522/SprayLearning</a>
+
+<br><br>
+Following screenshot is the structure of the project within eclipse.
+<br><br>
+
+<a href="http://2.bp.blogspot.com/-qg_vKgaRaJ0/Ug2MQXtcqwI/AAAAAAAAD_0/QvgyUP-qSgo/s1600/spray_lesson_1_folderstructure.png" imageanchor="1"><img border="0" src="http://2.bp.blogspot.com/-qg_vKgaRaJ0/Ug2MQXtcqwI/AAAAAAAAD_0/QvgyUP-qSgo/s640/spray_lesson_1_folderstructure.png" /></a>
+<br><br>
+
+<b>CustomerService.scala class:</b>
+<br><br>
+This class basically is the controller class with Actions/routes defined in them. I personally like to separate the service behavior from service actor as we want to be able to test it independently without having to spin up an actor.
+
+<pre>
+// we don't implement our route structure directly in the service actor because
+// we want to be able to test it independently, without having to spin up an actor
+class CustomerServiceActor extends Actor with CustomerService {
+
+// the HttpService trait defines only one abstract member, which
+// connects the services environment to the enclosing actor or test
+def actorRefFactory = context
+
+// this actor only runs our route, but you could add
+// other things here, like timeout handling
+def receive = runRoute(customerRoutes)
+}
+
+
+// this trait defines our service behavior independently from the service actor
+trait CustomerService extends HttpService {
+
+val customerRoutes= ??? //routes are defined/implemented here
+</pre>
+<br>
+<i>customerRoutes </i>is the place holder where all the routes/actions are defined and implemented. An example of how routes look is as follows:
+<pre>
+trait CustomerService extends HttpService {
+
+  val customerRoutes =
+    path("addCustomer") {
+      post {
+        complete {
+          //insert customer information into a DB
+          "Success"
+        }
+      }
+    } ~
+      path("getCustomer" / Segment) { customerId =>
+        get {
+          complete {
+            //get customer from db using customerId as Key
+            s"success ${customerId}"
+          }
+        }
+      }
+}
+</pre>
+
+The urls for accessing the above routes are as :<br>
+                                                <pre>
+    [GET] http://localhost:8080/getCustomer/123
+    [POST] http://localhost:8080/addCustomer
+</pre>
+<br>
+How about multiple controllers? It is as easy as creating a new trait extending HttpService and piping into the existing route. For example, if we want to create an Ajax service for all search related operations, following is a code snippet:
+<pre>
+class CustomerServiceActor extends Actor with CustomerService with AjaxService {
+
+  def actorRefFactory = context
+  def receive = runRoute(customerRoutes ~ ajaxRoutes)
+}
+
+trait AjaxService extends HttpService {
+  val ajaxRoutes =
+    path("search" / Segment) { query =>
+      get {
+        complete {
+          //Free text search implementation
+          s"success ${query}"
+        }
+      }
+    }
+}
+
+// this trait defines our service behavior independently from the service actor
+trait CustomerService extends HttpService {
+  //. . . . . . //existing code
+}
+
+</pre>
+
+The above project can be downloaded at <a href="https://github.com/karthik20522/SprayLearning">https://github.com/karthik20522/SprayLearning</a>

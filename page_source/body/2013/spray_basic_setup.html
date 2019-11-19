@@ -1,0 +1,52 @@
+<h1>Spray.io REST Web API - Basic setup</h1>
+
+What is Spray:
+"spray is an open-source toolkit for building REST/HTTP-based integration layers on top of Scala and Akka. Being asynchronous, actor-based, fast, lightweight, modular and testable it's a great way to connect your Scala applications to the world". Basically spray is web framework for building REST based services similar to ASP.NET WebAPI. Spray can be used for hosting both a rest based service as well as web pages (static/dynamic)
+<br><br>
+To get spray up and running you can download the SprayTemplate project from Github.com/spray
+<script type="syntaxhighlighter" class="brush: csharp">
+    $ git clone git://github.com/spray/spray-template.git -b on_spray-can_1.2 sprayLessons
+</script>
+<br>
+Note: there are multiple branches of spray with different spray, akka and server versions. For this example I am using on_spray-can_1.2 branch which has spray-can (server). Scala 2.10, Akka 2.2 and Spray 1.2
+<br><br>
+Folder Setup:
+<br><br>
+<a href="http://1.bp.blogspot.com/--kEhlFho_JU/Ug2Id5dteFI/AAAAAAAAD_U/V5VdD9O_eRc/s1600/spray_lesson_0_BasicSetup.png" imageanchor="1"><img border="0" src="http://1.bp.blogspot.com/--kEhlFho_JU/Ug2Id5dteFI/AAAAAAAAD_U/V5VdD9O_eRc/s640/spray_lesson_0_BasicSetup.png" /></a>
+<br><br>
+There are two important files that one must be aware of. <br><br>
+1) build.sbt : this file contains basic information of your project like com name, version and scalaversion. But addition to that there is libraryDependencies which has a list of external/internal libraries that the project might use. For example, if we decide to use json4s library or a mongoDB library, this is the place we would be adding to. <br>If you notice in the libraryDependecies we have <i>{"io.spray"%"spray-can"% "1.2-M8"}</i>, this can be read as <i>{"GroupId" %"DependencyName"%"Version"}</i>. But what about double "%%", this is basically letting sbt know to use the version that is compatible with the current version of scala that is being used.
+<br><br>
+These plugins can be located at maven repository at <a href="mvnrepository.com">mvnrepository.com</a>. An example dependency:
+<a href="http://mvnrepository.com/artifact/org.json4s/json4s-native_2.10/3.2.5">http://mvnrepository.com/artifact/org.json4s/json4s-native_2.10/3.2.5</a>
+<br><br>
+
+2) plugins.sbt: this file contains the plugins that sbt intends to use. Note that plugins.sbt requires an extra line break between the plugins. An example plugins.sbt looks like the following:
+<br><br>
+
+<a href="http://4.bp.blogspot.com/-d19hWkYHO3Q/Ug2JWC3mACI/AAAAAAAAD_k/ZijhGL06Pro/s1600/spray_lesson_0_pluginSbt.png" imageanchor="1"><img border="0" src="http://4.bp.blogspot.com/-d19hWkYHO3Q/Ug2JWC3mACI/AAAAAAAAD_k/ZijhGL06Pro/s640/spray_lesson_0_pluginSbt.png" /></a>
+<br><br>
+
+To run the project, in the project folder run the following commands:
+<br><br>
+
+<script type="syntaxhighlighter" class="brush: csharp">
+    //1) Change directory into your clone:
+    $ cd sprayLessons
+
+    //2) Launch SBT:
+    $ sbt
+
+    //3) Compile everything and run all tests:
+    > test
+
+    //4) Start the application:
+    > re-start
+
+    //5) Browse to http://localhost:8080/
+
+    //6) To stop the application
+    > re-stop
+</script>
+
+The above project can be downloaded at <a href="https://github.com/karthik20522/SprayLearning">https://github.com/karthik20522/SprayLearning</a>

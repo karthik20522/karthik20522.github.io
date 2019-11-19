@@ -1,0 +1,119 @@
+<h1>Spray.io REST service - API Versioning - Lesson 6</h1>
+View the lessons list at <a href="https://github.com/karthik20522/SprayLearning">https://github.com/karthik20522/SprayLearning</a>
+<br><br>
+
+Before we get into spray, would recommend reading different ways of Versioning an API or best practices of versioning an API at <a href="http://stackoverflow.com/questions/389169/best-practices-for-api-versioning">best-practices-for-api-versioning</a> or <a href="http://stackoverflow.com/questions/10742594/versioning-rest-api">versioning-rest-api</a>.
+
+<br><br>
+
+To summarize the stackoverflow discussion, there are 3 ways to do versioning.
+<ul>
+    <li>Header based - using X-API-Version</li>
+    <li>URL based - http://{uri}/v1/getCustomer</li>
+    <li>Content negotiation via Accept headers - application/vnd.example.v1+json (mediatype)</li>
+</ul>
+
+For this tutorial, I would be implementing the first two.<br><br>
+
+<b>1) Header based - using X-API-Version</b>
+Here I am building a Directive that extracts the version from the request header. If not exists than I am defaulting to 1
+
+<pre>
+    trait VersionDirectives {
+      val extractVersion: Directive[String :: HNil] =
+        extract { ctx =>
+          val header = ctx.request.headers.find(_.name == "X-API-Version")
+          header match {
+            case Some(head) => head.value
+            case _          => "1" //default to 1
+          }
+        }
+
+      def versioning: Directive[String :: HNil] =
+        extractVersion.flatMap { v =>
+          provide(v)
+        }
+    }
+</pre>
+
+In the above code there are two keywords, "extract" and "provide". These are part of Sprays BasicDirective. "extract" basically allows you to extract a single value and "provides" allows you to inject a value into the Directive. But wait, we can make this trait even smaller by getting rid of the provide all together to something as follows:
+<pre>
+trait VersionDirectives {
+  def versioning: Directive[String :: HNil] =
+    extract { ctx =>
+      val header = ctx.request.headers.find(_.name == "X-API-Version")
+      header match {
+        case Some(head) => head.value
+        case _          => "1" //default to 1
+      }
+    }
+}
+
+</pre>
+<i>Note: there are more than one way to write same operation in scala/spray. bane of my existence!</i>
+<br>
+More info at: <a href="https://github.com/spray/spray/blob/release/1.2/spray-routing/src/main/scala/spray/routing/directives/BasicDirectives.scala">spray/routing/directives/BasicDirectives.scala</a>
+<br><br>
+Now that we have defined the directive, we just need to inherit the directive to service trait and call versioning to extract the version number from X-API-Version header field.
+
+<pre>
+    trait CustomerService extends HttpService with Json4sSupport with VersionDirectives {
+
+    val customerRoutes = {
+    path("getCustomer" / Segment) { customerId =>
+    get {
+    versioning { v =>
+    println(v)
+    //do something now that you have extracted the version number
+    . . . .
+</pre>
+
+<b>2) url based - http://{uri}/v1/getCustomer</b>
+<br>
+
+Here we are basically performing regex on the incoming request.uri and extracting the version out of "v*". Spray provides quite a few PathFilters and one of them being PathMatcher. More info at:<br>
+<ul>
+    <li><a href="https://github.com/spray/spray/wiki/Path-Filters">https://github.com/spray/spray/wiki/Path-Filters</a><br></li>
+    <li><a href="https://github.com/spray/spray/blob/release/1.2/spray-routing/src/main/scala/spray/routing/directives/PathDirectives.scala">spray/routing/directives/PathDirectives</a><br></li>
+    <li><a href="https://github.com/spray/spray/blob/release/1.2/spray-routing/src/main/scala/spray/routing/PathMatcher.scala">spray/routing/PathMatcher</a></li>
+    <li><a href="https://github.com/spray/spray/blob/release/1.2/spray-routing-tests/src/test/scala/spray/routing/PathDirectivesSpec.scala">/scala/spray/routing/PathDirectivesSpec - Test cases</a></li>
+</ul>
+
+
+<pre>
+trait CustomerService extends HttpService with Json4sSupport {
+
+  val Version = PathMatcher("""v([0-9]+)""".r)
+    .flatMap {
+      case vString :: HNil => {
+        try Some(Integer.parseInt(vString) :: HNil)
+        catch {
+          case _: NumberFormatException =>
+            Some(1 :: HNil) //default to version 1
+        }
+      }
+    }
+
+  val customerRoutes =
+    pathPrefix(Version) { apiVersion =>
+      {
+        //. . . .
+        path("getCustomer" / Segment) { customerId =>
+          get {
+            complete {
+              apiVersion match {
+                case 1 => {
+                  // do something if version 1
+                }
+                case 2 => ??? //do something if version 2
+                case _ => {
+                  //do something if any other version
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+}
+</pre>

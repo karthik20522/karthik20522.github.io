@@ -1,0 +1,142 @@
+<h1>Spray.io REST service - MongoDB - Lesson 4</h1>
+
+View the lessons list at <a href="https://github.com/karthik20522/SprayLearning">https://github.com/karthik20522/SprayLearning</a>
+
+<br><br>
+
+Now that we have Spray Service <a href="https://github.com/karthik20522/SprayLearning">Setup</a> and <a href="https://github.com/karthik20522/SprayLearning">Routes</a> <a href="https://github.com/karthik20522/SprayLearning">defined</a>, we can now hookup the database to add and fetch customer information. For the database I am using MongoDB and <a href="http://mongodb.github.io/casbah/">Casbah</a>. Casbah is a Scala toolkit for MongoDB. Casbah is a "toolkit" rather than "driver", as Casbah is a layer on top of the official <a href="https://github.com/mongodb/mongo-java-driver">mongo-java-driver</a> for better integration with Scala.
+
+<br><br>
+To get Casbah setup, we need to add casbah and it's related dependencies to the Build.scala file.
+
+<script type="syntaxhighlighter" class="brush: java">
+
+    libraryDependencies ++= Seq(
+    . . . .
+    "org.mongodb"   %% "casbah"    % "2.6.2",
+    "com.typesafe"   %% "scalalogging-slf4j" % "1.0.1",
+    "org.slf4j"    % "slf4j-api"    % "1.7.1",
+    "org.slf4j"    % "log4j-over-slf4j"  % "1.7.1",
+    "ch.qos.logback"   % "logback-classic"  % "1.0.3")
+
+</script>
+<br>
+<i>Note that we have slf4j and scala logging in the dependencies. Without slf4j you would get "Failed to load class org.slf4j.impl.StaticLoggerBinder" error.</i>
+
+<br><br>
+
+In my example, I have created a MongoFactory that has 3 functions: getConnection, getCollection and closeConnection.
+    <pre>
+    import com.mongodb.casbah.MongoCollection
+    import com.mongodb.casbah.MongoConnection
+
+    object MongoFactory {
+    private val SERVER = "localhost"
+    private val PORT = 27017
+    private val DATABASE = "customerDb"
+    private val COLLECTION = "customer"
+
+    def getConnection: MongoConnection = return MongoConnection(SERVER)
+    def getCollection(conn: MongoConnection): MongoCollection =
+    return conn(DATABASE)(COLLECTION)
+    def closeConnection(conn: MongoConnection) { conn.close }
+    }
+
+</pre>
+
+
+<br>
+Now that we have our Factory method, the next is building the data access class for inserting and fetching data. Following code snippet has 2 operations:
+<ul>
+    <li>saveCustomer - which returns back the GUID after inserting into MongoDB</li>
+    <li>findCustomer - find customer by GUID</li>
+</ul>
+
+<pre>
+class CustomerDal {
+
+  val conn = MongoFactory.getConnection
+
+  def saveCustomer(customer: Customer) = {
+    val customerObj = buildMongoDbObject(customer)
+    val result = MongoFactory.getCollection(conn).save(customerObj)
+    val id = customerObj.getAs[org.bson.types.ObjectId]("_id").get
+    println(id)
+    id
+  }
+
+  def findCustomer(id: String) = {
+    var q = MongoDBObject("_id" -> new org.bson.types.ObjectId(id))
+    val collection = MongoFactory.getCollection(conn)
+    val result = collection findOne q
+
+    val customerResult = result.get
+
+    val customer = Customer(
+      firstName = customerResult.as[String]("firstName"),
+      lastName = customerResult.as[String]("lastName"),
+      _id = Some(customerResult.as[org.bson.types.ObjectId]("_id").toString()),
+      phoneNumber = Some(customerResult.as[String]("phoneNumber")),
+      address = Some(customerResult.as[String]("address")),
+      city = Some(customerResult.as[String]("city")),
+      country = Some(customerResult.as[String]("country")),
+      zipcode = Some(customerResult.as[String]("zipcode"))
+    )
+
+    customer //return the customer object
+  }
+
+  //Convert our Customer object into a BSON format that MongoDb can store.
+  private def buildMongoDbObject(customer: Customer): MongoDBObject = {
+    val builder = MongoDBObject.newBuilder
+    builder += "firstName" -> customer.firstName
+    builder += "lastName" -> customer.lastName
+    builder += "phoneNumber" -> customer.phoneNumber.getOrElse("")
+    builder += "address" -> customer.address.getOrElse("")
+    builder += "city" -> customer.city.get
+    builder += "country" -> customer.country.get
+    builder += "zipcode" -> customer.zipcode.getOrElse("")
+    builder.result
+  }
+}
+</pre>
+
+Now to integrate this to the service:
+
+<pre>
+trait CustomerService extends HttpService with Json4sSupport {
+  val customerRoutes =
+    path("addCustomer") {
+      post {
+        entity(as[JObject]) { customerObj =>
+          complete {
+            val customer = customerObj.extract[Customer]
+            val customerDal = new CustomerDal
+            val id = customerDal.saveCustomer(customer)
+            id.toString()
+          }
+        }
+      }
+    } ~
+      path("getCustomer" / Segment) { customerId =>
+        get {
+          complete {
+            //get customer from db using customerId as Key
+            val customerDal = new CustomerDal
+            val customer = customerDal.findCustomer(customerId)
+            customer
+          }
+        }
+      }
+}
+</pre>
+
+
+
+More information and resources on Casbah:
+<ul>
+<li><a href="http://mongodb.github.io/casbah/">http://mongodb.github.io/casbah/</a></li>
+<li><a href="http://mongocasbahcookbook.tumblr.com/post/44240846005/mongodbobject-as-criteria-and-as-actions">http://mongocasbahcookbook.tumblr.com/post/44240846005/mongodbobject-as-criteria-and-as-actions</a></li>
+<li><a href="http://janxspirit.blogspot.com/2011/11/introduction-to-casbah-scala-mongodb.html">http://janxspirit.blogspot.com/2011/11/introduction-to-casbah-scala-mongodb.html</a></li>
+<li><a href="http://stackoverflow.com/questions/tagged/casbah">http://stackoverflow.com/questions/tagged/casbah</a></li>
+</ul>

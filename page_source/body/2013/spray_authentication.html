@@ -1,0 +1,131 @@
+<h1>Spray.io REST service - Authentication - Lesson 5</h1>
+
+View the lessons list at <a href="https://github.com/karthik20522/SprayLearning ">https://github.com/karthik20522/SprayLearning </a>
+
+<br><br>
+
+"Directives" are small building blocks of which you can construct arbitrarily complex route structures. A directive does one or more of the following:<br>
+<ul>
+    <li>Transform the incoming RequestContext before passing it on to its inner route</li>
+    <li>Filter the RequestContext according to some logic, i.e. only pass on certain requests and reject all others</li>
+    <li>Apply some logic to the incoming RequestContext and create objects that are made available to inner routes as "extractions"</li>
+    <li>Complete the request</li>
+</ul>
+
+More detailed information on directives can be found at <a href="http://spray.io/documentation/1.2-M8/">http://spray.io/documentation/1.2-M8/</a> or here <a href="http://spray.io/documentation/1.2-M8/spray-routing/predefined-directives-alphabetically/">Spray-routing/predefined-directives-alphabetically/</a>. In future examples, I would be using Directives so basic understanding would be useful. For this example I would be using Authentication directive to validate the request with a username and password as part of the header.
+
+<br><br>
+
+So, for authentication a new UserAuthentication trait is created which has a function that returns a ContextAuthenticator. The authenticate directive expects either a ContextAuthenticator or a Future[Authenication[T]]. At the crust of ContextAuthenticator is basically Future[Authenication[T]].
+<br><br>
+Below code that describes the authentication directive basically takes in a ContextAuthenticator and returns a Future of Authentication type of Either Rejection or an Object of type T. What this means is that Either a Rejection is returned (Left) like FailedAuthenticationRejection when credentials are missing or failed; or when successful an object is returned (Right)
+<br>
+<pre>
+    package object authentication {
+        type ContextAuthenticator[T] = RequestContext => Future[Authentication[T]]
+        type Authentication[T] = Either[Rejection, T]
+        //. . . .
+    }
+</pre>
+
+<br>
+
+The UserAuthentication trait has two functions, one that returns a ContextAuthentication and other that returns a Future. In this example, I am reading the username and password from the application.conf file and validating against it.<br>
+
+<pre>
+import com.typesafe.config.ConfigFactory
+import scala.concurrent.ExecutionContext.Implicits.global
+import spray.routing.AuthenticationFailedRejection
+
+case class User(userName: String, token: String) {}
+
+trait UserAuthentication {
+
+  val conf = ConfigFactory.load()
+  lazy val configusername = conf.getString("security.username")
+  lazy val configpassword = conf.getString("security.password")
+
+  def authenticateUser: ContextAuthenticator[User] = { ctx =>
+    {
+      //get username and password from the url
+      val usr = ctx.request.uri.query.get("usr").get
+      val pwd = ctx.request.uri.query.get("pwd").get
+
+      doAuth(usr, pwd)
+    }
+  }
+
+  private def doAuth(
+      userName: String,
+      password: String
+  ): Future[Authentication[User]] = {
+    //here you can call database or a web service to authenticate the user
+    Future {
+      Either.cond(
+        password == configpassword && userName == configusername,
+        User(userName = userName, token = java.util.UUID.randomUUID.toString),
+        AuthenticationFailedRejection("CredentialsRejected")
+      )
+    }
+  }
+}
+
+</pre>
+
+<i>Note that I am importing "scala.concurrent.ExecutionContext.Implicits.global", this is because futures require an ExecutionContext and I letting spray to use the default actor ExecutingContext. //implicit val system = ActorSystem("on-spray-can")</i>
+<br>
+<br>
+
+Now that we have the authentication setup, we need to inherit the UserAuthenticationTrait using "with" and use the "authentication" directive by passing the "authenticateUser" function that we defined.
+<br>
+<pre>
+trait CustomerService
+    extends HttpService
+    with Json4sSupport
+    with UserAuthentication {
+
+  val customerRoutes =
+    path("addCustomer") {
+      post {
+        authenticate(authenticateUser) { user =>
+          entity(as[JObject]) { customerObj =>
+            complete {
+              //. . . .
+            }
+          }
+        }
+      }
+    } ~
+      path("getCustomer" / Segment) { customerId =>
+        get {
+          authenticate(authenticateUser) { user =>
+            {
+              complete {
+                //. . .
+              }
+            }
+          }
+        }
+      }
+}
+
+    [Success GET] http://localhost:8080/getCustomer/520ed44941f19472d5f?usr=karthik&pwd=kufli
+    [Failed GET] http://localhost:8080/getCustomer/520ed44941f19472d5f9?usr=fail&pwd=wrong
+</pre>
+
+<br>
+
+<br>
+
+Further readings on this topic:<br>
+
+<a href="https://github.com/spray/spray/blob/release/1.2/spray-routing/src/main/scala/spray/routing/authentication/HttpAuthenticator.scala">Spray/routing/authentication/HttpAuthenticator.scala</a><br>
+
+<a href="https://github.com/spray/spray/blob/release/1.2/spray-routing-tests/src/test/scala/spray/routing/SecurityDirectivesSpec.scala">Spray/routing/SecurityDirectivesSpec.scala</a><br>
+
+<a href="https://groups.google.com/forum/#!topic/spray-user/5DBEZUXbjtw">https://groups.google.com/forum/#!topic/spray-user/5DBEZUXbjtw</a><br>
+
+<a href="https://github.com/spray/spray/blob/master/spray-routing/src/main/scala/spray/routing/RejectionHandler.scala">Spray/routing/RejectionHandler.scala</a><br>
+
+
+
